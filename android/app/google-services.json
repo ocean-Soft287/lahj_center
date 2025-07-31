@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "109978753522",
+    "project_id": "lahj-center",
+    "storage_bucket": "lahj-center.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109978753522:android:adac76634298d42ca2736b",
+        "android_client_info": {
+          "package_name": "com.example.lahijcenter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjQfNGPEkX1-q5RV2rmG93jBsk5eIA0yc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
