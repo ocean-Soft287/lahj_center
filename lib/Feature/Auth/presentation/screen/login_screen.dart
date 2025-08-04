@@ -10,8 +10,10 @@ import '../../../../core/Textstyle/text_style.dart';
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/constans/responsve_font.dart';
+import '../../../../core/network/local/flutter_secure_storage.dart';
 import '../../../../core/sharde/widget/text_forn_field.dart';
 import '../../../main/bottomNavbar/Bottomnav.dart';
+import '../../Data/model/user_model.dart';
 import '../../manger/login-cubit/login_view_cubit.dart';
 import '../../manger/login-cubit/login_view_state.dart';
 import 'forgot_password_screen.dart';
@@ -30,6 +32,15 @@ class LoginScreen extends StatelessWidget {
       child: BlocConsumer<LoginViewCubit, LoginViewState>(
         listener: (context, state) async {
 if (state is LoginViewStateSuccess){
+  final user = state.dataUser;
+
+  // تخزين البيانات
+  await SecureStorageService.write(SecureStorageService.token, user.token);
+  await SecureStorageService.write(SecureStorageService.email, user.email);
+  await SecureStorageService.write(SecureStorageService.name, '${user.firstName} ${user.lastName}');
+  await SecureStorageService.write(SecureStorageService.image, user.imageUrl);
+  await SecureStorageService.write(SecureStorageService.mobile, user.phoneNumber);
+
   Navigator.of(context).pushAndRemoveUntil(
     MaterialPageRoute(builder: (context) => const Bottomnav()),
         (Route<dynamic> route) => false,

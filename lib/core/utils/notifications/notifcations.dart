@@ -20,7 +20,7 @@ class FcmApi {
 
   Future<String?> getToken() async{
     final fcmtoken = await firebaseMessaging.getToken();
-
+print("fcmtoken$fcmtoken");
     return fcmtoken;
 
   }

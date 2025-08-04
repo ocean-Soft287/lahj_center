@@ -8,7 +8,10 @@ import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo_imp.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/favourite_cubit.dart';
 import 'package:lahijcenter/Feature/Search/data/repo/search_repo.dart';
+import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo.dart';
+import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo_impl.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
+import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
 
 import '../../../Feature/AddAdvertisement/data/repo/repo.dart';
 import '../../../Feature/AddAdvertisement/data/repo/repoimp.dart';
@@ -26,6 +29,9 @@ import '../../../Feature/my_ads/data/my_ad_repo/myad_repo.dart';
 import '../../../Feature/my_ads/mange/myadd_cubit.dart';
 import '../../../Feature/profile/data/repo/profile_repo.dart';
 import '../../../Feature/profile/data/repo/profile_repo_imp.dart';
+import '../../../Feature/profile/data/repo/update_profile_repo.dart';
+import '../../../Feature/profile/data/repo/update_profile_repo_impl.dart';
+import '../../../Feature/profile/manager/get_profile_cubit.dart';
 import '../api/api_consumer.dart';
 import '../api/dio_consumer.dart';
 import '../api/endpoint.dart';
@@ -111,6 +117,19 @@ void setup() {
   sl.registerFactory<SearchCubit>(
           () => SearchCubit(sl<Searchrepo>()));
 
+  // Get profile repo and cubit
+  sl.registerLazySingleton<GetProfileRepo>(
+        () => GetProfileRepoImpl(dioConsumer: sl<DioConsumer>()),
+  );
+
+  sl.registerFactory<GetProfileCubit>(
+        () => GetProfileCubit(sl<GetProfileRepo>()),
+  );
+  //update profile
+  sl.registerLazySingleton<UpdateProfileRepo>(()=> UpadateProfileRepoImpl(dioConsumer: sl<DioConsumer>()));
+sl.registerFactory<UpdateProfileCubit>((
+
+)=>UpdateProfileCubit(sl<UpdateProfileRepo>()));
 
 
 

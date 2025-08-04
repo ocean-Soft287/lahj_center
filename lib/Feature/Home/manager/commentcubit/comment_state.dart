@@ -12,6 +12,12 @@ class CommentSuccess extends CommentState {
  CommentSuccess({required this.comments});
 }
 
+class AddCommentSuccess extends CommentState {
+ final List<CommentItem> comments;
+
+ AddCommentSuccess({required this.comments});
+}
+
 class CommentFailure extends CommentState {
  final String errorMessage;
 

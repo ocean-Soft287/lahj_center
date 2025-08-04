@@ -26,7 +26,7 @@ class CommentSection extends StatelessWidget {
       child: BlocConsumer<CommentCubit, CommentState>(
         listener: (context, state) {
           // On successful comment submission, show a confirmation snackbar and clear the text field
-          if (state is CommentSuccess) {
+          if (state is AddCommentSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('تم إضافة التعليق بنجاح')),
             );

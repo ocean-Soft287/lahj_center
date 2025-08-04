@@ -21,7 +21,6 @@ import 'core/sharde/widget/navigation.dart';
 import 'core/utils/notifications/notifcations.dart';
 import 'core/utils/services/services_locator.dart';
 import 'firebase_options.dart';
-
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
@@ -80,6 +79,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class StartApp extends StatefulWidget {
   const StartApp({super.key});
 
@@ -88,31 +88,15 @@ class StartApp extends StatefulWidget {
 }
 
 class _StartAppState extends State<StartApp> {
-  final AppLinks _appLinks = AppLinks();
   StreamSubscription<Uri>? _sub;
 
   @override
   void initState() {
     super.initState();
-    _initDeepLinking();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkLoginAndNavigate();
     });
-  }
-
-  void _initDeepLinking() async {
-    try {
-      final uri = await _appLinks.getInitialLink();
-      if (uri != null) _handleLink(uri);
-
-      _sub = _appLinks.uriLinkStream.listen((Uri uri) {
-        _handleLink(uri);
-      }, onError: (err) {
-        print('AppLinks error: $err');
-      });
-    } catch (e) {
-      print('Failed to initialize deep linking → $e');
-    }
   }
 
   void _handleLink(Uri uri) {
@@ -127,11 +111,14 @@ class _StartAppState extends State<StartApp> {
   }
 
   Future<void> _checkLoginAndNavigate() async {
-    final mobile = await SecureStorageService.read(SecureStorageService.mobile);
+    final token = await SecureStorageService.read(SecureStorageService.token);
 
     FlutterNativeSplash.remove();
 
-    if (mobile != null && mobile.isNotEmpty) {
+    // Debug
+    print("TOKEN: $token");
+
+    if (token != null && token.isNotEmpty) {
       navigatofinsh(context, const Bottomnav(), false);
     } else {
       navigatofinsh(context, const WelcomeScreen(), false);

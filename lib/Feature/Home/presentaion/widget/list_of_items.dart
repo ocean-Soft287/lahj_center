@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lahijcenter/core/constans/app_colors.dart';
+import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../Data/model/item_model.dart';
@@ -44,7 +46,7 @@ class Listofitems extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  // TODO: اضف وظيفة الضغط هنا
+
                 },
                 child: AdvertsiminteContainer(item: items[index]),
               );
@@ -52,8 +54,18 @@ class Listofitems extends StatelessWidget {
           );
         }
 
-        // ✅ في حالة عدم تطابق أي شرط
-        return const Center(child: CircularProgressIndicator());
+        return  Center(
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+
+            SizedBox(height: 50
+              ,),Text(" لاتوجد بيانات",style: TextStyle(color: AppColors.mainAppColor,
+            fontFamily: Fonts.font,
+            fontWeight: FontWeight.w500,
+            fontSize: 25),)
+          ],),
+        );
       },
     );
   }}

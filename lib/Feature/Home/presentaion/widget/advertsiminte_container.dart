@@ -66,173 +66,180 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
           ),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(8.sp),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: SizeUtility(context).height * 0.12,
-                child: AspectRatio(
-                  aspectRatio: 2 / 1.4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+        elevation: 4,
+        shadowColor: Colors.black.withOpacity(0.2),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(8.sp),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: Colors.white,
+                    child: ClipOval(
                       child: CachedNetworkImage(
-                        progressIndicatorBuilder:
-                            (context, url, progress) => Center(
-                              child: CircularProgressIndicator(
-                                value: progress.progress,
-                              ),
-                            ),
-                        imageUrl:
-                            widget.item.advertisementImages[0].imageName,
-
+                        imageUrl: widget.item.advertisementImages[0].imageName,
                         fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                        progressIndicatorBuilder: (context, url, progress) => Center(
+                          child: CircularProgressIndicator(value: progress.progress),
+                        ),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: MainTitle(
-                            text: widget.item.name,
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.mainAppColor,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: MainTitle(
+                              text: widget.item.name,
+                              fontSize: 17.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.mainAppColor,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
-                        BlocBuilder<FavouriteCubit, FavouriteState>(
-                          builder: (context, state) {
-                            FavouriteCubit favouritecubit = BlocProvider.of(context);
+                          BlocBuilder<FavouriteCubit, FavouriteState>(
+                            builder: (context, state) {
+                              final favouriteCubit = BlocProvider.of<FavouriteCubit>(context);
+                              return GestureDetector(
+                                onTap: () async {
+                                  final idString = await SecureStorageService.read(
+                                    SecureStorageService.customerid,
+                                  );
+                                  final int id = int.tryParse(idString ?? '') ?? 0;
 
-                            return GestureDetector(
-                              onTap: () async {
-                                final idString = await SecureStorageService.read(
-                                  SecureStorageService.customerid,
-                                );
-                                final int id = int.tryParse(idString ?? '') ?? 0;
+                                  setState(() {
+                                    widget.item.isLiked = !widget.item.isLiked;
+                                  });
 
-                                // أول نغيّر الشكل محليًا
-                                setState(() {
-                                  widget.item.isLiked = !widget.item.isLiked;
-                                });
-
-                                // بعد كده نبلّغ الكيوبيت إنه يشتغل مع السيرفر
-                                favouritecubit.addoedeletefavourite(
-                                  widget.item.id,
-                                  !widget.item.isLiked, // عكس الجديد (لأنه بيستخدم القيمة قبل التغيير)
-                                );
-                              },
-                              child: Icon(
-                                widget.item.isLiked
-                                    ? Icons.favorite
-                                    : Icons.favorite_border_outlined,
-                                color: Colors.green,
-                                size: 30,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: MainTitle(
-                            text: displayDate,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.hintTextColor,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                        MainTitle(
-                          text: widget.item.serviceName,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.hintTextColor,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 5.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: MainTitle(
-                            text:
-                                "${widget.item.area},",
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.hintTextColor,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                        SizedBox(width: 30.w),
-                        Expanded(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.person,
-                                color: AppColors.thrideAppColor,
-                              ),
-                              SizedBox(width: 5.w),
-                              Flexible(
-                                child: MainTitle(
-                                  text: widget.item.memberName,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.hintTextColor,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
+                                  favouriteCubit.addoedeletefavourite(
+                                    widget.item.id,
+                                    !widget.item.isLiked,
+                                  );
+                                },
+                                child: Icon(
+                                  widget.item.isLiked
+                                      ? Icons.favorite
+                                      : Icons.favorite_border_outlined,
+                                  color: Colors.green,
+                                  size: 30,
                                 ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      SizedBox(height: 10.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: MainTitle(
+                              text: displayDate,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.hintTextColor,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          MainTitle(
+                            text: widget.item.serviceName,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.hintTextColor,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: MainTitle(
+                              text: "${widget.item.area},",
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.hintTextColor,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          SizedBox(width: 30.w),
+                          Expanded(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.person,
+                                  color: AppColors.thrideAppColor,
+                                ),
+                                SizedBox(width: 5.w),
+                                Flexible(
+                                  child: MainTitle(
+                                    text: widget.item.memberName,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.hintTextColor,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+      )
+
     );
   }
 }

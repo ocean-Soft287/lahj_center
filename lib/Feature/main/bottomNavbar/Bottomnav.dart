@@ -49,7 +49,7 @@ class Bottomnav extends StatelessWidget {
             key: scaffoldKey,
             backgroundColor: Colors.white,
             body: SafeArea(child: homeCubit.screen[homeCubit.currentIndex]),
-            drawer: Customdrawer(cubit: homeCubit), // مرر الكيوبت هنا
+            drawer: Customdrawer(cubit: homeCubit),
             bottomNavigationBar: Directionality(
               textDirection: TextDirection.ltr,
               child: BottomAppBar(
@@ -91,15 +91,21 @@ class Bottomnav extends StatelessWidget {
                 ),
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: AppColors.mainAppColor,
-              elevation: 5,
-              shape: const CircleBorder(),
-              onPressed: () {
-                navigato(context, const AdGuidelinesScreen());
-              },
-              child: Icon(Icons.add, size: 30.sp, color: Colors.white),
+            floatingActionButton: Padding(
+              padding: EdgeInsets.only(bottom: 20,
+              right: 1,
+              left: 1),
+              child: FloatingActionButton(
+                backgroundColor: AppColors.mainAppColor,
+                elevation: 10,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  navigato(context, const AdGuidelinesScreen());
+                },
+                child: Icon(Icons.add, size: 30.sp, color: Colors.white),
+              ),
             ),
+
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           );
         },
@@ -109,7 +115,7 @@ class Bottomnav extends StatelessWidget {
 }
 
 class CustomDrawerTile extends StatelessWidget {
-  final String iconPath; // مسار الأي
+  final String iconPath;
   final String title;
   final VoidCallback onTap;
 
@@ -180,7 +186,7 @@ class NavItem extends StatelessWidget {
           SvgPicture.asset(
             icon,
             color: isActive ? Colors.white : Colors.grey[400],
-            width: 24, // ضبط الحجم حسب الحاجة
+            width: 24,
             height: 19,
           ),
           Text(
@@ -188,7 +194,7 @@ class NavItem extends StatelessWidget {
             style: TextStyle(
               fontFamily: Fonts.font,
               color: isActive ? Colors.white : Colors.grey[400],
-              fontSize: 12,
+              fontSize: 8,
             ),
           ),
         ],
@@ -205,65 +211,101 @@ void showPlatformDialog(BuildContext context) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
+        contentPadding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
         content: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center, // توسيط أفقي
           children: [
             Text(
               "شارك ل",
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 24.h),
+
+
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+
               },
               child: Container(
-                width: 100.w,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+                width: 120.w,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  color: Colors.grey[200],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 10,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey.shade200, width: 1),
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.android, size: 40.sp, color: Colors.black),
+                    Icon(Icons.android, size: 44.sp, color: Colors.black),
+                    SizedBox(height: 8.h),
                     Text(
                       "مستخدم Android",
                       style: TextStyle(
                         fontFamily: Fonts.font,
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         color: Colors.green,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 10.h),
-            Text("أو", style: TextStyle(fontSize: 16.sp)),
-            SizedBox(height: 10.h),
+            SizedBox(height: 16.h),
+            Text(
+              "أو",
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 16.h),
+
+            // خيار iOS
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+                // يمكنك هنا إضافة منطق مشاركة خاص بـ iOS
               },
               child: Container(
-                width: 100.w,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+                width: 120.w,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  color: Colors.grey[200],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 10,
+                      offset: Offset(0, 6),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey.shade200, width: 1),
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.apple, size: 40.sp, color: Colors.black),
+                    Icon(Icons.apple, size: 44.sp, color: Colors.black),
+                    SizedBox(height: 8.h),
                     Text(
                       "مستخدم iOS",
                       style: TextStyle(
                         fontFamily: Fonts.font,
-                        fontSize: 16.sp,
-                        color: AppColors.mainAppColor,
+                        fontSize: 14.sp,
+                        color: Colors.green,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -275,4 +317,5 @@ void showPlatformDialog(BuildContext context) {
       );
     },
   );
+
 }

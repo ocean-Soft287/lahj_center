@@ -59,6 +59,7 @@ class CommentCubit extends Cubit<CommentState> {
           (data) async {
         await getComment(num: advertisementId);
         emit(CommentSuccess(comments: comments));
+        emit( AddCommentSuccess(comments: comments));
       },
     );
   }

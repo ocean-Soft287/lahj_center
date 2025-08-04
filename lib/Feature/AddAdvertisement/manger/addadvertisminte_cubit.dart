@@ -280,17 +280,17 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
 
   List<Services> services = [];
 
-  Future<void> getServices() async {
-    emit(ServicesLoading());
-    final result = await servicesRepo.getServices();
-    result.fold(
-          (failure) => emit(ServicesError(_mapFailureToMessage(failure))),
-          (data) {
-        services = data;
-        emit(ServicesLoaded(List.from(services)));
-      },
-    );
-  }
+//   Future<void> getServices() async {
+//    emit(ServicesLoading());
+//    final result = await Addadvertisminterepo.getServices();
+//    result.fold(
+//          (failure) => emit(ServicesError(_mapFailureToMessage(failure))),
+// (data) {
+//   services = data;
+//        emit(ServicesLoaded(List.from(services)));
+//      },
+//     );
+//  }
 
   bool failureMessageContainsCache({required String failureMessage}) {
     return failureMessage.toLowerCase().contains("api") ||

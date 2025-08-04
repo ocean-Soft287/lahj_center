@@ -52,6 +52,8 @@ class EndPoint {
       "${baseUrl}Customer/DeleteCustomerByCustomerID?CustomerID=";
   static String editprofile =
       "${baseUrl}Customer/EditProfile";
+  static String getProfile="${baseUrl}Member/profile";
+  static String Updateprofile="${baseUrl}Member/updateProfile";
 
 
 
