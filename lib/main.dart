@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
   final Locale locale;
 
   const MyApp({super.key, required this.locale});
+  //////////
 
   @override
   Widget build(BuildContext context) {
