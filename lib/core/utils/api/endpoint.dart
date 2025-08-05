@@ -54,6 +54,7 @@ class EndPoint {
       "${baseUrl}Customer/EditProfile";
   static String getProfile="${baseUrl}Member/profile";
   static String Updateprofile="${baseUrl}Member/updateProfile";
+  static String Newpassword ="${baseUrl}Member/updatePassword";
 
 
 

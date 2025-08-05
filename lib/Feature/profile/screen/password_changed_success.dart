@@ -4,6 +4,7 @@ import 'package:lahijcenter/core/sharde/widget/default_button.dart';
 
 import '../../../../../core/constans/fonts.dart';
 import '../../Auth/presentation/screen/login_screen.dart';
+import '../../main/bottomNavbar/Bottomnav.dart';
 
 
 class PasswordChangedSuccess extends StatelessWidget {
@@ -44,7 +45,7 @@ class PasswordChangedSuccess extends StatelessWidget {
                   function: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) =>
-                            const LoginScreen()));
+                            const Bottomnav()));
                   },
                   text: 'حسناً')
             ],

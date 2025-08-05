@@ -1,29 +1,27 @@
 class Services {
   final int id;
-  final String arName;
-  final String enName;
+  final String name;
+  final String eName;
 
   Services({
     required this.id,
-    required this.arName,
-    required this.enName,
+    required this.name,
+    required this.eName,
   });
 
-  // fromJson
   factory Services.fromJson(Map<String, dynamic> json) {
     return Services(
-      id: json['id'] ?? 0,
-      arName: json['arName'] ?? '',
-      enName: json['enName'] ?? '',
+      id: json['id'],
+      name: json['name'],
+      eName: json['eName'],
     );
   }
 
-  // toJson
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'arName': arName,
-      'enName': enName,
+      'name': name,
+      'eName': eName,
     };
   }
 }

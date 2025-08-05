@@ -13,7 +13,7 @@ part 'addadvertisminte_state.dart';
 
 class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   AddadvertisminteCubit(this.addadvertisminterepo, this.homerepo)
-      : super(AddadvertisminteInitial());
+    : super(AddadvertisminteInitial());
 
   final Addadvertisminterepo addadvertisminterepo;
   final Homerepo homerepo;
@@ -21,9 +21,10 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   final List<Currency> currency = [];
   final List<Government> government = [];
   final List<Categorygroups> category = [];
+  final List<Services> services = [];
 
-  List<XFile?> galleryImage = []; // ✅ صور جديدة
-  List<String> oldImage = [];     // ✅ صور قديمة
+  List<XFile?> galleryImage = [];
+  List<String> oldImage = [];
 
   final ImagePicker _picker = ImagePicker();
 
@@ -75,8 +76,10 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
     emit(AddadvertisminteLoading());
 
     try {
-      final List<File> imageFiles =
-      galleryImage.whereType<XFile>().map((xfile) => File(xfile.path)).toList();
+      final List<File> imageFiles = galleryImage
+          .whereType<XFile>()
+          .map((xfile) => File(xfile.path))
+          .toList();
 
       final result = await addadvertisminterepo.addaddvertisminte(
         id: id,
@@ -110,8 +113,8 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
       );
 
       result.fold(
-            (failure) => emit(AddadvertisminteFailure(failure.message)),
-            (data) => emit(AddadvertisminteprocessSuccess(data)),
+        (failure) => emit(AddadvertisminteFailure(failure.message)),
+        (data) => emit(AddadvertisminteprocessSuccess(data)),
       );
     } catch (e) {
       emit(AddadvertisminteFailure("Unexpected error: ${e.toString()}"));
@@ -150,8 +153,10 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
     emit(AddadvertisminteLoading());
 
     try {
-      final List<File> imageFiles =
-      galleryImage.whereType<XFile>().map((xfile) => File(xfile.path)).toList();
+      final List<File> imageFiles = galleryImage
+          .whereType<XFile>()
+          .map((xfile) => File(xfile.path))
+          .toList();
 
       final result = await addadvertisminterepo.edit(
         id: id,
@@ -181,19 +186,19 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
         stateName: stateName,
         stateEName: stateEName,
         images: imageFiles,
-        deletionReason: deletionReason, oldImage: oldImage,
+        deletionReason: deletionReason,
+        oldImage: oldImage,
       );
 
       result.fold(
-            (failure) => emit(AddadvertisminteFailure(failure.message)),
-            (data) => emit(AddadvertisminteprocessSuccess(data)),
+        (failure) => emit(AddadvertisminteFailure(failure.message)),
+        (data) => emit(AddadvertisminteprocessSuccess(data)),
       );
     } catch (e) {
       emit(AddadvertisminteFailure("Unexpected error: ${e.toString()}"));
     }
   }
 
-  // 🔁 لتحديث الصور القديمة (تستخدمها لما ترجع بيانات الإعلان من الـ API)
   void setOldImages(List<String> images) {
     oldImage = images;
     emit(AddadvertisminteSuccess([]));
@@ -201,26 +206,28 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
 
   void fetchCategories() async {
     final result = await homerepo.fetchCategories();
-    result.fold((failure) => emit(AddadvertisminteFailure(failure.message)),
-            (data) async {
-          if (data.isNotEmpty) {
-            category.clear();
-            category.addAll(
-              data
-                  .map((item) =>
-                  Categorygroups.fromJson(item as Map<String, dynamic>))
-                  .toList(),
-            );
+    result.fold((failure) => emit(AddadvertisminteFailure(failure.message)), (
+      data,
+    ) async {
+      if (data.isNotEmpty) {
+        category.clear();
+        category.addAll(
+          data
+              .map(
+                (item) => Categorygroups.fromJson(item as Map<String, dynamic>),
+              )
+              .toList(),
+        );
 
-            await HiveCrudManager.saveList(
-              "shared_data_box",
-              "category",
-              category.map((e) => e.toJson()).toList(),
-            );
+        await HiveCrudManager.saveList(
+          "shared_data_box",
+          "category",
+          category.map((e) => e.toJson()).toList(),
+        );
 
-            emit(AddadvertisminteSuccess(category));
-          }
-        });
+        emit(AddadvertisminteSuccess(category));
+      }
+    });
   }
 
   void fetchcurrency() async {
@@ -228,13 +235,16 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
 
     final result = await addadvertisminterepo.getcurrency();
     result.fold(
-          (failure) => emit(AddadvertisminteFailure(failure.message)),
-          (data) async {
+      (failure) {
+        emit(AddadvertisminteFailure(failure.message));
+      },
+      (data) async {
         if (data.isNotEmpty) {
           currency.clear();
           currency.addAll(
-            data.map((item) =>
-                Currency.fromJson(item as Map<String, dynamic>)).toList(),
+            data
+                .map((item) => Currency.fromJson(item as Map<String, dynamic>))
+                .toList(),
           );
 
           await HiveCrudManager.saveList(
@@ -254,43 +264,127 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   void fetchgovermnet() async {
     emit(AddadvertisminteLoading());
 
-    final result = await addadvertisminterepo.getGovernment();
-    result.fold(
-          (failure) => emit(AddadvertisminteFailure(failure.message)),
+    int retryCount = 0;
+    const maxRetries = 3;
+
+    while (retryCount < maxRetries) {
+      try {
+
+        final result = await addadvertisminterepo.getGovernment();
+
+        result.fold(
+          (failure) {
+            retryCount++;
+
+            if (retryCount >= maxRetries) {
+              emit(
+                AddadvertisminteFailure(
+                  'فشل في جلب المحافظات بعد $maxRetries محاولات: ${failure.message}',
+                ),
+              );
+            }
+          },
           (data) async {
-        if (data.isNotEmpty) {
-          government.clear();
-          government.addAll(
-              data.map((item) => Government.fromJson(item as Map<String, dynamic>)).toList(),
-          );
+            if (data.isNotEmpty) {
+              government.clear();
+              government.addAll(data);
 
-          await HiveCrudManager.saveList(
-            "shared_data_box",
-            "government",
-            government.map((e) => e.toJson()).toList(),
-          );
+              await HiveCrudManager.saveList(
+                "shared_data_box",
+                "government",
+                government.map((e) => e.toJson()).toList(),
+              );
 
-          emit(AddadvertisminteSuccess(government));
-        } else {
-          emit(AddadvertisminteFailure("No data found"));
+              emit(AddadvertisminteSuccess(government));
+              return; // Exit the retry loop
+            } else {
+              emit(AddadvertisminteFailure("لا توجد بيانات متاحة للمحافظات"));
+              return; // Exit the retry loop
+            }
+          },
+        );
+
+        if (retryCount < maxRetries) {
+          await Future.delayed(
+            Duration(seconds: retryCount + 1),
+          ); // Exponential backoff
         }
-      },
-    );
+      } catch (e) {
+        retryCount++;
+
+        if (retryCount >= maxRetries) {
+          emit(AddadvertisminteFailure('فشل في جلب المحافظات: $e'));
+        }
+      }
+    }
   }
 
-  List<Services> services = [];
+  void fetchServices() async {
 
-//   Future<void> getServices() async {
-//    emit(ServicesLoading());
-//    final result = await Addadvertisminterepo.getServices();
-//    result.fold(
-//          (failure) => emit(ServicesError(_mapFailureToMessage(failure))),
-// (data) {
-//   services = data;
-//        emit(ServicesLoaded(List.from(services)));
-//      },
-//     );
-//  }
+    emit(AddadvertisminteLoading());
+
+    int retryCount = 0;
+    const maxRetries = 3;
+
+    while (retryCount < maxRetries) {
+      try {
+
+        final result = await addadvertisminterepo.getServices();
+
+        result.fold(
+          (failure) {
+
+            retryCount++;
+
+            if (retryCount >= maxRetries) {
+
+              emit(
+                AddadvertisminteFailure(
+                  'فشل في جلب الخدمات بعد $maxRetries محاولات: ${failure.message}',
+                ),
+              );
+            }
+          },
+          (data) async {
+
+            if (data.isNotEmpty) {
+
+              services.clear();
+              services.addAll(data);
+
+
+              await HiveCrudManager.saveList(
+                "shared_data_box",
+                "services",
+               services.map((e) => e.toJson()).toList(),
+              );
+
+
+
+              emit(AddadvertisminteSuccess(services));
+              return; // Exit the retry loop
+            } else {
+
+              emit(AddadvertisminteFailure("لا توجد بيانات متاحة للخدمات"));
+              return; // Exit the retry loop
+            }
+          },
+        );
+
+        if (retryCount < maxRetries) {
+          await Future.delayed(
+            Duration(seconds: retryCount + 1),
+          ); // Exponential backoff
+        }
+      } catch (e) {
+        retryCount++;
+
+        if (retryCount >= maxRetries) {
+          emit(AddadvertisminteFailure('فشل في جلب الخدمات: $e'));
+        }
+      }
+    }
+  }
 
   bool failureMessageContainsCache({required String failureMessage}) {
     return failureMessage.toLowerCase().contains("api") ||

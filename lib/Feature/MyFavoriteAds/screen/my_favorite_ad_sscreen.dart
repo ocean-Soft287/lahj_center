@@ -58,7 +58,6 @@ class MyFavoriteAdsScreen extends StatelessWidget {
           builder: (context, state) {
             FavouriteCubit favouritecubit = BlocProvider.of(context);
             List<Widget> slivers = [];
-
             if (state is Allfavouriteitemsuccfulload) {
               slivers.add(
                 const SliverToBoxAdapter(
@@ -70,25 +69,40 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (state is Allfavouriteitemsuccfulempty) {
+            }
+            else if (state is Allfavouriteitemsuccful && state.advertisementResponse.items.isEmpty) {
               slivers.add(
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 50),
-                    child: Center(
-                      child: Text(
-                        "لم يتم العثور على المفضله",
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: Fonts.font,
+                    padding: const EdgeInsets.only(top: 80),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child:Icon(Icons.favorite,
+                          size: 200,
+                          color: Colors.grey[300],)
+
+
                         ),
-                      ),
+                        SizedBox(height: 20.h),
+                        Text(
+                          "لا توجد منتجات في المفضله ",
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            color: Colors.green ,
+
+                            fontWeight: FontWeight.w600,
+                            fontFamily: Fonts.font,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               );
-            } else if (state is Allfavouriteitemsuccful) {
+            }
+            else if (state is Allfavouriteitemsuccful) {
               final items = state.advertisementResponse.items;
               slivers.add(
                 SliverList(

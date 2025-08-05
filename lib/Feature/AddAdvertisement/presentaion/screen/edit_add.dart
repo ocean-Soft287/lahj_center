@@ -5,9 +5,9 @@ import '../../../../core/constans/app_colors.dart';
 import '../../../../core/network/local/hive_crud_manager.dart';
 import '../../../../core/sharde/widget/default_button.dart';
 import '../../../Home/Data/model/categories.dart';
-import '../../../Home/Data/model/currency_model.dart';
 import '../../../Home/Data/model/item_model.dart';
 import '../../data/model/government_model.dart';
+import '../../data/model/services.dart';
 import '../../manger/addadvertisminte_cubit.dart';
 import '../widget/comment_section.dart';
 import '../widget/image_card_edit.dart';
@@ -19,7 +19,8 @@ class EditAdvertisementScreen extends StatefulWidget {
   final Item item;
 
   @override
-  State<EditAdvertisementScreen> createState() => _EditAdvertisementScreenState();
+  State<EditAdvertisementScreen> createState() =>
+      _EditAdvertisementScreenState();
 }
 
 class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
@@ -28,34 +29,36 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController comment = TextEditingController();
-
-  String selectedGovernorate = '';
-  String category = '';
-  String selectedCurrency = '';
+  String? selectedGovernorate;
+  String? category;
   String selectedCloseReplies = 'لا';
+  String? selectedServices;
 
   String selectedCategoryArabic = '';
   String selectedCategoryEnglish = '';
   String selectedCategoryId = '';
 
-  String selectedCurrencyArabic = '';
-  String selectedCurrencyEnglish = '';
-  String selectedCurrencyId = '';
-
   String selectedGovernorateArabic = '';
   String selectedGovernorateEnglish = '';
   String selectedGovernorateId = '';
 
-  late Future<List<Currency>> currencyListFuture;
+  String selectedServicesArabic = '';
+  String selectedServicesEnglish = '';
+  String selectedServicesId = '';
+
   late Future<List<Government>> governmentListFuture;
   late Future<List<Categorygroups>> categorylistfuture;
+  late Future<List<Services>> servicesListFuture;
 
   @override
   void initState() {
     super.initState();
-    currencyListFuture = loadCurrencyFromHive();
+    selectedServicesArabic = widget.item.serviceName;
+    selectedServicesEnglish = widget.item.serviceEName;
+    selectedServicesId = widget.item.serviceId.toString();
     governmentListFuture = loadGovernmentFromHive();
     categorylistfuture = loadCattegoryyFromHive();
+    servicesListFuture = loadServicesFromHive();
 
     nameofadd.text = widget.item.name;
     // phoneController.text = widget.item.phone;
@@ -68,31 +71,42 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
     selectedCategoryEnglish = widget.item.groupEName;
     selectedCategoryId = widget.item.groupId.toString();
 
-    selectedCurrencyArabic = widget.item.currencyName;
-    selectedCurrencyEnglish = widget.item.currencyEName;
-    selectedCurrencyId = widget.item.currencyId.toString();
-
     selectedGovernorateArabic = widget.item.area;
     selectedGovernorateEnglish = widget.item.area;
     // selectedGovernorateId = widget.item.regionId.toString();
   }
 
-  Future<List<Currency>> loadCurrencyFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "currency");
-    if (rawData == null) return [];
-    return rawData.map((e) => Currency.fromJson(e as Map<String, dynamic>)).toList();
-  }
-
   Future<List<Categorygroups>> loadCattegoryyFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "category");
+    final rawData = await HiveCrudManager.readList(
+      "shared_data_box",
+      "category",
+    );
     if (rawData == null) return [];
-    return rawData.map((e) => Categorygroups.fromJson(e as Map<String, dynamic>)).toList();
+    return rawData
+        .map((e) => Categorygroups.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Future<List<Government>> loadGovernmentFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "government");
+    final rawData = await HiveCrudManager.readList(
+      "shared_data_box",
+      "government",
+    );
     if (rawData == null) return [];
-    return rawData.map((e) => Government.fromJson(e as Map<String, dynamic>)).toList();
+    return rawData
+        .map((e) => Government.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<Services>> loadServicesFromHive() async {
+    final rawData = await HiveCrudManager.readList(
+      "shared_data_box",
+      "services",
+    );
+    if (rawData == null) return [];
+    return rawData
+        .map((e) => Services.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   @override
@@ -100,7 +114,9 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
     return BlocProvider(
       create: (context) {
         final cubit = GetIt.instance<AddadvertisminteCubit>();
-        cubit.oldImage = (widget.item.advertisementImages ?? []).map((e) => e.imageName).toList();
+        cubit.oldImage = (widget.item.advertisementImages ?? [])
+            .map((e) => e.imageName)
+            .toList();
         return cubit;
       },
       child: Scaffold(
@@ -110,7 +126,10 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text("تعديل الإعلان", style: TextStyle(color: Colors.white)),
+          title: const Text(
+            "تعديل الإعلان",
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: AppColors.mainAppColor,
         ),
         body: Padding(
@@ -126,41 +145,44 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
                   ),
                   PriceCategory(
                     priceController: priceController,
-                    currencyListFuture: currencyListFuture,
                     categorylistfuture: categorylistfuture,
                     governmentListFuture: governmentListFuture,
+                    servicesListFuture: servicesListFuture,
                     selectedGovernorate: selectedGovernorate,
-                    selectedCurrency: selectedCurrency,
+                    selectedServices: selectedServices,
                     selectedCloseReplies: selectedCloseReplies,
                     category: category,
-                    onGovernorateChanged: (val) => setState(() => selectedGovernorate = val ?? ''),
-                    onCurrencyChanged: (val) => setState(() => selectedCurrency = val ?? ''),
-                    onCloseRepliesChanged: (val) => setState(() => selectedCloseReplies = val ?? ''),
-                    onCategoryChanged: (val) => setState(() => category = val ?? ''),
+                    onGovernorateChanged: (val) =>
+                        setState(() => selectedGovernorate = val),
+                    onServicesChanged: (val) =>
+                        setState(() => selectedServices = val),
+                    onCloseRepliesChanged: (val) =>
+                        setState(() => selectedCloseReplies = val ?? 'لا'),
+                    onCategoryChanged: (val) => setState(() => category = val),
                     onGovernorateSelected: (ar, en, id) => setState(() {
                       selectedGovernorateArabic = ar;
                       selectedGovernorateEnglish = en;
                       selectedGovernorateId = id;
+                    }),
+                    onServicesSelected: (ar, en, id) => setState(() {
+                      selectedServicesArabic = ar;
+                      selectedServicesEnglish = en;
+                      selectedServicesId = id;
                     }),
                     onCategorySelected: (ar, en, id) => setState(() {
                       selectedCategoryArabic = ar;
                       selectedCategoryEnglish = en;
                       selectedCategoryId = id;
                     }),
-                    onCurrencySelected: (ar, en, id) => setState(() {
-                      selectedCurrencyArabic = ar;
-                      selectedCurrencyEnglish = en;
-                      selectedCurrencyId = id;
-                    }),
                     selectedCategoryArabic: selectedCategoryArabic,
                     selectedCategoryEnglish: selectedCategoryEnglish,
                     selectedCategoryId: selectedCategoryId,
-                    selectedCurrencyArabic: selectedCurrencyArabic,
-                    selectedCurrencyEnglish: selectedCurrencyEnglish,
-                    selectedCurrencyId: selectedCurrencyId,
                     selectedGovernorateArabic: selectedGovernorateArabic,
                     selectedGovernorateEnglish: selectedGovernorateEnglish,
                     selectedGovernorateId: selectedGovernorateId,
+                    selectedServicesArabic: selectedServicesArabic,
+                    selectedServicesEnglish: selectedServicesEnglish,
+                    selectedServicesId: selectedServicesId,
                   ),
                   const ImageCardEdit(),
                   const Divider(thickness: 1, color: Color(0xff868686)),

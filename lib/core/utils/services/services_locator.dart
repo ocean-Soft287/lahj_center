@@ -10,6 +10,9 @@ import 'package:lahijcenter/Feature/MyFavoriteAds/manger/favourite_cubit.dart';
 import 'package:lahijcenter/Feature/Search/data/repo/search_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo_impl.dart';
+import 'package:lahijcenter/Feature/profile/data/repo/new_password_repo.dart';
+import 'package:lahijcenter/Feature/profile/data/repo/new_password_repo_impl.dart';
+import 'package:lahijcenter/Feature/profile/manager/new_password_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
 
@@ -130,6 +133,9 @@ void setup() {
 sl.registerFactory<UpdateProfileCubit>((
 
 )=>UpdateProfileCubit(sl<UpdateProfileRepo>()));
+// new password
+sl.registerLazySingleton<NewPasswordRepo>(()=>NewPasswordRepoImpl(dioConsumer: sl<DioConsumer>()));
+sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>()));
 
 
 
