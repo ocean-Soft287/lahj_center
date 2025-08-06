@@ -12,67 +12,32 @@ import '../../../../core/network/remote/encrupt.dart';
 import '../../../../core/utils/api/endpoint.dart';
 import '../../../../../core/utils/api/dio_consumer.dart';
 import '../../../Home/Data/model/currency_model.dart';
+import '../model/currency.dart';
 import '../model/government_model.dart';
 import '../model/group.dart';
 import '../model/services.dart';
-
 class Addadvertisminterepoimp implements Addadvertisminterepo {
   final DioConsumer dioConsumer;
 
-  // Use an in-memory cache (just a variable for now, or you could use something like SharedPreferences for persistence)
   List<dynamic> cachedCurrencyData = [];
   List<dynamic> cachedGovernmentData = [];
 
   Addadvertisminterepoimp({required this.dioConsumer});
 
+  Map<String, dynamic> convertToMapStringDynamic(Map input) {
+    return input.map((key, value) => MapEntry(key.toString(), value));
+  }
+
   @override
-  Future<Either<Failure, List<Currency>>> getcurrency() async {
+  Future<Either<Failure, List<ModelCurrency>>> getcurrency() async {
     try {
-      print('🔍 Calling Currency API: ${EndPoint.getcurrency}');
       final response = await dioConsumer.get(EndPoint.getcurrency);
-
-
-
       if (response is List) {
-        if (response.isNotEmpty) {
-        } else {
-        }
-
-        try {
-          final List<Currency> currencies = [];
-
-          for (int i = 0; i < response.length; i++) {
-            final item = response[i];
-
-
-            if (item is Map) {
-
-              try {
-                // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
-                final Map<String, dynamic> convertedItem = {};
-                item.forEach((key, value) {
-                  convertedItem[key.toString()] = value;
-                });
-
-                final currencyItem = Currency.fromJson(convertedItem);
-                currencies.add(currencyItem);
-
-              } catch (parseError) {
-
-              }
-            } else {
-
-            }
-          }
-
-          if (currencies.isNotEmpty) {
-          }
-          return Right(currencies);
-        } catch (parseError) {
-          return Left(
-            ServerFailure('فشل في تحليل بيانات العملات: $parseError'),
-          );
-        }
+        final List<ModelCurrency> currencies = response
+            .whereType<Map<String, dynamic>>()
+            .map((item) => ModelCurrency.fromJson(item))
+            .toList();
+        return Right(currencies);
       } else {
         return Left(ServerFailure('فشل في جلب العملات: البيانات غير متوقعة'));
       }
@@ -84,65 +49,24 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
   @override
   Future<Either<Failure, List<Government>>> getGovernment() async {
     try {
-
-      // Add timeout
-      final response = await dioConsumer
-          .get(EndPoint.getAllGovernorates)
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () {
-              throw Exception(
-                'Timeout: Government API took too long to respond',
-              );
-            },
-          );
-
+      final response = await dioConsumer.get(EndPoint.getAllGovernorates).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw Exception('Timeout: Government API took too long');
+        },
+      );
 
       if (response == null) {
-        return Left(
-          ServerFailure('فشل في جلب المحافظات: استجابة فارغة من الخادم'),
-        );
+        return Left(ServerFailure('فشل في جلب المحافظات: استجابة فارغة'));
       }
 
       if (response is List) {
-        if (response.isNotEmpty) {
-        } else {
-        }
+        final List<Government> governments = response
+            .whereType<Map>()
+            .map((item) => Government.fromJson(convertToMapStringDynamic(item)))
+            .toList();
 
-        try {
-          final List<Government> governments = [];
-
-          for (int i = 0; i < response.length; i++) {
-            final item = response[i];
-
-
-            if (item is Map) {
-
-              try {
-                // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
-                final Map<String, dynamic> convertedItem = {};
-                item.forEach((key, value) {
-                  convertedItem[key.toString()] = value;
-                });
-
-                final governmentItem = Government.fromJson(convertedItem);
-                governments.add(governmentItem);
-
-              } catch (parseError) {
-                // Continue with other items instead of failing completely
-              }
-            } else {
-            }
-          }
-
-          if (governments.isNotEmpty) {
-          }
-          return Right(governments);
-        } catch (parseError) {
-          return Left(
-            ServerFailure('فشل في تحليل بيانات المحافظات: $parseError'),
-          );
-        }
+        return Right(governments);
       } else {
         return Left(ServerFailure('فشل في جلب المحافظات: البيانات غير متوقعة'));
       }
@@ -154,11 +78,12 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
     }
   }
 
+  @override
   Future<Either<Failure, List<Group>>> getgroup() async {
     try {
       final response = await dioConsumer.get(EndPoint.getallGroups);
       final List<Group> groups = (response as List)
-          .map((e) => Group.fromJson(e))
+          .map((e) => Group.fromJson(convertToMapStringDynamic(e)))
           .toList();
       return Right(groups);
     } catch (e) {
@@ -169,170 +94,61 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
   @override
   Future<Either<Failure, List<Services>>> getServices() async {
     try {
+      final response = await dioConsumer.get(EndPoint.getallServices);
 
-      // Add timeout
-      final response = await dioConsumer
-          .get(EndPoint.getallServices)
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () {
-              throw Exception('Timeout: Services API took too long to respond');
-            },
-          );
-
-
-
-
-      if (response == null) {
-
-        return Left(
-          ServerFailure('فشل في جلب الخدمات: استجابة فارغة من الخادم'),
-        );
+      if (response == null || response is! List) {
+        return Left(ServerFailure('البيانات غير متوقعة'));
       }
 
-      if (response is List) {
-        if (response.isNotEmpty) {
+      final List<Services> services = (response as List)
+          .map((item) => Services.fromJson(
+          Map<String, dynamic>.from(jsonDecode(jsonEncode(item)))))
+          .toList();
 
-
-          // Check if first item is Map
-          if (response.first is Map) {
-
-            final firstItem = response.first as Map;
-
-          }
-        } else {
-
-        }
-
-        try {
-
-          final List<Services> services = [];
-
-          for (int i = 0; i < response.length; i++) {
-            final item = response[i];
-
-            if (item is Map) {
-              try {
-                // Convert Map<dynamic, dynamic> to Map<String, dynamic> safely
-                final Map<String, dynamic> convertedItem = {};
-                item.forEach((key, value) {
-                  convertedItem[key.toString()] = value;
-                });
-
-                final servicesItem = Services.fromJson(convertedItem);
-                services.add(servicesItem);
-
-              } catch (parseError) {
-
-                // Continue with other items instead of failing completely
-              }
-            } else {
-            }
-          }
-
-          if (services.isNotEmpty) {
-
-
-          } else {
-          }
-          return Right(services);
-        } catch (parseError) {
-          return Left(
-            ServerFailure('فشل في تحليل بيانات الخدمات: $parseError'),
-          );
-        }
-      } else {
-        return Left(ServerFailure('فشل في جلب الخدمات: البيانات غير متوقعة'));
-      }
+      return Right(services);
     } catch (e) {
-      if (e.toString().contains('Timeout')) {
-        return Left(ServerFailure('فشل في جلب الخدمات: انتهت مهلة الاتصال'));
-      }
       return Left(ServerFailure('فشل في جلب الخدمات: $e'));
     }
   }
 
+  /// ✅ دالة الإضافة بعد التعديل
   @override
-  Future<Either<Failure, String>> addaddvertisminte({
-    required int id,
+  Future<Either<Failure, String>> addAdvertisminte({
     required String name,
     required String phone,
     required int groupId,
-    required String groupName,
-    required String groupEName,
     required int serviceId,
-    required String serviceName,
-    required String serviceEName,
     required double price,
+    required bool isCloseReplies,
     required int currencyId,
-    required String currencyName,
-    required String currencyEName,
-    required int regionId,
-    required String regionName,
-    required String regionEName,
+    required int governorateId,
     required String area,
     required String description,
-    required int customerId,
-    required String customerName,
-    required String customerEName,
-    required String date,
-    required bool isCloseReplies,
-    required int stateId,
-    required String stateName,
-    required String stateEName,
     required List<File> images,
-    String? deletionReason,
   }) async {
     try {
       final Map<String, dynamic> payload = {
-        "Id": id,
         "Name": name,
         "Phone": phone,
         "GroupId": groupId,
-        "GroupName": groupName,
-        "GroupEName": groupEName,
         "ServiceId": serviceId,
-        "ServiceName": serviceName,
-        "ServiceEName": serviceEName,
         "Price": price,
+        "IsCloseReplies": isCloseReplies,
         "CurrencyId": currencyId,
-        "CurrencyName": currencyName,
-        "CurrencyEName": currencyEName,
-        "RegionId": regionId,
-        "RegionName": regionName,
-        "RegionEName": regionEName,
+        "StateId": governorateId,
         "Area": area,
         "Discription": description,
-        "CustomerId": customerId,
-        "CustomerName": customerName,
-        "CustomerEName": customerEName,
-        "Date": date,
-        "IsCloseReplies": isCloseReplies,
-        "StateId": stateId,
-        "StateName": stateName,
-        "StateEName": stateEName,
-        "DeletionReason": deletionReason,
       };
 
-      final encryptedDatapayload = encryptData(payload, privateKey, publicKey);
+      final encryptedData = encryptData(payload, privateKey, publicKey);
 
       final formData = FormData();
-      formData.fields.add(MapEntry("advertisement", encryptedDatapayload));
+      formData.fields.add(MapEntry("advertisement", encryptedData));
 
-      for (var i = 0; i < images.length; i++) {
-        final image = images[i];
-
-        if (!await image.exists()) {
-          continue;
-        }
-
+      for (var image in images) {
+        if (!await image.exists()) continue;
         final fileName = image.path.split('/').last;
-
-        final multipartFile = await MultipartFile.fromFile(
-          image.path,
-          filename: fileName,
-        );
-
+        final multipartFile = await MultipartFile.fromFile(image.path, filename: fileName);
         formData.files.add(MapEntry('images', multipartFile));
       }
 
@@ -343,36 +159,21 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
       );
 
       if (response != null && response.toString().isNotEmpty) {
-        try {
-          final decryptedText = decrypt(
-            response.toString(),
-            privateKey,
-            publicKey,
-          );
-          final String jsonData = jsonDecode(decryptedText);
-          return Right(jsonData);
-        } catch (e) {
-          return Left(
-            ServerFailure(
-              ' Failed to process server response: ${e.toString()}',
-            ),
-          );
-        }
+        final decryptedText = decrypt(response.toString(), privateKey, publicKey);
+        final String jsonData = jsonDecode(decryptedText);
+        return Right(jsonData);
       } else {
-        return const Left(
-          ServerFailure(' Empty or null response from server'),
-        );
+        return const Left(ServerFailure('Empty or null response from server'));
       }
     } catch (e) {
       if (e is DioException) {
         return Left(ServerFailure('Network error: ${e.message}'));
       }
-      return Left(
-        ServerFailure('Failed to send advertisement: ${e.toString()}'),
-      );
+      return Left(ServerFailure('Failed to send advertisement: ${e.toString()}'));
     }
   }
 
+  /// باقي الدوال كما هي بدون تعديل
   @override
   Future<Either<Failure, String>> edit({
     required int id,
@@ -435,19 +236,14 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         "StateEName": stateEName,
         "DeletionReason": deletionReason,
       };
-      print(payload);
-      final encryptedDatapayload = encryptData(payload, privateKey, publicKey);
-      print(encryptedDatapayload);
 
+      final encryptedDatapayload = encryptData(payload, privateKey, publicKey);
       final formData = FormData();
       formData.fields.add(MapEntry("advertisement", encryptedDatapayload));
 
       final allImages = [...images];
-
-
       for (var name in oldImage) {
-        final url =
-            'http://78.89.159.126:9393/TheOneLahjAPI/AdvertImages/$name';
+        final url = 'http://78.89.159.126:9393/TheOneLahjAPI/AdvertImages/$name';
         try {
           final response = await http.get(Uri.parse(url));
           if (response.statusCode == 200) {
@@ -457,19 +253,13 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
             await file.writeAsBytes(response.bodyBytes);
             allImages.add(file);
           }
-        } catch (e) {
-          print(" Error downloading old image $name: ${e.toString()}");
-        }
+        } catch (_) {}
       }
 
       for (var image in allImages) {
         if (!await image.exists()) continue;
-
         final fileName = image.path.split('/').last;
-        final multipartFile = await MultipartFile.fromFile(
-          image.path,
-          filename: fileName,
-        );
+        final multipartFile = await MultipartFile.fromFile(image.path, filename: fileName);
         formData.files.add(MapEntry('images', multipartFile));
       }
 
@@ -479,28 +269,18 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         data: formData,
       );
 
-      print(response);
       if (response != null && response.toString().isNotEmpty) {
-        try {
-          final decryptedText = decrypt(
-            response.toString(),
-            privateKey,
-            publicKey,
-          );
-
-          final String jsonData = jsonDecode(decryptedText);
-          return Right(jsonData);
-        } catch (e) {
-          return Left(ServerFailure(' Decryption failed: ${e.toString()}'));
-        }
+        final decryptedText = decrypt(response.toString(), privateKey, publicKey);
+        final String jsonData = jsonDecode(decryptedText);
+        return Right(jsonData);
       } else {
-        return const Left(ServerFailure(' Server returned empty response'));
+        return const Left(ServerFailure('Server returned empty response'));
       }
     } catch (e) {
       if (e is DioException) {
-        return Left(ServerFailure(' Network error: ${e.message}'));
+        return Left(ServerFailure('Network error: ${e.message}'));
       }
-      return Left(ServerFailure(' Error: ${e.toString()}'));
+      return Left(ServerFailure('Error: ${e.toString()}'));
     }
   }
 }

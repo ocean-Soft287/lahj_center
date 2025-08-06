@@ -18,7 +18,7 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   final Addadvertisminterepo addadvertisminterepo;
   final Homerepo homerepo;
 
-  final List<Currency> currency = [];
+  final List<ModelCurrency> currency = [];
   final List<Government> government = [];
   final List<Categorygroups> category = [];
   final List<Services> services = [];
@@ -45,81 +45,49 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   }
 
   Future<void> addAdvertisement({
-    required int id,
     required String name,
     required String phone,
     required int groupId,
-    required String groupName,
-    required String groupEName,
     required int serviceId,
-    required String serviceName,
-    required String serviceEName,
     required double price,
+    required bool isCloseReplies,
     required int currencyId,
-    required String currencyName,
-    required String currencyEName,
-    required int regionId,
-    required String regionName,
-    required String regionEName,
+    required int governorateId,
     required String area,
     required String description,
-    required int customerId,
-    required String customerName,
-    required String customerEName,
-    required String date,
-    required bool isCloseReplies,
-    required int stateId,
-    required String stateName,
-    required String stateEName,
-    String? deletionReason,
   }) async {
     emit(AddadvertisminteLoading());
 
     try {
+      // تحويل الصور من XFile إلى File
       final List<File> imageFiles = galleryImage
           .whereType<XFile>()
           .map((xfile) => File(xfile.path))
           .toList();
 
-      final result = await addadvertisminterepo.addaddvertisminte(
-        id: id,
+      final result = await addadvertisminterepo.addAdvertisminte(
         name: name,
         phone: phone,
         groupId: groupId,
-        groupName: groupName,
-        groupEName: groupEName,
         serviceId: serviceId,
-        serviceName: serviceName,
-        serviceEName: serviceEName,
         price: price,
+        isCloseReplies: isCloseReplies,
         currencyId: currencyId,
-        currencyName: currencyName,
-        currencyEName: currencyEName,
-        regionId: regionId,
-        regionName: regionName,
-        regionEName: regionEName,
+        governorateId: governorateId,
         area: area,
         description: description,
-        customerId: customerId,
-        customerName: customerName,
-        customerEName: customerEName,
-        date: date,
-        isCloseReplies: isCloseReplies,
-        stateId: stateId,
-        stateName: stateName,
-        stateEName: stateEName,
         images: imageFiles,
-        deletionReason: deletionReason,
       );
 
       result.fold(
-        (failure) => emit(AddadvertisminteFailure(failure.message)),
-        (data) => emit(AddadvertisminteprocessSuccess(data)),
+            (failure) => emit(AddadvertisminteFailure(failure.message)),
+            (data) => emit(AddadvertisminteprocessSuccess(data)),
       );
     } catch (e) {
       emit(AddadvertisminteFailure("Unexpected error: ${e.toString()}"));
     }
   }
+
 
   Future<void> edit({
     required int id,
@@ -234,18 +202,15 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
     emit(AddadvertisminteLoading());
 
     final result = await addadvertisminterepo.getcurrency();
+
     result.fold(
-      (failure) {
+          (failure) {
         emit(AddadvertisminteFailure(failure.message));
       },
-      (data) async {
+          (data) async {
         if (data.isNotEmpty) {
           currency.clear();
-          currency.addAll(
-            data
-                .map((item) => Currency.fromJson(item as Map<String, dynamic>))
-                .toList(),
-          );
+          currency.addAll(data);
 
           await HiveCrudManager.saveList(
             "shared_data_box",
@@ -255,11 +220,14 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
 
           emit(AddadvertisminteSuccess(currency));
         } else {
-          emit(AddadvertisminteFailure("No data found"));
+          emit(AddadvertisminteFailure("لا توجد عملات متاحة"));
         }
       },
     );
   }
+
+
+
 
   void fetchgovermnet() async {
     emit(AddadvertisminteLoading());

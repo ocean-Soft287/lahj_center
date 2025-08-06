@@ -8,17 +8,14 @@ class Government {
   Government({required this.id, required this.arName, required this.enName});
 
   factory Government.fromJson(Map<String, dynamic> json) {
-    print('🔍 Parsing Government JSON: $json');
 
     final id = json['id'];
     final arName = json['arName'];
     final enName = json['enName'];
 
-    print(
-      '🔍 Government Parsed Values: id=$id (type: ${id.runtimeType}), arName=$arName, enName=$enName',
-    );
 
-    // Handle different id types
+
+
     int parsedId;
     if (id == null) {
       parsedId = 0;
@@ -30,7 +27,6 @@ class Government {
       parsedId = 0;
     }
 
-    print('🔍 Government Final Parsed ID: $parsedId');
 
     return Government(id: parsedId, arName: arName ?? '', enName: enName ?? '');
   }

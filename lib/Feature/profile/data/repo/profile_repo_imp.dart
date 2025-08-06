@@ -18,10 +18,10 @@ class Profilerepoimp implements Profilerepo {
 
   @override
   Future<Either<Failure, dynamic>> deleteprofilebyid() async {
-    try {
-      final userid = await SecureStorageService.read(
-        SecureStorageService.customerid,
-      );
+      try {
+        final userid = await SecureStorageService.read(
+          SecureStorageService.customerid,
+        );
 
       final response = await dioConsumer.get(
         "${EndPoint.deleteprofile}$userid",

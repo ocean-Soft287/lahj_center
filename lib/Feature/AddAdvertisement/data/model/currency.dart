@@ -1,23 +1,21 @@
 import 'package:equatable/equatable.dart';
 
-class Currency {
+class ModelCurrency {
   final int id;
   final String arName;
   final String enName;
 
-  Currency({required this.id, required this.arName, required this.enName});
+  ModelCurrency({required this.id, required this.arName, required this.enName});
 
   // fromJson
-  factory Currency.fromJson(Map<String, dynamic> json) {
-    print('🔍 Parsing Currency JSON: $json');
+  factory ModelCurrency.fromJson(Map<String, dynamic> json) {
+
 
     final id = json['id'];
     final arName = json['arName'];
     final enName = json['enName'];
 
-    print(
-      '🔍 Currency Parsed Values: id=$id (type: ${id.runtimeType}), arName=$arName, enName=$enName',
-    );
+
 
     // Handle different id types
     int parsedId;
@@ -31,9 +29,8 @@ class Currency {
       parsedId = 0;
     }
 
-    print('🔍 Currency Final Parsed ID: $parsedId');
 
-    return Currency(id: parsedId, arName: arName ?? '', enName: enName ?? '');
+    return ModelCurrency(id: parsedId, arName: arName ?? '', enName: enName ?? '');
   }
 
   // toJson

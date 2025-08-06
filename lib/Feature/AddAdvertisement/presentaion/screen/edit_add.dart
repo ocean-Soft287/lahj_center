@@ -8,6 +8,7 @@ import '../../../Home/Data/model/categories.dart';
 import '../../../Home/Data/model/item_model.dart';
 import '../../data/model/government_model.dart';
 import '../../data/model/services.dart';
+import '../../data/model/currency.dart';
 import '../../manger/addadvertisminte_cubit.dart';
 import '../widget/comment_section.dart';
 import '../widget/image_card_edit.dart';
@@ -19,8 +20,7 @@ class EditAdvertisementScreen extends StatefulWidget {
   final Item item;
 
   @override
-  State<EditAdvertisementScreen> createState() =>
-      _EditAdvertisementScreenState();
+  State<EditAdvertisementScreen> createState() => _EditAdvertisementScreenState();
 }
 
 class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
@@ -29,10 +29,17 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController comment = TextEditingController();
+
   String? selectedGovernorate;
   String? category;
   String selectedCloseReplies = 'لا';
   String? selectedServices;
+
+  // Currency
+  String? selectedCurrency;
+  String selectedCurrencyArabic = '';
+  String selectedCurrencyEnglish = '';
+  String selectedCurrencyId = '';
 
   String selectedCategoryArabic = '';
   String selectedCategoryEnglish = '';
@@ -49,22 +56,22 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
   late Future<List<Government>> governmentListFuture;
   late Future<List<Categorygroups>> categorylistfuture;
   late Future<List<Services>> servicesListFuture;
+  late Future<List<ModelCurrency>> currencyListFuture;
 
   @override
   void initState() {
     super.initState();
+
     selectedServicesArabic = widget.item.serviceName;
     selectedServicesEnglish = widget.item.serviceEName;
     selectedServicesId = widget.item.serviceId.toString();
-    governmentListFuture = loadGovernmentFromHive();
-    categorylistfuture = loadCattegoryyFromHive();
-    servicesListFuture = loadServicesFromHive();
+
+    selectedCurrencyArabic = widget.item.currencyName;
+    selectedCurrencyEnglish = widget.item.currencyEName;
+    selectedCurrencyId = widget.item.currencyId.toString();
 
     nameofadd.text = widget.item.name;
-    // phoneController.text = widget.item.phone;
     priceController.text = widget.item.price.toString();
-    // comment.text = widget.item.discription ?? '';
-
     selectedCloseReplies = widget.item.isCloseReplies ? 'نعم' : 'لا';
 
     selectedCategoryArabic = widget.item.groupName;
@@ -73,40 +80,35 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
 
     selectedGovernorateArabic = widget.item.area;
     selectedGovernorateEnglish = widget.item.area;
-    // selectedGovernorateId = widget.item.regionId.toString();
+
+    governmentListFuture = loadGovernmentFromHive();
+    categorylistfuture = loadCattegoryyFromHive();
+    servicesListFuture = loadServicesFromHive();
+    currencyListFuture = loadCurrencyFromHive();
   }
 
   Future<List<Categorygroups>> loadCattegoryyFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "category",
-    );
+    final rawData = await HiveCrudManager.readList("shared_data_box", "category");
     if (rawData == null) return [];
-    return rawData
-        .map((e) => Categorygroups.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return rawData.map((e) => Categorygroups.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<Government>> loadGovernmentFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "government",
-    );
+    final rawData = await HiveCrudManager.readList("shared_data_box", "government");
     if (rawData == null) return [];
-    return rawData
-        .map((e) => Government.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return rawData.map((e) => Government.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<Services>> loadServicesFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "services",
-    );
+    final rawData = await HiveCrudManager.readList("shared_data_box", "services");
     if (rawData == null) return [];
-    return rawData
-        .map((e) => Services.fromJson(e as Map<String, dynamic>))
-        .toList();
+    return rawData.map((e) => Services.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  Future<List<ModelCurrency>> loadCurrencyFromHive() async {
+    final rawData = await HiveCrudManager.readList("shared_data_box", "currency");
+    if (rawData == null) return [];
+    return rawData.map((e) => ModelCurrency.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   @override
@@ -114,9 +116,7 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
     return BlocProvider(
       create: (context) {
         final cubit = GetIt.instance<AddadvertisminteCubit>();
-        cubit.oldImage = (widget.item.advertisementImages ?? [])
-            .map((e) => e.imageName)
-            .toList();
+        cubit.oldImage = (widget.item.advertisementImages ?? []).map((e) => e.imageName).toList();
         return cubit;
       },
       child: Scaffold(
@@ -126,10 +126,7 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            "تعديل الإعلان",
-            style: TextStyle(color: Colors.white),
-          ),
+          title: const Text("تعديل الإعلان", style: TextStyle(color: Colors.white)),
           backgroundColor: AppColors.mainAppColor,
         ),
         body: Padding(
@@ -148,32 +145,45 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
                     categorylistfuture: categorylistfuture,
                     governmentListFuture: governmentListFuture,
                     servicesListFuture: servicesListFuture,
+                    currencyListFuture: currencyListFuture,
                     selectedGovernorate: selectedGovernorate,
                     selectedServices: selectedServices,
                     selectedCloseReplies: selectedCloseReplies,
                     category: category,
-                    onGovernorateChanged: (val) =>
-                        setState(() => selectedGovernorate = val),
-                    onServicesChanged: (val) =>
-                        setState(() => selectedServices = val),
-                    onCloseRepliesChanged: (val) =>
-                        setState(() => selectedCloseReplies = val ?? 'لا'),
+                    selectedCurrency: selectedCurrency,
+                    onGovernorateChanged: (val) => setState(() => selectedGovernorate = val),
+                    onServicesChanged: (val) => setState(() => selectedServices = val),
+                    onCloseRepliesChanged: (val) => setState(() => selectedCloseReplies = val ?? 'لا'),
                     onCategoryChanged: (val) => setState(() => category = val),
-                    onGovernorateSelected: (ar, en, id) => setState(() {
-                      selectedGovernorateArabic = ar;
-                      selectedGovernorateEnglish = en;
-                      selectedGovernorateId = id;
-                    }),
-                    onServicesSelected: (ar, en, id) => setState(() {
-                      selectedServicesArabic = ar;
-                      selectedServicesEnglish = en;
-                      selectedServicesId = id;
-                    }),
-                    onCategorySelected: (ar, en, id) => setState(() {
-                      selectedCategoryArabic = ar;
-                      selectedCategoryEnglish = en;
-                      selectedCategoryId = id;
-                    }),
+                    onCurrencyChanged: (val) => setState(() => selectedCurrency = val),
+                    onGovernorateSelected: (ar, en, id) {
+                      setState(() {
+                        selectedGovernorateArabic = ar;
+                        selectedGovernorateEnglish = en;
+                        selectedGovernorateId = id;
+                      });
+                    },
+                    onServicesSelected: (ar, en, id) {
+                      setState(() {
+                        selectedServicesArabic = ar;
+                        selectedServicesEnglish = en;
+                        selectedServicesId = id;
+                      });
+                    },
+                    onCategorySelected: (ar, en, id) {
+                      setState(() {
+                        selectedCategoryArabic = ar;
+                        selectedCategoryEnglish = en;
+                        selectedCategoryId = id;
+                      });
+                    },
+                    onCurrencySelected: (ar, en, id) {
+                      setState(() {
+                        selectedCurrencyArabic = ar;
+                        selectedCurrencyEnglish = en;
+                        selectedCurrencyId = id;
+                      });
+                    },
                     selectedCategoryArabic: selectedCategoryArabic,
                     selectedCategoryEnglish: selectedCategoryEnglish,
                     selectedCategoryId: selectedCategoryId,
@@ -183,6 +193,9 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
                     selectedServicesArabic: selectedServicesArabic,
                     selectedServicesEnglish: selectedServicesEnglish,
                     selectedServicesId: selectedServicesId,
+                    selectedCurrencyArabic: selectedCurrencyArabic,
+                    selectedCurrencyEnglish: selectedCurrencyEnglish,
+                    selectedCurrencyId: selectedCurrencyId,
                   ),
                   const ImageCardEdit(),
                   const Divider(thickness: 1, color: Color(0xff868686)),
@@ -193,42 +206,7 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
                       return DefaultButton(
                         text: "تحديث الإعلان",
                         function: () async {
-                          // final id = widget.item.id;
-                          // final customerId = widget.item.;
-                          // final username = await SecureStorageService.read(SecureStorageService.name) ?? '';
-                          //
-                          // if (_formKey.currentState!.validate()) {
-                          //   cubit.edit(
-                          //     id: id,
-                          //     name: nameofadd.text,
-                          //     phone: phoneController.text,
-                          //     groupId: int.tryParse(selectedCategoryId) ?? 0,
-                          //     groupName: selectedCategoryArabic,
-                          //     groupEName: selectedCategoryEnglish,
-                          //     serviceId: int.tryParse(selectedCategoryId) ?? 0,
-                          //     serviceName: selectedCategoryEnglish,
-                          //     serviceEName: selectedCategoryArabic,
-                          //     price: double.tryParse(priceController.text) ?? 0,
-                          //     currencyId: int.tryParse(selectedCurrencyId) ?? 0,
-                          //     currencyName: selectedCurrencyArabic,
-                          //     currencyEName: selectedCurrencyEnglish,
-                          //     regionId: int.tryParse(selectedGovernorateId) ?? 0,
-                          //     regionName: selectedGovernorateArabic,
-                          //     regionEName: selectedGovernorateEnglish,
-                          //     area: selectedGovernorateArabic,
-                          //     description: comment.text,
-                          //     customerId: customerId,
-                          //     customerName: username,
-                          //     customerEName: username,
-                          //     date: DateTime.now().toIso8601String(),
-                          //     isCloseReplies: selectedCloseReplies == "نعم",
-                          //     stateId: 4,
-                          //     stateName: "stateName",
-                          //     stateEName: "stateEName",
-                          //   );
-                          //   print(cubit.oldImage);
-                          //   print(cubit.galleryImage.map((x) => File(x!.path)).toList(),);
-                          // }
+                          // مكان تنفيذ عملية التحديث
                         },
                       );
                     },

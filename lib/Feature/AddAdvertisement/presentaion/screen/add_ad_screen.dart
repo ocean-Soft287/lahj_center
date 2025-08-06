@@ -1,8 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lahijcenter/core/network/local/flutter_secure_storage.dart';
 import '../../../../../../../core/constans/app_colors.dart';
 import '../../../../../../../core/constans/responsve_font.dart';
 import '../../../../../../../core/sharde/widget/default_button.dart';
@@ -11,8 +12,10 @@ import '../../../../core/network/local/hive_crud_manager.dart';
 import '../../../Home/Data/model/categories.dart';
 import '../../data/model/government_model.dart';
 import '../../data/model/services.dart';
+import '../../data/model/currency.dart';
 import '../../manger/addadvertisminte_cubit.dart';
 import '../widget/comment_section.dart';
+import '../widget/custom_ad_field.dart';
 import '../widget/image_card.dart';
 import '../widget/nameadd_mobilewidget.dart';
 import '../widget/pricecategory.dart';
@@ -28,16 +31,18 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController comment = TextEditingController();
+  TextEditingController ereacontroller=TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  // Add flags to prevent multiple API calls
   bool _isLoadingServices = false;
   bool _isLoadingGovernment = false;
+  bool _isLoadingCurrency = false;
 
   String? selectedGovernorate;
   String? category;
   String selectedCloseReplies = 'لا';
   String? selectedServices;
+  String? selectedCurrency;
 
   String selectedCategoryArabic = '';
   String selectedCategoryEnglish = '';
@@ -51,30 +56,38 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
   String selectedServicesEnglish = '';
   String selectedServicesId = '';
 
+  String selectedCurrencyArabic = '';
+  String selectedCurrencyEnglish = '';
+  String selectedCurrencyId = '';
+
   late Future<List<Government>> governmentListFuture;
   late Future<List<Categorygroups>> categorylistfuture;
   late Future<List<Services>> servicesListFuture;
+  late Future<List<ModelCurrency>> currencyListFuture;
 
   @override
   void initState() {
     super.initState();
     governmentListFuture = loadGovernmentFromHive();
     categorylistfuture = loadCattegoryyFromHive();
+    currencyListFuture = loadCurrencyFromHive();
 
-    // Delay API calls to avoid blocking UI
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final cubit = GetIt.instance<AddadvertisminteCubit>();
 
-      // Fetch services if not already loaded
       if (cubit.services.isEmpty && !_isLoadingServices) {
         _isLoadingServices = true;
         cubit.fetchServices();
       }
 
-      // Fetch government if not already loaded
       if (cubit.government.isEmpty && !_isLoadingGovernment) {
         _isLoadingGovernment = true;
         cubit.fetchgovermnet();
+      }
+
+      if (cubit.currency.isEmpty && !_isLoadingCurrency) {
+        _isLoadingCurrency = true;
+        cubit.fetchcurrency();
       }
     });
   }
@@ -84,12 +97,8 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
       "shared_data_box",
       "government",
     );
-    if (rawData == null) {
-      return [];
-    }
-    return rawData
-        .map((e) => Government.fromJson(e as Map<String, dynamic>))
-        .toList();
+    if (rawData == null) return [];
+    return rawData.map((e) => Government.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<Categorygroups>> loadCattegoryyFromHive() async {
@@ -97,12 +106,8 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
       "shared_data_box",
       "category",
     );
-    if (rawData == null) {
-      return [];
-    }
-    return rawData
-        .map((e) => Categorygroups.fromJson(e as Map<String, dynamic>))
-        .toList();
+    if (rawData == null) return [];
+    return rawData.map((e) => Categorygroups.fromJson(e as Map<String, dynamic>)).toList();
   }
 
   Future<List<Services>> loadServicesFromHive() async {
@@ -110,22 +115,32 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
       "shared_data_box",
       "services",
     );
-    if (rawData == null) {
-      return [];
-    }
-    return rawData
-        .map((e) => Services.fromJson(e as Map<String, dynamic>))
-        .toList();
+    if (rawData == null) return [];
+    return rawData.map((e) => Services.fromJson(Map<String, dynamic>.from(jsonDecode(jsonEncode(e))))).toList();
   }
 
-  Future<List<Services>> getServicesFromCubit(
-    AddadvertisminteCubit cubit,
-  ) async {
+  Future<List<ModelCurrency>> loadCurrencyFromHive() async {
+    final rawData = await HiveCrudManager.readList(
+      "shared_data_box",
+      "currency",
+    );
+    if (rawData == null) return [];
+    return rawData.map((e) => ModelCurrency.fromJson(Map<String, dynamic>.from(jsonDecode(jsonEncode(e))))).toList();
+  }
 
+  Future<List<Services>> getServicesFromCubit(AddadvertisminteCubit cubit) async {
     if (cubit.services.isNotEmpty) {
       return cubit.services;
     } else {
       return await loadServicesFromHive();
+    }
+  }
+
+  Future<List<ModelCurrency>> getCurrencyFromCubit(AddadvertisminteCubit cubit) async {
+    if (cubit.currency.isNotEmpty) {
+      return cubit.currency;
+    } else {
+      return await loadCurrencyFromHive();
     }
   }
 
@@ -167,196 +182,144 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   ),
                   BlocBuilder<AddadvertisminteCubit, AddadvertisminteState>(
                     builder: (context, state) {
-                      AddadvertisminteCubit addadvertisminteCubit =
-                          BlocProvider.of(context);
-
-
-
+                      final cubit = context.read<AddadvertisminteCubit>();
                       return Column(
                         children: [
-                          PriceCategory(
-                            priceController: priceController,
-                            categorylistfuture: categorylistfuture,
-                            governmentListFuture: governmentListFuture,
-                            servicesListFuture: getServicesFromCubit(
-                              addadvertisminteCubit,
-                            ),
-                            selectedGovernorate: selectedGovernorate,
-                            selectedServices: selectedServices,
-                            selectedCloseReplies: selectedCloseReplies,
-                            category: category,
-                            onGovernorateChanged: (val) =>
-                                setState(() => selectedGovernorate = val),
-                            onServicesChanged: (val) =>
-                                setState(() => selectedServices = val),
-                            onCloseRepliesChanged: (val) => setState(
-                              () => selectedCloseReplies = val ?? 'لا',
-                            ),
-                            onCategoryChanged: (val) =>
-                                setState(() => category = val),
-                            onGovernorateSelected: (ar, en, id) => setState(() {
-                              selectedGovernorateArabic = ar;
-                              selectedGovernorateEnglish = en;
-                              selectedGovernorateId = id;
-                            }),
-                            onServicesSelected: (ar, en, id) => setState(() {
-                              selectedServicesArabic = ar;
-                              selectedServicesEnglish = en;
-                              selectedServicesId = id;
-                            }),
-                            onCategorySelected: (ar, en, id) => setState(() {
-                              selectedCategoryArabic = ar;
-                              selectedCategoryEnglish = en;
-                              selectedCategoryId = id;
-                            }),
-                            selectedCategoryArabic: selectedCategoryArabic,
-                            selectedCategoryEnglish: selectedCategoryEnglish,
-                            selectedCategoryId: selectedCategoryId,
-                            selectedGovernorateArabic:
-                                selectedGovernorateArabic,
-                            selectedGovernorateEnglish:
-                                selectedGovernorateEnglish,
-                            selectedGovernorateId: selectedGovernorateId,
-                            selectedServicesArabic: selectedServicesArabic,
-                            selectedServicesEnglish: selectedServicesEnglish,
-                            selectedServicesId: selectedServicesId,
+                          FutureBuilder<List<ModelCurrency>>(
+                            future: getCurrencyFromCubit(cubit),
+                            builder: (context, snapshot) {
+                              final currencyList = snapshot.data ?? [];
+                              return PriceCategory(
+                                priceController: priceController,
+                                categorylistfuture: categorylistfuture,
+                                governmentListFuture: governmentListFuture,
+                                servicesListFuture: getServicesFromCubit(cubit),
+                                currencyListFuture: getCurrencyFromCubit(cubit),
+                                selectedGovernorate: selectedGovernorate,
+                                selectedServices: selectedServices,
+                                selectedCloseReplies: selectedCloseReplies,
+                                category: category,
+                                selectedCurrency: selectedCurrency,
+                                onGovernorateChanged: (val) => setState(() => selectedGovernorate = val),
+                                onServicesChanged: (val) => setState(() => selectedServices = val),
+                                onCloseRepliesChanged: (val) => setState(() => selectedCloseReplies = val ?? 'لا'),
+                                onCategoryChanged: (val) => setState(() => category = val),
+                                onCurrencyChanged: (val) => setState(() => selectedCurrency = val),
+                                onGovernorateSelected: (ar, en, id) {
+                                  setState(() {
+                                    selectedGovernorateArabic = ar;
+                                    selectedGovernorateEnglish = en;
+                                    selectedGovernorateId = id;
+                                  });
+                                },
+                                onServicesSelected: (ar, en, id) {
+                                  setState(() {
+                                    selectedServicesArabic = ar;
+                                    selectedServicesEnglish = en;
+                                    selectedServicesId = id;
+                                  });
+                                },
+                                onCategorySelected: (ar, en, id) {
+                                  setState(() {
+                                    selectedCategoryArabic = ar;
+                                    selectedCategoryEnglish = en;
+                                    selectedCategoryId = id;
+                                  });
+                                },
+                                onCurrencySelected: (ar, en, id) {
+                                  setState(() {
+                                    selectedCurrencyArabic = ar;
+                                    selectedCurrencyEnglish = en;
+                                    selectedCurrencyId = id;
+                                  });
+                                },
+                                selectedCategoryArabic: selectedCategoryArabic,
+                                selectedCategoryEnglish: selectedCategoryEnglish,
+                                selectedCategoryId: selectedCategoryId,
+                                selectedGovernorateArabic: selectedGovernorateArabic,
+                                selectedGovernorateEnglish: selectedGovernorateEnglish,
+                                selectedGovernorateId: selectedGovernorateId,
+                                selectedServicesArabic: selectedServicesArabic,
+                                selectedServicesEnglish: selectedServicesEnglish,
+                                selectedServicesId: selectedServicesId,
+                                selectedCurrencyArabic: selectedCurrencyArabic,
+                                selectedCurrencyEnglish: selectedCurrencyEnglish,
+                                selectedCurrencyId: selectedCurrencyId,
+                              );
+                            },
+                          ),
+                          CustomAdField(
+
+                            label: "المنطقه",
+                            hintText: "اضف اسم المنطقه",
+                            validationMessage: 'برجاء كتابه اسم المنطقه',
+                            controller: ereacontroller,
+                            validator: (value) {
+                              debugPrint("Name Validator: value='$value'");
+                              if (value == null || value.trim().isEmpty) {
+                                debugPrint("Name validation failed: Field is empty");
+                                return 'برجاء كتابه اسم المنطقه';
+                              }
+                              if (value.trim().length < 3) {
+                                debugPrint("Name validation failed: Name too short");
+                                return 'اسم الاعلان يجب أن يكون 3 أحرف على الأقل';
+                              }
+                              return null;
+                            },
                           ),
                           const ImageCard(),
                           const Divider(thickness: 1, color: Color(0xff868686)),
                           CommentSectionrrSW(comment: comment),
-                          DefaultButton(
-                            text: "اضافة الاعلان",
-                            function: () async {
-                              debugPrint(
-                                "الاسم قبل الفاليديشن: ${nameofadd.text}",
-                              );
-                              debugPrint(
-                                "الهاتف قبل الفاليديشن: ${phoneController.text}",
-                              );
-
-                              final username =
-                                  await SecureStorageService.read(
-                                    SecureStorageService.name,
-                                  ) ??
-                                  '';
-                              final id1String = await SecureStorageService.read(
-                                SecureStorageService.customerid,
-                              );
-                              final id1 = int.tryParse(id1String ?? '0');
-
-                              final parsedCategoryId =
-                                  int.tryParse(selectedCategoryId) ?? 0;
-                              final parsedGovernorateId =
-                                  int.tryParse(selectedGovernorateId) ?? 0;
-                              final parsedServicesId =
-                                  int.tryParse(selectedServicesId) ?? 0;
-
-
-                              if (addadvertisminteCubit.galleryImage.length <
-                                  5) {
+                          BlocListener<AddadvertisminteCubit, AddadvertisminteState>(
+                            listener: (context, state) {
+                              if (state is AddadvertisminteprocessSuccess) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      "يجب رفع على الأقل 5 صور للإعلان",
-                                    ),
-                                    backgroundColor: Colors.red,
+                                  SnackBar(
+                                    content: Text("تم إضافة الإعلان بنجاح"),
+                                    backgroundColor: Colors.green,
                                   ),
                                 );
-                                return;
-                              }
-
-
-                              if (addadvertisminteCubit.galleryImage.length >
-                                  8) {
+                                Navigator.pop(context);
+                              } else if (state is AddadvertisminteFailure) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("مسموح بحد أقصى 8 صور فقط"),
+                                  SnackBar(
+                                    content: Text("فشل في إضافة الإعلان: ${state.message}"),
                                     backgroundColor: Colors.red,
                                   ),
-                                );
-                                return;
-                              }
-
-
-                              if (_formKey.currentState!.validate()) {
-                                addadvertisminteCubit.addAdvertisement(
-                                  id: id1 ?? 0,
-                                  name: nameofadd.text,
-                                  phone: phoneController.text,
-                                  groupId: parsedCategoryId,
-                                  groupName: selectedCategoryArabic,
-                                  groupEName: selectedCategoryEnglish,
-                                  serviceId: parsedServicesId,
-                                  serviceName: selectedServicesArabic,
-                                  serviceEName: selectedServicesEnglish,
-                                  price:
-                                      double.tryParse(priceController.text) ??
-                                      0,
-                                  currencyId: 0, // Removed currencyId
-                                  currencyName: '', // Removed currencyName
-                                  currencyEName: '', // Removed currencyEName
-                                  regionId: parsedGovernorateId,
-                                  regionName: selectedGovernorateArabic,
-                                  regionEName: selectedGovernorateEnglish,
-                                  area: selectedGovernorateArabic,
-                                  description: comment.text,
-                                  customerId: id1 ?? 0,
-                                  customerName: username,
-                                  customerEName: username,
-                                  date: DateTime.now().toIso8601String(),
-                                  isCloseReplies: selectedCloseReplies == "نعم",
-                                  stateId: 4,
-                                  stateName: "stateName",
-                                  stateEName: "stateEName",
                                 );
                               }
                             },
+                            child: BlocBuilder<AddadvertisminteCubit, AddadvertisminteState>(
+                              builder:(context,state) {
+
+                             return  DefaultButton(
+                               text: "اضافة الاعلان",
+
+                               function: () async {
+                                 if (_formKey.currentState!.validate()) {
+                                   final cubit = context.read<AddadvertisminteCubit>();
+                                   await cubit.addAdvertisement(
+                                     name: nameofadd.text.trim(),
+                                     phone: phoneController.text.trim(),
+                                     groupId: int.tryParse(selectedCategoryId) ?? 0,
+                                     serviceId: int.tryParse(selectedServicesId) ?? 0,
+                                     price: double.tryParse(priceController.text.trim()) ?? 0.0,
+                                     isCloseReplies: selectedCloseReplies == 'نعم',
+                                     currencyId: int.tryParse(selectedCurrencyId) ?? 0,
+                                     governorateId: int.tryParse(selectedGovernorateId) ?? 0,
+                                     area: ereacontroller.text.trim(),
+                                     description: comment.text.trim(),
+
+                                   );
+                                 }
+                               },
+                             );
+
+
+                              } ),
                           ),
                         ],
                       );
-                    },
-                  ),
-                  BlocListener<AddadvertisminteCubit, AddadvertisminteState>(
-                    listener: (context, state) {
-                      print('🎧 BlocListener - State: ${state.runtimeType}');
-
-                      if (state is AddadvertisminteLoading) {
-
-                      } else if (state is AddadvertisminteSuccess) {
-
-
-                        if (state.data.isNotEmpty) {
-
-                        }
-                        // Reset loading flags when data is loaded
-                        _isLoadingServices = false;
-                        _isLoadingGovernment = false;
-                      } else if (state is AddadvertisminteFailure) {
-
-                        // Reset loading flags on failure
-                        _isLoadingServices = false;
-                        _isLoadingGovernment = false;
-                      } else if (state is AddadvertisminteprocessSuccess) {
-
-                      }
-
-                      // ممكن تحط هنا أي رسالة نجاح مثلاً لو الإعلان تم إضافته بنجاح
-                      if (state is AddadvertisminteprocessSuccess) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("تمت إضافة الإعلان بنجاح"),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        Navigator.pop(context);
-                      } else if (state is AddadvertisminteFailure) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(state.message),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
                     },
                   ),
                 ],

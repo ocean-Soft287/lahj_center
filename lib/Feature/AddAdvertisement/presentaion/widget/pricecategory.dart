@@ -5,6 +5,7 @@ import '../../../../core/constans/responsve_font.dart';
 import '../../../../core/sharde/widget/text_forn_field.dart';
 import '../../../Home/Data/model/categories.dart';
 import '../../../Home/Data/model/currency_model.dart';
+import '../../data/model/currency.dart';
 import '../../data/model/government_model.dart';
 import '../../data/model/services.dart';
 import 'custom_drop_down.dart';
@@ -14,6 +15,11 @@ class PriceCategory extends StatefulWidget {
   final Future<List<Government>> governmentListFuture;
   final Future<List<Categorygroups>> categorylistfuture;
   final Future<List<Services>> servicesListFuture;
+  final Future<List<ModelCurrency>> currencyListFuture;
+  final String? selectedCurrency;
+  final void Function(String?) onCurrencyChanged;
+  final void Function(String, String, String) onCurrencySelected;
+
 
   final String? selectedGovernorate;
   final String? selectedServices;
@@ -42,6 +48,10 @@ class PriceCategory extends StatefulWidget {
 
   const PriceCategory({
     super.key,
+    required this.currencyListFuture,
+    required this.selectedCurrency,
+    required this.onCurrencyChanged,
+    required this.onCurrencySelected,
     required this.priceController,
     required this.governmentListFuture,
     required this.categorylistfuture,
@@ -65,7 +75,7 @@ class PriceCategory extends StatefulWidget {
     required this.selectedServicesId,
     required this.onCategorySelected,
     required this.onGovernorateSelected,
-    required this.onServicesSelected,
+    required this.onServicesSelected, required String selectedCurrencyArabic, required String selectedCurrencyEnglish, required String selectedCurrencyId,
   });
 
   @override
@@ -127,12 +137,12 @@ class _PriceCategoryState extends State<PriceCategory> {
         ),
         const Divider(thickness: 1, color: Color(0xff868686)),
 
-        // السعر
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "السعر",
+              " السعر",
               style: TextStyle(
                 fontFamily: Fonts.font,
                 color: AppColors.mainAppColor,
@@ -141,10 +151,11 @@ class _PriceCategoryState extends State<PriceCategory> {
               ),
             ),
             SizedBox(
-              width: MediaQuery.sizeOf(context).width * .6,
+              width: MediaQuery.sizeOf(context).width * .22,
               child: CustomTextFormField(
                 controller: widget.priceController,
-                hintText: "0",
+                hintText: " السعر",
+
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "برجاء كتابه قيمه المنتج";
@@ -157,11 +168,69 @@ class _PriceCategoryState extends State<PriceCategory> {
                 },
               ),
             ),
+            FutureBuilder<List<ModelCurrency>>(
+              future: widget.currencyListFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Text("تحميل العملات...");
+                }
+
+                if (snapshot.hasError) {
+                  return const Text("خطأ في تحميل العملات", style: TextStyle(color: Colors.red));
+                }
+
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text("لا توجد عملات متاحة");
+                }
+
+                final currencies = snapshot.data!;
+                final unique = <String, ModelCurrency>{};
+                for (final c in currencies) {
+                  unique[c.id.toString()] = c;
+                }
+                final currencyList = unique.values.toList();
+
+                return Container(
+                  width: MediaQuery.sizeOf(context).width * .6,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.mainAppColor),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: widget.selectedCurrency,
+                      hint: const Text("اختر العملة"),
+                      isExpanded: true,
+                      icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                      onChanged: (value) {
+                        if (value != null) {
+                          final selected = currencyList.firstWhere((e) => e.id.toString() == value);
+                          widget.onCurrencySelected(selected.arName, selected.enName, selected.id.toString());
+                          widget.onCurrencyChanged(value);
+                          setState(() {});
+                        }
+                      },
+                      items: currencyList.map((currency) {
+                        return DropdownMenuItem<String>(
+                          value: currency.id.toString(),
+                          child: Text('${currency.arName} (${currency.enName})'),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
         ),
+
+
+
+
         const Divider(thickness: 1, color: Color(0xff868686)),
 
-        // إغلاق الردود
+
         CustomDropdown(
           label: "اغلاق الردود",
           items: const ["لا", "نعم"],
@@ -172,11 +241,9 @@ class _PriceCategoryState extends State<PriceCategory> {
           },
         ),
 
-        const Divider(thickness: 1, color: Color(0xff868686)),
 
-        const Divider(thickness: 1, color: Color(0xff868686)),
 
-        // المحافظة
+
         buildDropdown<Government>(
           label: "المحافظة",
           future: widget.governmentListFuture,

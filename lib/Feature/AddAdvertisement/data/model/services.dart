@@ -11,17 +11,17 @@ class Services {
 
   factory Services.fromJson(Map<String, dynamic> json) {
     return Services(
-      id: json['id'],
-      name: json['name'],
-      eName: json['eName'],
+      id: json['id'] ?? 0,
+      name: json['arName'] ?? '',
+      eName: json['enName'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
-      'eName': eName,
+      'arName': name,
+      'enName': eName,
     };
   }
 }

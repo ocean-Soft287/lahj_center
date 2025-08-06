@@ -41,7 +41,7 @@ class EndPoint {
   /// ads
   static String myadds =
       "${baseUrl}Advertisement/myAdvertisementsPaged?page=1&pageSize=900000";
-  static String addads = "${baseUrl}Advertisements/Create";
+  static String addads = "${baseUrl}Advertisement/AddAdvertisement";
   static String deletemyadd="${baseUrl}Advertisement/DeleteAdvertisement";
   static String editmyadd="${baseUrl}Advertisements/Edit";
   /// comment
