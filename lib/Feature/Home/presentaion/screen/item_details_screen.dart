@@ -58,7 +58,7 @@ final TextEditingController comment=TextEditingController();
                       name: state.item.name,
                       price: state.item.price.toString(),
                       currency: state.item.currencyName,
-                      regionName: "state.item.",
+                      regionName: "",
                       area: state.item.area,
                       item: state.item,
                     ),
