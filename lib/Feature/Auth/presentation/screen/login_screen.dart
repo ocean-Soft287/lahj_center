@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/register_screen.dart';
+import 'package:lahijcenter/Feature/Auth/presentation/screen/verify_account_with_otp.dart';
+import 'package:lahijcenter/core/Failure/failure.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import '../../../../core/Textstyle/text_style.dart';
@@ -113,37 +115,57 @@ if (state is LoginViewStateSuccess){
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              BlocProvider.of<LoginViewCubit>(context).userLogin(password:passwordController.text, email: emailController.text,);
-
-                              // navigato(context,
-                              //     const HomeScreen());
+                          BlocConsumer<LoginViewCubit, LoginViewState>(
+                            listener: (context,state){
+                              if(state is LoginViewStateSuccess){
+                                navigato(context, Bottomnav());
+                              }
+                              if(state is LoginViewStateError){
+                                if(state.failure is VerifyOtpFailure){
+                                  navigato(context,OTPScreen(email: emailController.text));
+                                }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(state.failure.message),
+                                    ),
+                                  );
+                                }
+                              }
                             },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    color: AppColors.mainAppColor,
-                                    borderRadius: BorderRadius.circular(25)),
-                                padding: const EdgeInsets.all(8),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.white,
+                            builder: (context,state) {
+                              return InkWell(
+                                onTap: () {
+                                  BlocProvider.of<LoginViewCubit>(context).userLogin(password:passwordController.text, email: emailController.text,);
+
+                                  // navigato(context,
+                                  //     const HomeScreen());
+                                },
+                                child:state is LoginViewStateLoading ? Center(child: CircularProgressIndicator(color: AppColors.mainAppColor,)) : Container(
+                                    decoration: BoxDecoration(
+                                        color: AppColors.mainAppColor,
+                                        borderRadius: BorderRadius.circular(25)),
+                                    padding: const EdgeInsets.all(8),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.symmetric(horizontal: 5),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.arrow_back,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "تسجيل الدخول",
+                                            style: Textstylefont.logintext(context),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        "تسجيل الدخول",
-                                        style: Textstylefont.logintext(context),
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                                    )),
+                              );
+                            }
                           ),
                           InkWell(
                             onTap: () {

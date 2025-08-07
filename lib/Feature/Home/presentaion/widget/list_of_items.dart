@@ -37,18 +37,16 @@ class Listofitems extends StatelessWidget {
         }
 
         if (state is Groupsuccful || state is Allitemsuccful) {
-          final List<Item> items = (state is Groupsuccful)
-              ? state.item.items
-              : (state as Allitemsuccful).item.items;
+
 
           return ListView.builder(
-            itemCount: items.length,
+            itemCount: (state as Allitemsuccful).item.totalItems,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
 
                 },
-                child: AdvertsiminteContainer(item: items[index]),
+                child: AdvertsiminteContainer(item: (state as Allitemsuccful).item.items[index]),
               );
             },
           );

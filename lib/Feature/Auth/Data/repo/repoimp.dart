@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -29,7 +30,7 @@ class Loginrepoimp implements Loginrepo {
     required String activity,
   }) async {
     try {
-      final fcmtoken = await FirebaseMessaging.instance.getToken();
+      final fcmtoken = "fcm";
       MultipartFile? imageFile;
       if (image != null) {
         imageFile = await MultipartFile.fromFile(image.path);
@@ -52,19 +53,8 @@ class Loginrepoimp implements Loginrepo {
         isFromData: true,
       );
 
-      if (response['message'] == "Registration successful. Please verify your email with the OTP sent.") {
-        return Right(RegisterResponseModel.fromJson(response));
-      }
-      if(response == "Email is already registered."){
+      return Right(RegisterResponseModel.fromJson(response));
 
-        return Right(RegisterResponseModel.fromJson(response));
-
-
-      }
-
-      else {
-        return Left(ServerFailure("Unexpected response: ${response['message']}"));
-      }
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
@@ -141,7 +131,8 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
     required String email,
     required String password,
   }) async {
-    final fcmtoken = await FirebaseMessaging.instance.getToken();
+    ///TODO : add fcmtoken
+    final fcmtoken = "fcm";
 
     try {
       final response = await dioConsumer.post(
@@ -168,6 +159,11 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
       }
       return right(model);
     } on DioException catch (e) {
+
+      // print("------------------------------------------------------ VerifyOtpFailure ${e.response?.}");
+      if(e.message!.contains("Email is not confirmed.")){
+        return left(VerifyOtpFailure(e.response?.statusMessage??""));
+      }
       return left(_handleDioError(e));
     } catch (e) {
       return left(ServerFailure("Login failed: ${e.toString()}"));

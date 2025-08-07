@@ -16,18 +16,40 @@ import '../../manger/register_view_cubit/register_view_cubit.dart';
 import '../../manger/register_view_cubit/register_view_state.dart';
 import 'login_screen.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
 
-  final keyForm = GlobalKey<FormState>();
-  final phonecontroller = TextEditingController();
-  final confirmPasswordController = TextEditingController();
-  final passwordController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
-  final emailController = TextEditingController();
-  final activityController = TextEditingController();
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
 
+class _RegisterScreenState extends State<RegisterScreen> {
+  final keyForm = GlobalKey<FormState>();
+
+  final phonecontroller = TextEditingController();
+
+  final confirmPasswordController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
+  final firstNameController = TextEditingController();
+
+  final lastNameController = TextEditingController();
+
+  final emailController = TextEditingController();
+
+  final activityController = TextEditingController();
+@override
+  void dispose() {
+    phonecontroller.dispose();
+    confirmPasswordController.dispose();
+    passwordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    activityController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     currentLang = CacheHelper.getData(key: 'changeLang') ?? 'ar';

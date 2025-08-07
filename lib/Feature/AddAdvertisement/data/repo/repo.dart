@@ -15,7 +15,7 @@ abstract class Addadvertisminterepo {
   Future<Either<Failure, List<Group>>> getgroup();
   Future<Either<Failure, List<Services>>> getServices();
 
-  Future<Either<Failure, String>> addAdvertisminte({
+  Future<Either<Failure, void>> addAdvertisminte({
     required String name,
     required String phone,
     required int groupId,

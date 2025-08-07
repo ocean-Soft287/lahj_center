@@ -44,49 +44,6 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
     }
   }
 
-  Future<void> addAdvertisement({
-    required String name,
-    required String phone,
-    required int groupId,
-    required int serviceId,
-    required double price,
-    required bool isCloseReplies,
-    required int currencyId,
-    required int governorateId,
-    required String area,
-    required String description,
-  }) async {
-    emit(AddadvertisminteLoading());
-
-    try {
-      // تحويل الصور من XFile إلى File
-      final List<File> imageFiles = galleryImage
-          .whereType<XFile>()
-          .map((xfile) => File(xfile.path))
-          .toList();
-
-      final result = await addadvertisminterepo.addAdvertisminte(
-        name: name,
-        phone: phone,
-        groupId: groupId,
-        serviceId: serviceId,
-        price: price,
-        isCloseReplies: isCloseReplies,
-        currencyId: currencyId,
-        governorateId: governorateId,
-        area: area,
-        description: description,
-        images: imageFiles,
-      );
-
-      result.fold(
-            (failure) => emit(AddadvertisminteFailure(failure.message)),
-            (data) => emit(AddadvertisminteprocessSuccess(data)),
-      );
-    } catch (e) {
-      emit(AddadvertisminteFailure("Unexpected error: ${e.toString()}"));
-    }
-  }
 
 
   Future<void> edit({

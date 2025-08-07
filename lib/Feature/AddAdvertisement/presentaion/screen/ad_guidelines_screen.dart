@@ -3,10 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/category_bloc/category_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/government_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/services_bloc/services_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/manger/addadvertisminte_cubit.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import '../../../../../../../core/constans/app_colors.dart';
 import '../../../../../../../core/sharde/widget/default_button.dart';
+import '../../../../core/utils/services/services_locator.dart';
 import 'add_ad_screen.dart';
 import '../../../../core/constans/fonts.dart';
 
@@ -129,7 +134,14 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
             const Spacer(),
             DefaultButton(
               function: () {
-                navigato(context, BlocProvider(create: (context)=>GetIt.instance<AddadvertisminteCubit>()..fetchgovermnet()..fetchcurrency()..fetchCategories()..fetchServices(), child:  AddAdvertisementScreen()));
+                navigato(context, MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (context)=>sl<GovernmentBloc>()),
+                      BlocProvider(create: (context)=>sl<ServicesBloc>()),
+                      BlocProvider(create: (context)=>sl<CurrencyBloc>()),
+                      BlocProvider(create: (context)=>sl<CategoryBloc>()),
+                    ],
+                    child:  AddAdvertisementScreen()));
               },
               text: "استمرار",
             ),

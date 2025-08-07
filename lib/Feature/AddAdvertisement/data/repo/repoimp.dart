@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -113,7 +114,7 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
 
   /// ✅ دالة الإضافة بعد التعديل
   @override
-  Future<Either<Failure, String>> addAdvertisminte({
+  Future<Either<Failure, void>> addAdvertisminte({
     required String name,
     required String phone,
     required int groupId,
@@ -140,16 +141,16 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         "Discription": description,
       };
 
-      final encryptedData = encryptData(payload, privateKey, publicKey);
+     
 
-      final formData = FormData();
-      formData.fields.add(MapEntry("advertisement", encryptedData));
+      final formData = FormData.fromMap(payload);
 
-      for (var image in images) {
+      for (int i = 0; i < images.length; i++) {
+        final image = images[i];
         if (!await image.exists()) continue;
         final fileName = image.path.split('/').last;
         final multipartFile = await MultipartFile.fromFile(image.path, filename: fileName);
-        formData.files.add(MapEntry('images', multipartFile));
+        formData.files.add(MapEntry('images[$i]', multipartFile));
       }
 
       final response = await dioConsumer.post(
@@ -158,13 +159,9 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         data: formData,
       );
 
-      if (response != null && response.toString().isNotEmpty) {
-        final decryptedText = decrypt(response.toString(), privateKey, publicKey);
-        final String jsonData = jsonDecode(decryptedText);
-        return Right(jsonData);
-      } else {
-        return const Left(ServerFailure('Empty or null response from server'));
-      }
+
+        return Right(null);
+
     } catch (e) {
       if (e is DioException) {
         return Left(ServerFailure('Network error: ${e.message}'));

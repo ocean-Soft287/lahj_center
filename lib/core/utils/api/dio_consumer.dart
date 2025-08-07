@@ -14,26 +14,6 @@ class DioConsumer extends ApiConsumer {
       'Accept-Language': 'ar',
     };
 
-    dio.interceptors.add(
-      DioCacheInterceptor(
-        options: CacheOptions(
-          store: MemCacheStore(),
-          policy: CachePolicy.request,
-          maxStale: const Duration(minutes: 30),
-          priority: CachePriority.high,
-          keyBuilder: CacheOptions.defaultCacheKeyBuilder,
-        ),
-      ),
-    );
-
-    dio.interceptors.add(LogInterceptor(
-      request: true,
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      error: true,
-    ));
   }
 
   Future<Map<String, String>> _buildHeaders({bool withAuth = true}) async {
@@ -102,6 +82,9 @@ class DioConsumer extends ApiConsumer {
     } on DioException catch (e) {
       handleDioExceptions(e);
       rethrow;
+    }
+    catch(e){
+      print(e.toString());
     }
   }
 

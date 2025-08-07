@@ -20,7 +20,7 @@ class LoginViewCubit extends Cubit<LoginViewState> {
 
     response.fold(
       (failure) {
-        emit(LoginViewStateError(failure.message));
+        emit(LoginViewStateError(failure.message,failure));
       },
       (data) {
 
@@ -37,7 +37,7 @@ class LoginViewCubit extends Cubit<LoginViewState> {
 
     response.fold(
       (failure) {
-        emit(LoginViewStateError(failure.message));
+        emit(LoginViewStateError(failure.message,failure));
       },
       (data) {
         emit(LoginViewStateSuccessMessage(""));

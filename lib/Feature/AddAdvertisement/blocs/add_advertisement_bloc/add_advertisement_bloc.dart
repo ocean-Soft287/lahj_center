@@ -4,7 +4,7 @@ import 'package:lahijcenter/core/bloc/base_state.dart';
 import '../../data/repo/repo.dart';
 import 'add_advertisement_event.dart';
 
-class AddAdvertisementBloc extends Bloc<AddAdvertisementEvent, BaseState<String>> {
+class AddAdvertisementBloc extends Bloc<AddAdvertisementEvent, BaseState<void>> {
   final Addadvertisminterepo _addadvertisminterepo;
   
   AddAdvertisementBloc(this._addadvertisminterepo) : super(BaseState()) {
@@ -13,7 +13,7 @@ class AddAdvertisementBloc extends Bloc<AddAdvertisementEvent, BaseState<String>
 
   FutureOr<void> _onSubmitAdvertisement(
     SubmitAdvertisement event, 
-    Emitter<BaseState<String>> emit
+    Emitter<BaseState<void>> emit
   ) async {
     emit(state.copyWith(status: Status.loading));
     
@@ -38,7 +38,6 @@ class AddAdvertisementBloc extends Bloc<AddAdvertisementEvent, BaseState<String>
       )), 
       (right) => emit(state.copyWith(
         status: Status.success, 
-        data: right,
       )),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_cubit.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/home_repo.dart';
@@ -15,6 +16,7 @@ import 'package:lahijcenter/Feature/profile/data/repo/new_password_repo_impl.dar
 import 'package:lahijcenter/Feature/profile/manager/new_password_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../../Feature/AddAdvertisement/data/repo/repo.dart';
 import '../../../Feature/AddAdvertisement/data/repo/repoimp.dart';
@@ -38,19 +40,24 @@ import '../../../Feature/profile/manager/get_profile_cubit.dart';
 import '../api/api_consumer.dart';
 import '../api/dio_consumer.dart';
 import '../api/endpoint.dart';
+import 'add_advertisment_service_locator.dart';
 
 final sl = GetIt.instance;
-void setup() {
+Future<void> setup() async {
   // Dio instance registration
   sl.registerLazySingleton<Dio>(
       () => Dio(BaseOptions(baseUrl: EndPoint.baseUrl))
-        ..interceptors.add(LogInterceptor(
+        ..interceptors.add(PrettyDioLogger(
           request: true,
           requestHeader: true,
           requestBody: true,
-          responseHeader: true,
+          responseHeader: false,
+          enabled: kDebugMode,
           responseBody: true,
           error: true,
+          compact: true,
+          maxWidth: 90,
+
         )));
 
   /// Register DioConsumer
@@ -137,6 +144,6 @@ sl.registerFactory<UpdateProfileCubit>((
 sl.registerLazySingleton<NewPasswordRepo>(()=>NewPasswordRepoImpl(dioConsumer: sl<DioConsumer>()));
 sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>()));
 
-
+  await AddAdvertismentServiceLocator.execute(getIt: sl);
 
 }

@@ -1,5 +1,7 @@
 import 'package:lahijcenter/Feature/Auth/Data/model/user_model.dart';
 
+import '../../../../core/Failure/failure.dart';
+
 abstract class LoginViewState {}
 
 class InitializeLoginViewState extends LoginViewState{}
@@ -10,9 +12,9 @@ class LoginViewStateSuccess extends LoginViewState{
 LoginViewStateSuccess(this.dataUser);
 }
 class LoginViewStateError extends LoginViewState{
-
+  final Failure failure;
   final String error;
-  LoginViewStateError(this.error);
+  LoginViewStateError(this.error,this.failure);
 }
 class ChangeIconPasswordSuccess extends LoginViewState{}
 
