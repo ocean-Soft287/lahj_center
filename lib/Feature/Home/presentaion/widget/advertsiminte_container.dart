@@ -106,7 +106,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                     radius: 40,
                     backgroundColor: Colors.white,
                     child: ClipOval(
-                      child: CachedNetworkImage(
+                      child: widget.item.advertisementImages.isEmpty?SizedBox.shrink():CachedNetworkImage(
                         imageUrl: widget.item.advertisementImages[0].imageName,
                         fit: BoxFit.cover,
                         width: 80,

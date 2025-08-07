@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../Data/model/advertismint_response.dart';
 import '../../Data/model/item_model.dart';
 import '../../manager/categorycubit/category_cubit.dart';
 import 'advertsiminte_container.dart';
@@ -15,9 +17,9 @@ class Listofitems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoryCubit, CategoryState>(
+    return BlocBuilder<CategoryCubit, BaseState<AdvertisementResponse>>(
       builder: (context, state) {
-        if (state is Groupload || state is Allitemload) {
+        if (state.isLoading) {
           return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) {
@@ -36,17 +38,16 @@ class Listofitems extends StatelessWidget {
           );
         }
 
-        if (state is Groupsuccful || state is Allitemsuccful) {
-
-
+        if (state.isSuccess) {
+          print("-------------------------- Allitemsuccful ${state.data?.items.length}");
           return ListView.builder(
-            itemCount: (state as Allitemsuccful).item.totalItems,
+            itemCount: state.data!.items.length,
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
 
                 },
-                child: AdvertsiminteContainer(item: (state as Allitemsuccful).item.items[index]),
+                child: AdvertsiminteContainer(item: state.data!.items[index]),
               );
             },
           );

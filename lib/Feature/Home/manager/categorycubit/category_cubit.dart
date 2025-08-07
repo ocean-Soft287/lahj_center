@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:lahijcenter/core/bloc/base_state.dart';
 import '../../Data/model/advertismint_response.dart';
 import '../../Data/model/item_model.dart';
 import '../../Data/repo/home_repo.dart';
 
-part 'category_state.dart';
 
 
-class CategoryCubit extends Cubit<CategoryState> {
-  CategoryCubit(this.homerepo) : super(CategoryInitial());
+class CategoryCubit extends Cubit<BaseState<AdvertisementResponse>> {
+  CategoryCubit(this.homerepo) : super(BaseState());
 
   final Homerepo homerepo;
 
@@ -16,51 +16,55 @@ class CategoryCubit extends Cubit<CategoryState> {
   List<Item> itemgroup = [];
 
   void getitemsbygroup(int x) async {
-    emit(Groupload());
+    emit(state.copyWith(status: Status.loading));
 
     final response = await homerepo.fetchitemsbygroup(number: x);
 
     response.fold(
           (failure) {
       print(failure);
-        emit(GroupitemFailure(
-            error: "فشل في تحميل التصنيفات: ${failure.message}"));
+        emit(state.copyWith(
+            errorMessage: "فشل في تحميل التصنيفات: ${failure.message}"));
       },
           (data) {
         try {
           if (data.items.isNotEmpty) {
 
-            emit(Groupsuccful(item: data));
+            emit(state.copyWith(status: Status.success, data: data));
           } else {
-            emit(GroupitemFailure(error: "لا توجد بيانات"));
+            emit(state.copyWith(
+                errorMessage: "لا توجد بيانات"));
           }
         } catch (e) {
-          emit(GroupitemFailure(
-              error: "خطأ في معالجة البيانات: ${e.toString()}"));
+          emit(state.copyWith(
+              errorMessage: "خطأ في معالجة البيانات: ${e.toString()}"));
         }
       },
     );
   }
 
   void getallitems() async {
-    emit(Allitemload());
+    emit(state.copyWith(status: Status.loading));
 
     final response = await homerepo.fetchallitems();
 
     response.fold(
           (failure) {
         print(failure);
-        emit(AllitemFailure("فشل في تحميل التصنيفات: ${failure.message}"));
+        emit(state.copyWith(
+            errorMessage:"فشل في تحميل التصنيفات: ${failure.message}"));
       },
           (data) {
         try {
           if (data.items.isNotEmpty) {
-            emit(Allitemsuccful(item: data));
+            emit(state.copyWith(status: Status.success, data: data));
           } else {
-            emit(AllitemFailure("لا توجد بيانات للإعلانات"));
+            emit(state.copyWith(
+                errorMessage:"لا توجد بيانات للإعلانات"));
           }
         } catch (e) {
-          emit(AllitemFailure("خطأ في معالجة البيانات: ${e.toString()}"));
+          emit(state.copyWith(
+              errorMessage:"خطأ في معالجة البيانات: ${e.toString()}"));
         }
       },
     );
