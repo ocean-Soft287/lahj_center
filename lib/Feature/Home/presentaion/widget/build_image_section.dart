@@ -74,7 +74,7 @@ class BuildImageSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
+          imagecache.isEmpty?SizedBox.shrink():SizedBox(
             height: 200.h,
             child: PageView.builder(
               controller: pageController,
@@ -94,7 +94,7 @@ class BuildImageSection extends StatelessWidget {
           ),
           SizedBox(height: 5.h),
           Center(
-            child: SmoothPageIndicator(
+            child: imagecache.isEmpty?SizedBox.shrink():SmoothPageIndicator(
               controller: pageController,
               count: imagecache.length,
               axisDirection: Axis.horizontal,
