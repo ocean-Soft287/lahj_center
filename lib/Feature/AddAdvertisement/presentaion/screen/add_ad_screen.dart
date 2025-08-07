@@ -1,333 +1,268 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_it/get_it.dart';
-import '../../../../../../../core/constans/app_colors.dart';
-import '../../../../../../../core/constans/responsve_font.dart';
-import '../../../../../../../core/sharde/widget/default_button.dart';
-import '../../../../core/constans/fonts.dart';
-import '../../../../core/network/local/hive_crud_manager.dart';
-import '../../../Home/Data/model/categories.dart';
-import '../../data/model/government_model.dart';
-import '../../data/model/services.dart';
-import '../../data/model/currency.dart';
-import '../../manger/addadvertisminte_cubit.dart';
-import '../widget/comment_section.dart';
-import '../widget/custom_ad_field.dart';
-import '../widget/image_card.dart';
-import '../widget/nameadd_mobilewidget.dart';
-import '../widget/pricecategory.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AddAdvertisementScreen extends StatefulWidget {
   const AddAdvertisementScreen({super.key});
+
   @override
   State<AddAdvertisementScreen> createState() => _AddAdvertisementScreenState();
 }
 
 class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
-  final TextEditingController nameofadd = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController comment = TextEditingController();
-  TextEditingController ereacontroller=TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  bool _isLoadingServices = false;
-  bool _isLoadingGovernment = false;
-  bool _isLoadingCurrency = false;
-
-  String? selectedGovernorate;
-  String? category;
-  String selectedCloseReplies = 'لا';
-  String? selectedServices;
+  String? selectedService;
   String? selectedCurrency;
+  String? selectedCategory;
+  String? selectedGovernorate;
+  bool? isReplyClosed = false;
+  File? image1;
+  final ImagePicker _picker = ImagePicker();
 
-  String selectedCategoryArabic = '';
-  String selectedCategoryEnglish = '';
-  String selectedCategoryId = '';
-
-  String selectedGovernorateArabic = '';
-  String selectedGovernorateEnglish = '';
-  String selectedGovernorateId = '';
-
-  String selectedServicesArabic = '';
-  String selectedServicesEnglish = '';
-  String selectedServicesId = '';
-
-  String selectedCurrencyArabic = '';
-  String selectedCurrencyEnglish = '';
-  String selectedCurrencyId = '';
-
-  late Future<List<Government>> governmentListFuture;
-  late Future<List<Categorygroups>> categorylistfuture;
-  late Future<List<Services>> servicesListFuture;
-  late Future<List<ModelCurrency>> currencyListFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    governmentListFuture = loadGovernmentFromHive();
-    categorylistfuture = loadCattegoryyFromHive();
-    currencyListFuture = loadCurrencyFromHive();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cubit = GetIt.instance<AddadvertisminteCubit>();
-
-      if (cubit.services.isEmpty && !_isLoadingServices) {
-        _isLoadingServices = true;
-        cubit.fetchServices();
-      }
-
-      if (cubit.government.isEmpty && !_isLoadingGovernment) {
-        _isLoadingGovernment = true;
-        cubit.fetchgovermnet();
-      }
-
-      if (cubit.currency.isEmpty && !_isLoadingCurrency) {
-        _isLoadingCurrency = true;
-        cubit.fetchcurrency();
-      }
-    });
-  }
-
-  Future<List<Government>> loadGovernmentFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "government",
-    );
-    if (rawData == null) return [];
-    return rawData.map((e) => Government.fromJson(e as Map<String, dynamic>)).toList();
-  }
-
-  Future<List<Categorygroups>> loadCattegoryyFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "category",
-    );
-    if (rawData == null) return [];
-    return rawData.map((e) => Categorygroups.fromJson(e as Map<String, dynamic>)).toList();
-  }
-
-  Future<List<Services>> loadServicesFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "services",
-    );
-    if (rawData == null) return [];
-    return rawData.map((e) => Services.fromJson(Map<String, dynamic>.from(jsonDecode(jsonEncode(e))))).toList();
-  }
-
-  Future<List<ModelCurrency>> loadCurrencyFromHive() async {
-    final rawData = await HiveCrudManager.readList(
-      "shared_data_box",
-      "currency",
-    );
-    if (rawData == null) return [];
-    return rawData.map((e) => ModelCurrency.fromJson(Map<String, dynamic>.from(jsonDecode(jsonEncode(e))))).toList();
-  }
-
-  Future<List<Services>> getServicesFromCubit(AddadvertisminteCubit cubit) async {
-    if (cubit.services.isNotEmpty) {
-      return cubit.services;
-    } else {
-      return await loadServicesFromHive();
+  Future<void> pickImageFromCamera() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        image1 = File(pickedFile.path);
+      });
     }
   }
 
-  Future<List<ModelCurrency>> getCurrencyFromCubit(AddadvertisminteCubit cubit) async {
-    if (cubit.currency.isNotEmpty) {
-      return cubit.currency;
-    } else {
-      return await loadCurrencyFromHive();
+  Future<void> pickImageFromGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        image1 = File(pickedFile.path);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.instance<AddadvertisminteCubit>(),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
+    ScreenUtil.init(context);
+    Color green = Colors.green;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'اضافة اعلان',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
           ),
-          toolbarHeight: 40.h,
-          title: Text(
-            "اضافه اعلان",
-            style: TextStyle(
-              fontFamily: Fonts.font,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-              fontSize: getFontSize(context, 15),
-            ),
-          ),
-          backgroundColor: AppColors.mainAppColor,
-          elevation: 0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        backgroundColor: green,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(8.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildRowLabelField("اسم الاعلان", textField(hint: 'اضف اسم الاعلان', green: green)),
+            buildRowLabelField("رقم الجوال", textField(hint: 'رقم الجوال', inputType: TextInputType.phone, green: green)),
+            buildRowLabelField("الخدمة", dropdownField(value: selectedService, items: ['خدمة 1', 'خدمة 2'], hint: "اختر الخدمة", onChanged: (val) => setState(() => selectedService = val), green: green)),
+
+            Padding(
+              padding: EdgeInsets.only(bottom: 12.h),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  NameaddMobilewidget(
-                    name: nameofadd,
-                    phoneController: phoneController,
+                  SizedBox(width: 100.w, child: label('السعر', green)),
+                  Expanded(
+                    child: textField(hint: 'اضف السعر', green: green),
                   ),
-                  BlocBuilder<AddadvertisminteCubit, AddadvertisminteState>(
-                    builder: (context, state) {
-                      final cubit = context.read<AddadvertisminteCubit>();
-                      return Column(
-                        children: [
-                          FutureBuilder<List<ModelCurrency>>(
-                            future: getCurrencyFromCubit(cubit),
-                            builder: (context, snapshot) {
-                              final currencyList = snapshot.data ?? [];
-                              return PriceCategory(
-                                priceController: priceController,
-                                categorylistfuture: categorylistfuture,
-                                governmentListFuture: governmentListFuture,
-                                servicesListFuture: getServicesFromCubit(cubit),
-                                currencyListFuture: getCurrencyFromCubit(cubit),
-                                selectedGovernorate: selectedGovernorate,
-                                selectedServices: selectedServices,
-                                selectedCloseReplies: selectedCloseReplies,
-                                category: category,
-                                selectedCurrency: selectedCurrency,
-                                onGovernorateChanged: (val) => setState(() => selectedGovernorate = val),
-                                onServicesChanged: (val) => setState(() => selectedServices = val),
-                                onCloseRepliesChanged: (val) => setState(() => selectedCloseReplies = val ?? 'لا'),
-                                onCategoryChanged: (val) => setState(() => category = val),
-                                onCurrencyChanged: (val) => setState(() => selectedCurrency = val),
-                                onGovernorateSelected: (ar, en, id) {
-                                  setState(() {
-                                    selectedGovernorateArabic = ar;
-                                    selectedGovernorateEnglish = en;
-                                    selectedGovernorateId = id;
-                                  });
-                                },
-                                onServicesSelected: (ar, en, id) {
-                                  setState(() {
-                                    selectedServicesArabic = ar;
-                                    selectedServicesEnglish = en;
-                                    selectedServicesId = id;
-                                  });
-                                },
-                                onCategorySelected: (ar, en, id) {
-                                  setState(() {
-                                    selectedCategoryArabic = ar;
-                                    selectedCategoryEnglish = en;
-                                    selectedCategoryId = id;
-                                  });
-                                },
-                                onCurrencySelected: (ar, en, id) {
-                                  setState(() {
-                                    selectedCurrencyArabic = ar;
-                                    selectedCurrencyEnglish = en;
-                                    selectedCurrencyId = id;
-                                  });
-                                },
-                                selectedCategoryArabic: selectedCategoryArabic,
-                                selectedCategoryEnglish: selectedCategoryEnglish,
-                                selectedCategoryId: selectedCategoryId,
-                                selectedGovernorateArabic: selectedGovernorateArabic,
-                                selectedGovernorateEnglish: selectedGovernorateEnglish,
-                                selectedGovernorateId: selectedGovernorateId,
-                                selectedServicesArabic: selectedServicesArabic,
-                                selectedServicesEnglish: selectedServicesEnglish,
-                                selectedServicesId: selectedServicesId,
-                                selectedCurrencyArabic: selectedCurrencyArabic,
-                                selectedCurrencyEnglish: selectedCurrencyEnglish,
-                                selectedCurrencyId: selectedCurrencyId,
-                              );
-                            },
-                          ),
-                          CustomAdField(
-
-                            label: "المنطقه",
-                            hintText: "اضف اسم المنطقه",
-                            validationMessage: 'برجاء كتابه اسم المنطقه',
-                            controller: ereacontroller,
-                            validator: (value) {
-                              debugPrint("Name Validator: value='$value'");
-                              if (value == null || value.trim().isEmpty) {
-                                debugPrint("Name validation failed: Field is empty");
-                                return 'برجاء كتابه اسم المنطقه';
-                              }
-                              if (value.trim().length < 3) {
-                                debugPrint("Name validation failed: Name too short");
-                                return 'اسم الاعلان يجب أن يكون 3 أحرف على الأقل';
-                              }
-                              return null;
-                            },
-                          ),
-                          const ImageCard(),
-                          const Divider(thickness: 1, color: Color(0xff868686)),
-                          CommentSectionrrSW(comment: comment),
-                          BlocListener<AddadvertisminteCubit, AddadvertisminteState>(
-                            listener: (context, state) {
-                              if (state is AddadvertisminteprocessSuccess) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("تم إضافة الإعلان بنجاح"),
-                                    backgroundColor: Colors.green,
-                                  ),
-                                );
-                                Navigator.pop(context);
-                              } else if (state is AddadvertisminteFailure) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("فشل في إضافة الإعلان: ${state.message}"),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            },
-                            child: BlocBuilder<AddadvertisminteCubit, AddadvertisminteState>(
-                              builder:(context,state) {
-
-                             return  DefaultButton(
-                               text: "اضافة الاعلان",
-
-                               function: () async {
-                                 if (_formKey.currentState!.validate()) {
-                                   final cubit = context.read<AddadvertisminteCubit>();
-                                   await cubit.addAdvertisement(
-                                     name: nameofadd.text.trim(),
-                                     phone: phoneController.text.trim(),
-                                     groupId: int.tryParse(selectedCategoryId) ?? 0,
-                                     serviceId: int.tryParse(selectedServicesId) ?? 0,
-                                     price: double.tryParse(priceController.text.trim()) ?? 0.0,
-                                     isCloseReplies: selectedCloseReplies == 'نعم',
-                                     currencyId: int.tryParse(selectedCurrencyId) ?? 0,
-                                     governorateId: int.tryParse(selectedGovernorateId) ?? 0,
-                                     area: ereacontroller.text.trim(),
-                                     description: comment.text.trim(),
-
-                                   );
-                                 }
-                               },
-                             );
-
-
-                              } ),
-                          ),
-                        ],
-                      );
-                    },
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: dropdownField(
+                      value: selectedCurrency,
+                      hint: 'اختر العملة',
+                      items: ['ريال', 'دولار'],
+                      onChanged: (val) => setState(() => selectedCurrency = val),
+                      green: green,
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 100.w, child: label('اغلاق الردود', green)),
+                Radio<bool>(
+                  value: true,
+                  groupValue: isReplyClosed,
+                  onChanged: (value) => setState(() => isReplyClosed = value),
+                  activeColor: green,
+                ),
+                Text("نعم"),
+                SizedBox(width: 20.w),
+                Radio<bool>(
+                  value: false,
+                  groupValue: isReplyClosed,
+                  onChanged: (value) => setState(() => isReplyClosed = value),
+                  activeColor: green,
+                ),
+                Text("لا"),
+              ],
+            ),
+            SizedBox(height: 12.h),
+
+            buildRowLabelField("القسم الرئيسي", dropdownField(value: selectedCategory, items: ['الكترونيات', 'سيارات', 'خدمات'], hint: "اختر القسم", onChanged: (val) => setState(() => selectedCategory = val), green: green)),
+            buildRowLabelField("المحافظة", dropdownField(value: selectedGovernorate, items: ['القاهرة', 'الجيزة', 'الاسكندرية'], hint: "اختر المحافظة", onChanged: (val) => setState(() => selectedGovernorate = val), green: green)),
+
+            label('صورة الاعلان', green),
+            Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: pickImageFromCamera,
+                          child: Column(
+                            children: [
+                              Icon(Icons.camera_alt_outlined, size: 40),
+                              SizedBox(height: 4.h),
+                              Text("استخدام الكاميرا"),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50.h,
+                        width: 1,
+                        color: Colors.grey.shade400,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: pickImageFromGallery,
+                          child: Column(
+                            children: [
+                              Icon(Icons.photo_library_outlined, size: 40),
+                              SizedBox(height: 4.h),
+                              Text("تحميل الصور"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    "صور الاعلان يجب أن تكون من 5 الى 8 صور",
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                  if (image1 != null) ...[
+                    SizedBox(height: 12.h),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.r),
+                      child: Image.file(image1!, height: 150.h),
+                    )
+                  ]
+                ],
+              ),
+            ),
+
+            SizedBox(height: 12.h),
+            label("وصف الاعلان", green),
+            SizedBox(height: 10.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              decoration: BoxDecoration(
+                border: Border.all(color: green),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: TextFormField(
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: "اكتب التفاصيل هنا ...",
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            SizedBox(height: 24.h),
+
+            SizedBox(
+              width: double.infinity,
+              height: 50.h,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(backgroundColor: green),
+                child: Text(
+                  "اضف الاعلان",
+                  style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
+  Widget buildRowLabelField(String title, Widget field) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: 100.w, child: label(title, Colors.green)),
+          Expanded(child: field),
+        ],
+      ),
+    );
+  }
+
+  Widget label(String text, Color color) => Center(
+    child: Text(
+      text,
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp, color: color),
+      textAlign: TextAlign.center,
+    ),
+  );
+
+  Widget textField({String? hint, TextInputType? inputType, required Color green}) => TextFormField(
+    keyboardType: inputType,
+    decoration: InputDecoration(
+      hintText: hint ?? '',
+      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: green),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+    ),
+  );
+
+  Widget dropdownField({
+    required String? value,
+    required List<String> items,
+    required void Function(String?) onChanged,
+    String? hint,
+    required Color green,
+  }) =>
+      DropdownButtonFormField<String>(
+        value: items.contains(value) ? value : null,
+        items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(color: green),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: green),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+        ),
+      );
 }
