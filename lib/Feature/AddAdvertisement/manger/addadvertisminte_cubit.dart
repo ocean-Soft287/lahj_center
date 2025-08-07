@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +15,6 @@ part 'addadvertisminte_state.dart';
 class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   AddadvertisminteCubit(this.addadvertisminterepo, this.homerepo)
     : super(AddadvertisminteInitial());
-
   final Addadvertisminterepo addadvertisminterepo;
   final Homerepo homerepo;
 
@@ -173,6 +173,7 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
   }
 
   void fetchCategories() async {
+    log("categories");
     final result = await homerepo.fetchCategories();
     result.fold((failure) => emit(AddadvertisminteFailure(failure.message)), (
       data,
@@ -237,22 +238,15 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
 
     while (retryCount < maxRetries) {
       try {
-
         final result = await addadvertisminterepo.getGovernment();
 
-        result.fold(
-          (failure) {
-            retryCount++;
+        bool shouldRetry = false;
 
-            if (retryCount >= maxRetries) {
-              emit(
-                AddadvertisminteFailure(
-                  'فشل في جلب المحافظات بعد $maxRetries محاولات: ${failure.message}',
-                ),
-              );
-            }
+        await result.fold(
+              (failure) {
+            shouldRetry = true; // Flag retry
           },
-          (data) async {
+              (data) async {
             if (data.isNotEmpty) {
               government.clear();
               government.addAll(data);
@@ -264,24 +258,31 @@ class AddadvertisminteCubit extends Cubit<AddadvertisminteState> {
               );
 
               emit(AddadvertisminteSuccess(government));
-              return; // Exit the retry loop
+              return;
             } else {
               emit(AddadvertisminteFailure("لا توجد بيانات متاحة للمحافظات"));
-              return; // Exit the retry loop
+              shouldRetry = false; // Don't retry on empty data
             }
           },
         );
 
-        if (retryCount < maxRetries) {
-          await Future.delayed(
-            Duration(seconds: retryCount + 1),
-          ); // Exponential backoff
+        if (!shouldRetry) return;
+
+        retryCount++;
+        if (retryCount >= maxRetries) {
+          emit(AddadvertisminteFailure(
+            'فشل في جلب المحافظات بعد $maxRetries محاولات',
+          ));
+          return;
         }
+
+        await Future.delayed(Duration(seconds: retryCount + 1)); // Exponential backoff
+
       } catch (e) {
         retryCount++;
-
         if (retryCount >= maxRetries) {
           emit(AddadvertisminteFailure('فشل في جلب المحافظات: $e'));
+          return;
         }
       }
     }
