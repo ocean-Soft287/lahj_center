@@ -77,7 +77,7 @@ class FavouriteContainer extends StatelessWidget {
                       radius: 40,
                       backgroundColor: Colors.white,
                       child: ClipOval(
-                        child: CachedNetworkImage(
+                        child: item.advertisementImages.isEmpty?SizedBox.shrink():CachedNetworkImage(
                           progressIndicatorBuilder: (context, url, progress) =>
                               Center(
                                 child: CircularProgressIndicator(
