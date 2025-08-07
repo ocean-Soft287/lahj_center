@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -19,15 +19,12 @@ class ItemDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final pageController = PageController();
-final TextEditingController comment=TextEditingController();
+    final TextEditingController comment = TextEditingController();
     return BlocProvider(
       create: (context) =>
-      ItemDetailsCubit(GetIt.instance<Homerepo>())
-        ..getData(x),
+          ItemDetailsCubit(GetIt.instance<Homerepo>())..getData(x),
       child: Scaffold(
-
         backgroundColor: Colors.white,
         appBar: AppBar(
           toolbarHeight: 40,
@@ -42,10 +39,7 @@ final TextEditingController comment=TextEditingController();
           scrolledUnderElevation: 0,
         ),
         body: BlocConsumer<ItemDetailsCubit, ItemDetailsState>(
-
-          listener: (context, state) {
-            // Add any listener logic here if needed
-          },
+          listener: (context, state) {},
           builder: (context, state) {
             if (state is ItemDetailsSuccessful) {
               return SingleChildScrollView(
@@ -53,35 +47,27 @@ final TextEditingController comment=TextEditingController();
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     BuildImageSection(
+                      govrnment: state.item.governorateName,
                       pageController: pageController,
                       imagecache: state.item.advertisementImages,
                       name: state.item.name,
                       price: state.item.price.toString(),
                       currency: state.item.currencyName,
-                      regionName: "state.item.",
                       area: state.item.area,
                       item: state.item,
                     ),
-                    Divider(
-                      thickness: 5,
-                      color: Color(0xffD9D9D9),
-                    ),
-                    BuildAdvertiserSection(item: state.item,),
-                    Divider(
-                      thickness: 5,
-                      color: Color(0xffD9D9D9),
-                    ),
-                    buildDescriptionSection(name: state.item.serviceName),
-                    Divider(
-                      thickness: 5,
-                      color: Color(0xffD9D9D9),
-                    ),
-                    SizedBox(
-                      height: 15.h,
-                    ),
+                    Divider(thickness: 5, color: Color(0xffD9D9D9)),
+                    BuildAdvertiserSection(item: state.item),
+                    Divider(thickness: 5, color: Color(0xffD9D9D9)),
+                    buildDescriptionSection(name: state.item.description),
+                    Divider(thickness: 5, color: Color(0xffD9D9D9)),
+                    SizedBox(height: 15.h),
                     state.item.isCloseReplies == false
-                        ? CommentSection(controller: comment,advertisementId:x,)
-                        : const SizedBox()
+                        ? CommentSection(
+                            controller: comment,
+                            advertisementId: x,
+                          )
+                        : const SizedBox(),
                   ],
                 ),
               );
@@ -100,11 +86,7 @@ final TextEditingController comment=TextEditingController();
                         color: Colors.white,
                       ),
                       const SizedBox(height: 16),
-                      Container(
-                        height: 20,
-                        width: 150,
-                        color: Colors.white,
-                      ),
+                      Container(height: 20, width: 150, color: Colors.white),
                       const SizedBox(height: 10),
                       Container(
                         height: 14,
@@ -118,11 +100,7 @@ final TextEditingController comment=TextEditingController();
                         color: Colors.white,
                       ),
                       const SizedBox(height: 10),
-                      Container(
-                        height: 14,
-                        width: 200,
-                        color: Colors.white,
-                      ),
+                      Container(height: 14, width: 200, color: Colors.white),
                     ],
                   ),
                 ),
@@ -165,5 +143,3 @@ final TextEditingController comment=TextEditingController();
     );
   }
 }
-
-

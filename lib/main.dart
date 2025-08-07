@@ -58,12 +58,12 @@ class MyApp extends StatelessWidget {
   final Locale locale;
 
   const MyApp({super.key, required this.locale});
-  //////////
+
 
   @override
   Widget build(BuildContext context) {
     return DevicePreview(
-      enabled: false,
+      enabled: true,
       builder: (context) => ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,

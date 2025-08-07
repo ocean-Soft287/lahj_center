@@ -10,6 +10,8 @@ import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/gover
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/government_model.dart';
 import 'package:lahijcenter/Feature/main/bottomNavbar/Bottomnav.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
+import 'package:lahijcenter/core/constans/app_colors.dart';
+import 'package:lahijcenter/core/constans/fonts.dart';
 
 import '../../../../core/utils/services/services_locator.dart';
 import '../../blocs/add_advertisement_bloc/add_advertisement_event.dart';
@@ -40,6 +42,8 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
+  final TextEditingController _areaController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -48,8 +52,10 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
     _priceController.dispose();
     _descController.dispose();
     _phoneController.dispose();
+    _areaController.dispose();
     super.dispose();
   }
+
   Future<void> pickImageFromCamera() async {
     if (_selectedImages.length >= _maxImages) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -76,7 +82,10 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
     if (pickedFiles.isNotEmpty) {
       setState(() {
         final remainingSlots = _maxImages - _selectedImages.length;
-        final filesToAdd = pickedFiles.take(remainingSlots).map((e) => File(e.path)).toList();
+        final filesToAdd = pickedFiles
+            .take(remainingSlots)
+            .map((e) => File(e.path))
+            .toList();
         _selectedImages.addAll(filesToAdd);
       });
     }
@@ -113,8 +122,31 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildRowLabelField("اسم الاعلان", textField(hint: 'اضف اسم الاعلان', green: green,controller: _titleController)),
-              buildRowLabelField("رقم الجوال", textField(hint: 'رقم الجوال', inputType: TextInputType.phone, green: green,controller: _phoneController)),
+              buildRowLabelField(
+                "اسم الاعلان",
+                textField(
+                  hint: 'اضف اسم الاعلان',
+                  green: green,
+                  controller: _titleController,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
+
+              buildRowLabelField(
+                "رقم الجوال",
+                textField(
+                  hint: 'رقم الجوال',
+                  inputType: TextInputType.phone,
+                  green: green,
+                  controller: _phoneController,
+                ),
+              ),Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
               buildRowLabelField(
                 "الخدمة",
                 BlocBuilder<ServicesBloc, BaseState<Services>>(
@@ -122,13 +154,17 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     return buildDropdown<Services>(
                       value: selectedService,
                       items: state.items,
-                      displayText: (item) => item.name ?? '',
+                      displayText: (item) => item.name ,
                       onChanged: (val) => setState(() => selectedService = val),
                       hint: "اختر الخدمة",
                       green: green,
                     );
                   },
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 12.h),
@@ -138,30 +174,43 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     SizedBox(width: 100.w, child: label('السعر', green)),
 
                     Expanded(
-                      child: BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
-                        builder: (context, state) {
-                          return buildDropdown<ModelCurrency>(
-                            value: selectedCurrency,
-                            items: state.items,
-                            displayText: (item) => item.arName ?? '',
-                            onChanged: (val) => setState(() => selectedCurrency = val),
-                            hint: 'اختر العملة',
-                            green: green,
-                          );
-                        },
-                      ),
+                      child:
+                          BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
+                            builder: (context, state) {
+                              return buildDropdown<ModelCurrency>(
+                                value: selectedCurrency,
+                                items: state.items,
+                                displayText: (item) => item.arName ,
+                                onChanged: (val) =>
+                                    setState(() => selectedCurrency = val),
+                                hint: 'اختر العملة',
+                                green: green,
+                              );
+                            },
+                          ),
                     ),
                   ],
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               Row(
                 children: [
                   SizedBox(width: 100.w, child: label('السعر', green)),
                   Expanded(
-                    child: textField(hint: 'اضف السعر', green: green,controller: _priceController),
+                    child: textField(
+                      hint: 'اضف السعر',
+                      green: green,
+                      controller: _priceController,
+                    ),
                   ),
-
                 ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
 
               Row(
@@ -186,6 +235,10 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ],
               ),
               SizedBox(height: 12.h),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
 
               buildRowLabelField(
                 "القسم الرئيسي",
@@ -194,13 +247,18 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     return buildDropdown<Group>(
                       value: selectedCategory,
                       items: state.items,
-                      displayText: (item) => item.arName ?? '',
-                      onChanged: (val) => setState(() => selectedCategory = val),
+                      displayText: (item) => item.arName,
+                      onChanged: (val) =>
+                          setState(() => selectedCategory = val),
                       hint: "اختر القسم",
                       green: green,
                     );
                   },
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               buildRowLabelField(
                 "المحافظة",
@@ -209,16 +267,39 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     return buildDropdown<Government>(
                       value: selectedGovernorate,
                       items: state.items,
-                      displayText: (item) => item.arName ?? '',
-                      onChanged: (val) => setState(() => selectedGovernorate = val),
+                      displayText: (item) => item.arName,
+                      onChanged: (val) =>
+                          setState(() => selectedGovernorate = val),
                       hint: "اختر المحافظة",
                       green: green,
                     );
                   },
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
+               Row(
+                children: [
+                  SizedBox(width: 100.w, child: label('المنطقه', green)),
+                  Expanded(
+                    child: textField(
+                      hint: 'اختر المنطقه',
+                      green: green,
+                      controller: _areaController,
+                    ),
+                  ),
+                ],
+              ),
+               Padding(
+                padding: const EdgeInsets.only(right: 20,left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
 
-              label('صور الاعلان', green),
+              Align(
+                alignment: Alignment.topRight,
+                child: label('صور الاعلان', green)),
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
@@ -238,10 +319,16 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                               children: [
                                 Container(
                                   width: 200.w,
-                                  margin: EdgeInsets.only(left: 8.w, right: 8.w, bottom: 8.h),
+                                  margin: EdgeInsets.only(
+                                    left: 8.w,
+                                    right: 8.w,
+                                    bottom: 8.h,
+                                  ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.r),
-                                    border: Border.all(color: Colors.grey.shade300),
+                                    border: Border.all(
+                                      color: Colors.grey.shade300,
+                                    ),
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.r),
@@ -264,7 +351,11 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                                         color: Colors.black54,
                                         shape: BoxShape.circle,
                                       ),
-                                      child: Icon(Icons.close, color: Colors.white, size: 16),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                        size: 16,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -289,9 +380,16 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                               ),
                               child: Column(
                                 children: [
-                                  Icon(Icons.camera_alt_outlined, size: 32.sp, color: green),
+                                  Icon(
+                                    Icons.camera_alt_outlined,
+                                    size: 32.sp,
+                                    color: green,
+                                  ),
                                   SizedBox(height: 4.h),
-                                  Text("الكاميرا", style: TextStyle(fontSize: 12.sp)),
+                                  Text(
+                                    "الكاميرا",
+                                    style: TextStyle(fontSize: 12.sp),
+                                  ),
                                 ],
                               ),
                             ),
@@ -310,9 +408,16 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                               ),
                               child: Column(
                                 children: [
-                                  Icon(Icons.photo_library_outlined, size: 32.sp, color: green),
+                                  Icon(
+                                    Icons.photo_library_outlined,
+                                    size: 32.sp,
+                                    color: green,
+                                  ),
                                   SizedBox(height: 4.h),
-                                  Text("المعرض", style: TextStyle(fontSize: 12.sp)),
+                                  Text(
+                                    "المعرض",
+                                    style: TextStyle(fontSize: 12.sp),
+                                  ),
                                 ],
                               ),
                             ),
@@ -331,7 +436,9 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
               ),
 
               SizedBox(height: 12.h),
-              label("وصف الاعلان", green),
+              Align(
+                alignment: Alignment.topRight,
+                child: label("وصف الاعلان", green)),
               SizedBox(height: 10.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -341,7 +448,8 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ),
                 child: TextFormField(
                   maxLines: 4,
-                  validator: (value) => value!.isEmpty ? 'برجاء ادخال التفاصيل' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'برجاء ادخال التفاصيل' : null,
                   controller: _descController,
                   decoration: InputDecoration(
                     hintText: "اكتب التفاصيل هنا ...",
@@ -357,34 +465,114 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   width: double.infinity,
                   height: 50.h,
                   child: BlocConsumer<AddAdvertisementBloc, BaseState<void>>(
-                     listener: (context, state) {
-                      if(state.isSuccess){
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("تم إضافة الإعلان بنجاح")));
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Bottomnav()), (route)=>false);
-                      }
-                    if(state.isFailure){
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMessage??"حدث خطأ ما")));
-                    }
+                    listener: (context, state) {
+                     if (state.isSuccess) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("شكراً لك",
+        style: TextStyle(
+          fontFamily: Fonts.font,
+          color: Colors.black,
+          fontSize: 12,
+          fontWeight: FontWeight.w300,
 
+        ),),
+        content: const Text("تم إضافة الإعلان بنجاح.",
+        style: TextStyle(
+          fontFamily: Fonts.font,
+          color: Colors.black,
+          fontSize: 10,
+          fontWeight: FontWeight.w300,
+
+        ),),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); 
+            },
+            child:  Text("حسناً",
+            style: TextStyle(color:AppColors.mainAppColor,
+            fontFamily: Fonts.font,
+            fontSize: 8.sp,
+            fontWeight: FontWeight.w600,
+            ),),
+          ),
+        ],
+      );
+    },
+  );
+
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Bottomnav(),
+                          ),
+                          (route) => false,
+                        );
+                      }
+                      if (state.isFailure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.errorMessage ?? "حدث خطأ ما"),
+                          ),
+                        );
+                      }
                     },
                     builder: (context, state) {
-                      return state.isLoading?const Center(child: CircularProgressIndicator()): ElevatedButton(
-                        onPressed: () {
-          if(_formKey.currentState!.validate()){
-            if(_selectedImages.length<5){
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("يجب اختيار على الاقل 5 صور")));
-return;
-            }
-                          context.read<AddAdvertisementBloc>().add(SubmitAdvertisement(name: _titleController.text.trim(), phone: _phoneController.text.trim(), groupId: selectedCategory?.id??0, serviceId: selectedService?.id??0, price: num.tryParse(_priceController.text.trim())?.toDouble()??0, isCloseReplies: isReplyClosed??false, currencyId: selectedCurrency?.id??0, governorateId: selectedGovernorate?.id??0, area: "", description: _descController.text.trim(), images: _selectedImages));
-          }
-                        },
-                        style: ElevatedButton.styleFrom(backgroundColor: green),
-                        child: Text(
-                          "اضف الاعلان",
-                          style: TextStyle(fontSize: 16.sp, color: Colors.white),
-                        ),
-                      );
-                    }
+                      return state.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  if (_selectedImages.length < 5) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "يجب اختيار على الاقل 5 صور",
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  context.read<AddAdvertisementBloc>().add(
+                                    SubmitAdvertisement(
+                                      name: _titleController.text.trim(),
+                                      phone: _phoneController.text.trim(),
+                                      groupId: selectedCategory?.id ?? 0,
+                                      serviceId: selectedService?.id ?? 0,
+                                      area: _areaController.text.trim(),
+                                     
+                                      price:
+                                          num.tryParse(
+                                            _priceController.text.trim(),
+                                          )?.toDouble() ??
+                                          0,
+                                      isCloseReplies: isReplyClosed ?? false,
+                                      currencyId: selectedCurrency?.id ?? 0,
+                                      governorateId:
+                                          selectedGovernorate?.id ?? 0,
+                                      
+                                      description: _descController.text.trim(),
+                                      images: _selectedImages,
+                                    ),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: green,
+                              ),
+                              child: Text(
+                                "اضف الاعلان",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
+                    },
                   ),
                 ),
               ),
@@ -397,7 +585,8 @@ return;
 
   Widget buildRowLabelField(String title, Widget field) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.only(bottom: 12.h,
+      top: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -409,27 +598,36 @@ return;
   }
 
   Widget label(String text, Color color) => Center(
-        child: Text(
-          text,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12.sp, color: color),
-          textAlign: TextAlign.center,
-        ),
-      );
+    child: Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 12.sp,
+        color: color,
+      ),
+      textAlign: TextAlign.center,
+    ),
+  );
 
-  Widget textField({String? hint, TextInputType? inputType, required Color green,required TextEditingController controller}) => TextFormField(
+  Widget textField({
+    String? hint,
+    TextInputType? inputType,
+    required Color green,
+    required TextEditingController controller,
+  }) => TextFormField(
     controller: controller,
-        keyboardType: inputType,
-        validator: (value) => value!.isEmpty ? 'برجاء ادخال $hint' : null,
-        decoration: InputDecoration(
-          hintText: hint ?? '',
-          contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: green),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-        ),
-      );
+    keyboardType: inputType,
+    validator: (value) => value!.isEmpty ? 'برجاء ادخال $hint' : null,
+    decoration: InputDecoration(
+      hintText: hint ?? '',
+      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: green),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+    ),
+  );
 
   Widget buildDropdown<T>({
     required T? value,
@@ -442,10 +640,7 @@ return;
     return DropdownButtonFormField<T>(
       value: value,
       items: items.map((item) {
-        return DropdownMenuItem<T>(
-          value: item,
-          child: Text(displayText(item)),
-        );
+        return DropdownMenuItem<T>(value: item, child: Text(displayText(item)));
       }).toList(),
       onChanged: onChanged,
       validator: (value) => value == null ? 'برجاء اختيار $hint' : null,

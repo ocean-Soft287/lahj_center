@@ -198,7 +198,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                         children: [
                           Flexible(
                             child: MainTitle(
-                              text: "${widget.item.area},",
+                              text: widget.item.area ,
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.hintTextColor,

@@ -1,5 +1,6 @@
 class Item {
   final int id;
+  final String Phone;
   final String name;
   final int groupId;
   final String groupName;
@@ -26,6 +27,7 @@ class Item {
   final List<AdvertisementImage> advertisementImages;
 
   Item({
+    required this.Phone,
     required this.id,
     required this.name,
     required this.groupId,
@@ -55,6 +57,7 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
+      Phone: json['phone'] as String? ?? '',
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
       groupId: json['groupId'] as int? ?? 0,
@@ -75,15 +78,18 @@ class Item {
       memberId: json['memberId'] as String? ?? '',
       memberName: json['memberName'] as String? ?? '',
       status: json['status'] as String? ?? '',
-      deletionReason: json['deletionReason'] as String?  ??"", // nullable
+      deletionReason: json['deletionReason'] as String? ?? "", // nullable
       isCloseReplies: json['isCloseReplies'] as bool? ?? false,
       isLiked: json['isLiked'] as bool? ?? false,
       date: json['date'] != null
           ? DateTime.tryParse(json['date']) ?? DateTime.now()
           : DateTime.now(),
-      advertisementImages: (json['advertisementImages'] as List<dynamic>?)
-          ?.map((x) => AdvertisementImage.fromJson(x as Map<String, dynamic>))
-          .toList() ??
+      advertisementImages:
+          (json['advertisementImages'] as List<dynamic>?)
+              ?.map(
+                (x) => AdvertisementImage.fromJson(x as Map<String, dynamic>),
+              )
+              .toList() ??
           [],
     );
   }
@@ -93,10 +99,7 @@ class AdvertisementImage {
   final int id;
   final String imageName;
 
-  AdvertisementImage({
-    required this.id,
-    required this.imageName,
-  });
+  AdvertisementImage({required this.id, required this.imageName});
 
   factory AdvertisementImage.fromJson(Map<String, dynamic> json) {
     return AdvertisementImage(

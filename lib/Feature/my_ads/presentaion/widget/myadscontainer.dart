@@ -27,7 +27,7 @@ final  Function function ;
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
+                    child: item.advertisementImages.isEmpty?SizedBox.shrink():Image.network(
                   item.advertisementImages[0].imageName,
                       fit: BoxFit.contain,
                     ),

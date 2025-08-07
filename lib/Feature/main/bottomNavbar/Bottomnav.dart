@@ -9,7 +9,6 @@ import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import '../../../core/constans/app_assets.dart';
 import '../../../core/constans/app_colors.dart';
 import '../../../core/constans/responsve_font.dart';
-import '../../AddAdvertisement/manger/addadvertisminte_cubit.dart';
 import '../../AddAdvertisement/presentaion/screen/ad_guidelines_screen.dart';
 import 'manager/Bottom_cubit.dart';
 import 'manager/Bottom_state.dart';
@@ -30,32 +29,32 @@ class Bottomnav extends StatelessWidget {
           return Scaffold(
             appBar: homeCubit.currentIndex != 0
                 ? AppBar(
-              backgroundColor: AppColors.mainAppColor,
-              title: Text(
-                homeCubit.currentIndex == 1
-                    ? "البريد الالكتروني"
-                    : homeCubit.currentIndex == 2
-                    ? "الاشعارات"
-                    : "",
-                style: TextStyle(
-                  fontFamily: Fonts.font,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: getFontSize(context, 15),
-                ),
-              ),
-              leading: const SizedBox(),
-              centerTitle: true,
-            )
+                    backgroundColor: AppColors.mainAppColor,
+                    title: Text(
+                      homeCubit.currentIndex == 1
+                          ? "البريد الالكتروني"
+                          : homeCubit.currentIndex == 2
+                          ? "الاشعارات"
+                          : "",
+                      style: TextStyle(
+                        fontFamily: Fonts.font,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: getFontSize(context, 15),
+                      ),
+                    ),
+                    leading: const SizedBox(),
+                    centerTitle: true,
+                  )
                 : null,
             key: scaffoldKey,
             backgroundColor: Colors.white,
             body: SafeArea(child: homeCubit.screen[homeCubit.currentIndex]),
             drawer: Customdrawer(cubit: homeCubit),
             bottomNavigationBar: Directionality(
-              textDirection: TextDirection.ltr,
+              textDirection: TextDirection.rtl,
               child: BottomAppBar(
-                height: 55.h,
+                height: 60.h,
                 shape: const CircularNotchedRectangle(),
                 notchMargin: 0.0,
                 color: AppColors.mainAppColor,
@@ -94,12 +93,10 @@ class Bottomnav extends StatelessWidget {
               ),
             ),
             floatingActionButton: Padding(
-              padding: EdgeInsets.only(bottom: 20,
-              right: 1,
-              left: 1),
+              padding: EdgeInsets.only(bottom: 20, right: 1, left: 1),
               child: FloatingActionButton(
                 backgroundColor: AppColors.mainAppColor,
-                elevation: 10,
+                elevation: 5,
                 shape: const CircleBorder(),
                 onPressed: () {
                   navigato(context, const AdGuidelinesScreen());
@@ -108,7 +105,8 @@ class Bottomnav extends StatelessWidget {
               ),
             ),
 
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
           );
         },
       ),
@@ -142,7 +140,7 @@ class CustomDrawerTile extends StatelessWidget {
         style: TextStyle(
           fontFamily: Fonts.font,
           color: Colors.black,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
           fontSize: getFontSize(context, 12),
         ),
       ),
@@ -196,7 +194,7 @@ class NavItem extends StatelessWidget {
             style: TextStyle(
               fontFamily: Fonts.font,
               color: isActive ? Colors.white : Colors.grey[400],
-              fontSize: 8,
+              fontSize: 10,
             ),
           ),
         ],
@@ -216,7 +214,7 @@ void showPlatformDialog(BuildContext context) {
         contentPadding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 20.w),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center, // توسيط أفقي
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               "شارك ل",
@@ -225,11 +223,9 @@ void showPlatformDialog(BuildContext context) {
             ),
             SizedBox(height: 24.h),
 
-
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
-
               },
               child: Container(
                 width: 120.w,
@@ -319,5 +315,4 @@ void showPlatformDialog(BuildContext context) {
       );
     },
   );
-
 }

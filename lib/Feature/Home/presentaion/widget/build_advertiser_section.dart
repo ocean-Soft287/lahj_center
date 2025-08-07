@@ -54,25 +54,19 @@ class BuildAdvertiserSection extends StatelessWidget {
                             fontSize: 12.sp,
                           ),
                         ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.grey,
-                          size: 12.sp,
-                        ),
                       ],
                     ),
                     const Spacer(),
                     buildIconButton(AppAssets.whatsAppIcon, () {
-                      bottomcubit.whatsappuser("item.phone");
+                      bottomcubit.whatsappuser(item.Phone);
                     }),
                     SizedBox(width: 5.w),
                     buildIconButton(AppAssets.phoneIcon, () {
-                      bottomcubit.callinguser("item0");
+                      bottomcubit.callinguser(item.Phone);
                     }),
                     SizedBox(width: 5.w),
                     buildIconButton(AppAssets.addAdIcon, () {
-                      bottomcubit.sendhi("item.phone");
-
+                      bottomcubit.sendhi(item.Phone);
                     }),
                   ],
                 );
@@ -89,8 +83,10 @@ class BuildAdvertiserSection extends StatelessWidget {
               ),
             ),
             SizedBox(height: 12.h),
-            buildSpecificationRow('القسم الرئيسي:', item.serviceName),
+            buildSpecificationRow('القسم الرئيسي:', item.groupName),
+
             SizedBox(height: 5.h),
+            buildSpecificationRow(' الخدمة :', item.serviceName),
           ],
         ),
       ),
@@ -103,10 +99,7 @@ class BuildAdvertiserSection extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(6.sp),
         color: AppColors.mainAppColor,
-        child: SvgPicture.asset(
-          asset,
-          color: Colors.white,
-        ),
+        child: SvgPicture.asset(asset, color: Colors.white),
       ),
     );
   }

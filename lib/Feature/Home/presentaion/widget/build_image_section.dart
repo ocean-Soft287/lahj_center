@@ -12,7 +12,6 @@ import '../../../../core/constans/fonts.dart';
 import '../../Data/model/item_model.dart';
 
 class BuildImageSection extends StatelessWidget {
-
   const BuildImageSection({
     super.key,
     required this.pageController,
@@ -20,7 +19,8 @@ class BuildImageSection extends StatelessWidget {
     required this.name,
     required this.price,
     required this.currency,
-    required this.regionName,
+    required this.govrnment,
+
     required this.area,
     required this.item,
   });
@@ -30,13 +30,13 @@ class BuildImageSection extends StatelessWidget {
   final String name;
   final String price;
   final String currency;
-  final String regionName;
+  final String govrnment;
+
   final String area;
   final Item item;
   String formatDate(dynamic rawDate) {
     late DateTime itemDate;
 
-    // التأكد إذا التاريخ String أو DateTime
     if (rawDate is String) {
       try {
         itemDate = DateTime.parse(rawDate);
@@ -53,7 +53,6 @@ class BuildImageSection extends StatelessWidget {
     final difference = now.difference(itemDate);
 
     if (difference.inDays < 30) {
-      // التاريخ أقل من شهر - نعرضه بصيغة مفهومة وبأرقام إنجليزية
       return DateFormat('yyyy-MM-dd', 'en_US').format(itemDate);
     } else {
       final months = (difference.inDays / 30).floor();
@@ -65,6 +64,7 @@ class BuildImageSection extends StatelessWidget {
       return 'منذ $engNumber أشهر';
     }
   }
+
   Widget build(BuildContext context) {
     final displayDate = formatDate(item.date);
 
@@ -74,41 +74,45 @@ class BuildImageSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          imagecache.isEmpty?SizedBox.shrink():SizedBox(
-            height: 200.h,
-            child: PageView.builder(
-              controller: pageController,
-              physics: const BouncingScrollPhysics(),
-              itemCount: 3,
-              itemBuilder: (context, index) {
-                return CachedNetworkImage(
+          imagecache.isEmpty
+              ? SizedBox.shrink()
+              : SizedBox(
                   height: 200.h,
-                  width: double.infinity,
-                  fit: BoxFit.fill,
-                  imageUrl: "$imageadd$imagecache",
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
-                );
-              },
-            ),
-
-          ),
+                  child: PageView.builder(
+                    controller: pageController,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return CachedNetworkImage(
+                        height: 200.h,
+                        width: double.infinity,
+                        fit: BoxFit.fill,
+                        imageUrl: "$imageadd$imagecache",
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      );
+                    },
+                  ),
+                ),
           SizedBox(height: 5.h),
           Center(
-            child: imagecache.isEmpty?SizedBox.shrink():SmoothPageIndicator(
-              controller: pageController,
-              count: imagecache.length,
-              axisDirection: Axis.horizontal,
-              effect: SlideEffect(
-                spacing: 8.0,
-                radius: 25,
-                dotWidth: 16,
-                dotHeight: 16.0,
-                paintStyle: PaintingStyle.stroke,
-                strokeWidth: 1.5,
-                dotColor: Colors.grey,
-                activeDotColor: AppColors.mainAppColor,
-              ),
-            ),
+            child: imagecache.isEmpty
+                ? SizedBox.shrink()
+                : SmoothPageIndicator(
+                    controller: pageController,
+                    count: imagecache.length,
+                    axisDirection: Axis.horizontal,
+                    effect: SlideEffect(
+                      spacing: 8.0,
+                      radius: 25,
+                      dotWidth: 16,
+                      dotHeight: 16.0,
+                      paintStyle: PaintingStyle.stroke,
+                      strokeWidth: 1.5,
+                      dotColor: Colors.grey,
+                      activeDotColor: AppColors.mainAppColor,
+                    ),
+                  ),
           ),
           SizedBox(height: 8.h),
           Row(
@@ -123,10 +127,7 @@ class BuildImageSection extends StatelessWidget {
                   fontSize: 16.sp,
                 ),
               ),
-              Icon(
-                Icons.forward_10_sharp,
-                color: AppColors.mainAppColor,
-              )
+              Icon(Icons.reply, color: AppColors.mainAppColor),
             ],
           ),
           SizedBox(height: 4.h),
@@ -169,7 +170,7 @@ class BuildImageSection extends StatelessWidget {
               SvgPicture.asset(AppAssets.locationIcon),
               SizedBox(width: 8.w),
               Text(
-                "$regionName، $area,",
+                " $area,$govrnment",
                 style: TextStyle(
                   fontFamily: Fonts.font,
                   color: AppColors.hintTextColor,
