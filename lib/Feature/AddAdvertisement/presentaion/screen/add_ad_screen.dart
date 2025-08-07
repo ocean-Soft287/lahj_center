@@ -136,10 +136,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(width: 100.w, child: label('السعر', green)),
-                    Expanded(
-                      child: textField(hint: 'اضف السعر', green: green,controller: _priceController),
-                    ),
-                    SizedBox(width: 10.w),
+
                     Expanded(
                       child: BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
                         builder: (context, state) {
@@ -156,6 +153,15 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     ),
                   ],
                 ),
+              ),
+              Row(
+                children: [
+                  SizedBox(width: 100.w, child: label('السعر', green)),
+                  Expanded(
+                    child: textField(hint: 'اضف السعر', green: green,controller: _priceController),
+                  ),
+
+                ],
               ),
 
               Row(
