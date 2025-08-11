@@ -27,6 +27,7 @@ class Bottomnav extends StatelessWidget {
         builder: (context, state) {
           Bottomcubit homeCubit = BlocProvider.of(context);
           return Scaffold(
+            resizeToAvoidBottomInset: true,
             appBar: homeCubit.currentIndex != 0
                 ? AppBar(
                     backgroundColor: AppColors.mainAppColor,
@@ -56,7 +57,7 @@ class Bottomnav extends StatelessWidget {
               child: BottomAppBar(
                 height: 60.h,
                 shape: const CircularNotchedRectangle(),
-                notchMargin: 0.0,
+                notchMargin: 6.0,
                 color: AppColors.mainAppColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -92,11 +93,24 @@ class Bottomnav extends StatelessWidget {
                 ),
               ),
             ),
-            floatingActionButton: Padding(
-              padding: EdgeInsets.only(bottom: 20, right: 1, left: 1),
+            floatingActionButton: Container(
+              width: 60.w,
+              height: 60.h,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: FloatingActionButton(
                 backgroundColor: AppColors.mainAppColor,
-                elevation: 5,
+                elevation: 0,
                 shape: const CircleBorder(),
                 onPressed: () {
                   navigato(context, const AdGuidelinesScreen());
@@ -104,15 +118,15 @@ class Bottomnav extends StatelessWidget {
                 child: Icon(Icons.add, size: 30.sp, color: Colors.white),
               ),
             ),
-
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           );
         },
       ),
     );
   }
 }
+
+
 
 class CustomDrawerTile extends StatelessWidget {
   final String iconPath;

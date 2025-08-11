@@ -34,7 +34,7 @@ class HomeCubit extends Cubit<HomeState> {
                 .map((category) =>
                 Categorygroups.fromJson(category as Map<String, dynamic>))
                 .toList();
-            // أضف "الكل" في البداية
+          
             categories.insert(
               0,
               Categorygroups.fromJson(

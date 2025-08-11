@@ -6,7 +6,6 @@ import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../Data/model/advertismint_response.dart';
-import '../../Data/model/item_model.dart';
 import '../../manager/categorycubit/category_cubit.dart';
 import 'advertsiminte_container.dart';
 

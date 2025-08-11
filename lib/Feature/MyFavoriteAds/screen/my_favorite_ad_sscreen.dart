@@ -8,19 +8,6 @@ import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import '../../../../../core/constans/responsve_font.dart';
 import '../../../core/network/local/flutter_secure_storage.dart';
-import '../../Home/presentaion/screen/item_details_screen.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_it/get_it.dart';
-import 'package:lahijcenter/Feature/MyFavoriteAds/manger/favourite_cubit.dart';
-import 'package:lahijcenter/Feature/MyFavoriteAds/screen/widget/favourite_container.dart';
-import 'package:lahijcenter/core/constans/app_colors.dart';
-import 'package:lahijcenter/core/constans/fonts.dart';
-import '../../../../../core/constans/responsve_font.dart';
-import '../../../core/network/local/flutter_secure_storage.dart';
-import '../../Home/presentaion/screen/item_details_screen.dart';
 
 class MyFavoriteAdsScreen extends StatelessWidget {
   const MyFavoriteAdsScreen({super.key});
@@ -58,6 +45,7 @@ class MyFavoriteAdsScreen extends StatelessWidget {
           builder: (context, state) {
             FavouriteCubit favouritecubit = BlocProvider.of(context);
             List<Widget> slivers = [];
+
             if (state is Allfavouriteitemsuccfulload) {
               slivers.add(
                 const SliverToBoxAdapter(
@@ -69,8 +57,8 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                   ),
                 ),
               );
-            }
-            else if (state is Allfavouriteitemsuccful && state.advertisementResponse.items.isEmpty) {
+            } else if (state is Allfavouriteitemsuccful &&
+                state.advertisementResponse.items.isEmpty) {
               slivers.add(
                 SliverToBoxAdapter(
                   child: Padding(
@@ -79,19 +67,18 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Center(
-                          child:Icon(Icons.favorite,
-                          size: 200,
-                          color: Colors.grey[300],)
-
-
+                          child: Icon(
+                            Icons.favorite,
+                            size: 200,
+                            color: Colors.grey[300],
+                          ),
                         ),
                         SizedBox(height: 20.h),
                         Text(
                           "لا توجد منتجات في المفضله ",
                           style: TextStyle(
                             fontSize: 20.sp,
-                            color: Colors.green ,
-
+                            color: Colors.green,
                             fontWeight: FontWeight.w600,
                             fontFamily: Fonts.font,
                           ),
@@ -101,31 +88,36 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                   ),
                 ),
               );
-            }
-            else if (state is Allfavouriteitemsuccful) {
+            } else if (state is Allfavouriteitemsuccful) {
               final items = state.advertisementResponse.items;
               slivers.add(
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      return GestureDetector(
+                    (context, index) {
+                      return FavouriteContainer(
+                        item: items[index],
                         onTap: () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ItemDetailsScreen(x: items[index].id),
+                          final idString = await SecureStorageService.read(
+                              SecureStorageService.customerid);
+                          final int id =
+                              int.tryParse(idString ?? '') ?? 0;
+
+                          favouritecubit.delete(items[index].id);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "تم الحذف من المفضلة",
+                                style: TextStyle(
+                                  fontFamily: Fonts.font,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              backgroundColor: Colors.red,
+                              duration: const Duration(seconds: 2),
                             ),
                           );
                         },
-                        child: FavouriteContainer(
-                          item: items[index],
-                          onTap: () async {
-                            final idString = await SecureStorageService.read(SecureStorageService.customerid);
-                            final int id = int.tryParse(idString ?? '') ?? 0;
-                            favouritecubit.delete(items[index].id);
-                          },
-                        ),
                       );
                     },
                     childCount: items.length,
@@ -168,12 +160,13 @@ class MainTitle extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-          fontFamily: Fonts.font,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          decoration: decoration,
-          decorationColor: AppColors.mainAppColor,
-          color: color),
+        fontFamily: Fonts.font,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        decoration: decoration,
+        decorationColor: AppColors.mainAppColor,
+        color: color,
+      ),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
@@ -187,6 +180,5 @@ class SizeUtility {
   SizeUtility(this.context);
 
   double get width => MediaQuery.of(context).size.width;
-
   double get height => MediaQuery.of(context).size.height;
 }

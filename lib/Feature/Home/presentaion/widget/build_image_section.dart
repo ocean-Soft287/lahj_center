@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/constans/constants.dart';
@@ -20,7 +19,6 @@ class BuildImageSection extends StatelessWidget {
     required this.price,
     required this.currency,
     required this.govrnment,
-
     required this.area,
     required this.item,
   });
@@ -170,7 +168,7 @@ class BuildImageSection extends StatelessWidget {
               SvgPicture.asset(AppAssets.locationIcon),
               SizedBox(width: 8.w),
               Text(
-                " $area,$govrnment",
+                " $area،$govrnment",
                 style: TextStyle(
                   fontFamily: Fonts.font,
                   color: AppColors.hintTextColor,

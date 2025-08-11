@@ -45,7 +45,7 @@ class HomeScreenWi extends StatelessWidget {
 
           return Column(
             children: [
-              // 🔍 Search Section
+              
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -69,7 +69,7 @@ class HomeScreenWi extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        // Fake Search Input (navigate to SearchPage)
+                       
                         Expanded(
                           child: InkWell(
                             onTap: () {
@@ -123,7 +123,7 @@ class HomeScreenWi extends StatelessWidget {
                           ),
                         ),
                         SizedBox(width: 12.w),
-                        // Button "بحث"
+                        
                         InkWell(
                           onTap: () {
                             final searchCubit = context.read<SearchCubit>();
@@ -169,7 +169,7 @@ class HomeScreenWi extends StatelessWidget {
                     ),
                     SizedBox(height: 16.h),
 
-                    // 🧭 Categories
+                    
                     BlocConsumer<HomeCubit, HomeState>(
                       listener: (context, state) {},
                       builder: (context, state) {
@@ -321,7 +321,7 @@ class HomeScreenWi extends StatelessWidget {
               // ),
               SizedBox(height: 8.h),
 
-              // 📋 List of Items
+              
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(

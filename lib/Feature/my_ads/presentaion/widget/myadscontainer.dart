@@ -8,8 +8,10 @@ import '../../../MyFavoriteAds/screen/my_favorite_ad_sscreen.dart';
 
 class Myadscontainer extends StatelessWidget {
   const Myadscontainer({super.key, required this.item, required this.function,});
-final Item item;
-final  Function function ;
+  
+  final Item item;
+  final Function function;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,14 +26,34 @@ final  Function function ;
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),  
+                    ]
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: item.advertisementImages.isEmpty?SizedBox.shrink():Image.network(
-                  item.advertisementImages[0].imageName,
-                      fit: BoxFit.contain,
-                    ),
-
+                    child: item.advertisementImages.isEmpty
+                        ?  SizedBox.shrink(
+                            child: Container(
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey[600],
+                              size: 30,
+                            ),
+                          ),
+                  
+                )
+                        : Image.network(
+                            item.advertisementImages[0].imageName,
+                            fit: BoxFit.cover, 
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
                   ),
                 ),
               ),
@@ -43,11 +65,11 @@ final  Function function ;
                 children: [
                   Row(
                     mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+                        MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
                         child: MainTitle(
-                          text: item.name, // اسم الإعلان ثابت
+                          text: item.name,
                           fontSize: 17.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.mainAppColor,
@@ -56,12 +78,9 @@ final  Function function ;
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {
-
-                        },
-                        child:  Icon(
-                          Icons.forward_10_outlined
-                          ,
+                        onTap: () {},
+                        child: Icon(
+                          Icons.forward_10_outlined,
                           color: Colors.green,
                           size: 30.sp,
                         ),
@@ -70,9 +89,7 @@ final  Function function ;
                   ),
                   SizedBox(height: 10.h),
                   MainTitle(
-                    text:
-//منذ 10 أشهر
-                    "", // وقت ثابت
+                    text: "",
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.hintTextColor,
@@ -90,7 +107,7 @@ final  Function function ;
                   ),
                   const SizedBox(height: 5),
                   MainTitle(
-                    text: item.serviceName, // وقت ثابت
+                    text: item.serviceName,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.hintTextColor,
@@ -110,35 +127,27 @@ final  Function function ;
               width: MediaQuery.sizeOf(context).width * .25,
               height: 35.h,
               child: DefaultButton(
-                function:function,
+                function: function,
                 text: "حذف",
               ),
             ),
-            SizedBox(
-              width: 5.w,
-            ),
+            SizedBox(width: 5.w),
             SizedBox(
               width: MediaQuery.sizeOf(context).width * .25,
               height: 35.h,
               child: DefaultButton(
                 function: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>EditAdvertisementScreen(item: item,)));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditAdvertisementScreen(item: item),
+                    ),
+                  );
                 },
                 text: "تعديل",
               ),
             ),
-            SizedBox(
-              width: 5.w,
-            ),
-            // SizedBox(
-            //   width: MediaQuery.sizeOf(context).width * .25,
-            //   height: 35.h,
-            //   child: DefaultButton(
-            //     function: () {},
-            //     text: "مشاركه",
-            //   ),
-            // ),
-
+            SizedBox(width: 5.w),
           ],
         )
       ],

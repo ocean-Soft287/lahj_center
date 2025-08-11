@@ -24,7 +24,6 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
   String formatDate(dynamic rawDate) {
     late DateTime itemDate;
 
-    // التأكد إذا التاريخ String أو DateTime
     if (rawDate is String) {
       try {
         itemDate = DateTime.parse(rawDate);
@@ -67,9 +66,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
         );
       },
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 4,
         shadowColor: Colors.black.withOpacity(0.2),
         child: Container(
@@ -79,7 +76,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 6,
                 offset: const Offset(0, 3),
@@ -92,33 +89,55 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
+                  width: 80.w,
+                  height: 80.h,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(8.r),
+                    color: Colors.grey[200],
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: widget.item.advertisementImages.isEmpty?SizedBox.shrink():CachedNetworkImage(
-                        imageUrl: widget.item.advertisementImages[0].imageName,
-                        fit: BoxFit.cover,
-                        width: 80,
-                        height: 80,
-                        progressIndicatorBuilder: (context, url, progress) => Center(
-                          child: CircularProgressIndicator(value: progress.progress),
-                        ),
-                        errorWidget: (context, url, error) => const Icon(Icons.error),
-                      ),
-                    ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.r),
+                    child: (widget.item.advertisementImages != null &&
+                            widget.item.advertisementImages.isNotEmpty)
+                        ? CachedNetworkImage(
+                            imageUrl: widget.item.advertisementImages[0].imageName,
+                            fit: BoxFit.cover,
+                            width: 80.w,
+                            height: 80.h,
+                            progressIndicatorBuilder: (context, url, progress) => 
+                                Center(
+                                  child: CircularProgressIndicator(
+                                    value: progress.progress,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[300],
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey[600],
+                                size: 30,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey[600],
+                              size: 30,
+                            ),
+                          ),
                   ),
                 ),
+
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Column(
@@ -139,13 +158,16 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                           ),
                           BlocBuilder<FavouriteCubit, FavouriteState>(
                             builder: (context, state) {
-                              final favouriteCubit = BlocProvider.of<FavouriteCubit>(context);
+                              final favouriteCubit =
+                                  BlocProvider.of<FavouriteCubit>(context);
                               return GestureDetector(
                                 onTap: () async {
-                                  final idString = await SecureStorageService.read(
-                                    SecureStorageService.customerid,
-                                  );
-                                  final int id = int.tryParse(idString ?? '') ?? 0;
+                                  final idString =
+                                      await SecureStorageService.read(
+                                        SecureStorageService.customerid,
+                                      );
+                                  final int id =
+                                      int.tryParse(idString ?? '') ?? 0;
 
                                   setState(() {
                                     widget.item.isLiked = !widget.item.isLiked;
@@ -155,7 +177,25 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                                     widget.item.id,
                                     !widget.item.isLiked,
                                   );
+
+                                  
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      content: Text(
+                                        widget.item.isLiked
+                                            ? "تمت الإضافة إلى المفضلة"
+                                            : "تم الحذف من المفضلة",
+                                        style: TextStyle(fontSize: 16.sp),
+                                      ),
+                                      backgroundColor: widget.item.isLiked
+                                          ? Colors.red
+                                          : Colors.red,
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
                                 },
+
                                 child: Icon(
                                   widget.item.isLiked
                                       ? Icons.favorite
@@ -198,7 +238,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                         children: [
                           Flexible(
                             child: MainTitle(
-                              text: widget.item.area ,
+                              text: widget.item.area,
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.hintTextColor,
@@ -238,8 +278,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
             ),
           ),
         ),
-      )
-
+      ),
     );
   }
 }

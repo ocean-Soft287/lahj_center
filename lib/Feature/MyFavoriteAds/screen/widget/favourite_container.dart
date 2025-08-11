@@ -63,8 +63,10 @@ class FavouriteContainer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
+                    width: 80,
+                    height: 80,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.2),
@@ -73,23 +75,33 @@ class FavouriteContainer extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white,
-                      child: ClipOval(
-                        child: item.advertisementImages.isEmpty?SizedBox.shrink():CachedNetworkImage(
-                          progressIndicatorBuilder: (context, url, progress) =>
-                              Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: item.advertisementImages.isEmpty
+                          ?  SizedBox.shrink(
+                            child: Container(
+                            color: Colors.grey[300],
+                            child: Icon(
+                              Icons.image_not_supported,
+                              color: Colors.grey[600],
+                              size: 30,
+                            ),
+                          ),
+                  
+                )
+                          
+                          : CachedNetworkImage(
+                              progressIndicatorBuilder:
+                                  (context, url, progress) => Center(
                                 child: CircularProgressIndicator(
                                   value: progress.progress,
                                 ),
                               ),
-                          imageUrl: item.advertisementImages[0].imageName,
-                          fit: BoxFit.cover,
-                          width: 80,
-                          height: 80,
-                        ),
-                      ),
+                              imageUrl: item.advertisementImages[0].imageName,
+                              fit: BoxFit.cover,
+                              width: 80,
+                              height: 80,
+                            ),
                     ),
                   ),
                   SizedBox(width: 10.w),
@@ -99,7 +111,7 @@ class FavouriteContainer extends StatelessWidget {
                       children: [
                         Row(
                           mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                              MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: MainTitle(
@@ -124,7 +136,7 @@ class FavouriteContainer extends StatelessWidget {
                         SizedBox(height: 10.h),
                         Row(
                           mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                              MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: MainTitle(
@@ -149,11 +161,12 @@ class FavouriteContainer extends StatelessWidget {
                         SizedBox(height: 5.h),
                         Row(
                           mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                              MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: MainTitle(
-                                text: "${item.governorateName}، ${item.area},",
+                                text:
+                                    " ${item.area}،${item.governorateName}",
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.hintTextColor,
@@ -165,7 +178,7 @@ class FavouriteContainer extends StatelessWidget {
                             Expanded(
                               child: Row(
                                 crossAxisAlignment:
-                                CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                 children: [
                                   Icon(
                                     Icons.person,

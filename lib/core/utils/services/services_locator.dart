@@ -16,6 +16,7 @@ import 'package:lahijcenter/Feature/profile/data/repo/new_password_repo_impl.dar
 import 'package:lahijcenter/Feature/profile/manager/new_password_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
+import 'package:lahijcenter/core/connectivity/cubit/connectivity_cubit.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../../Feature/AddAdvertisement/data/repo/repo.dart';
@@ -145,5 +146,6 @@ sl.registerLazySingleton<NewPasswordRepo>(()=>NewPasswordRepoImpl(dioConsumer: s
 sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>()));
 
   await AddAdvertismentServiceLocator.execute(getIt: sl);
+  sl.registerSingleton<ConnectivityCubit>(ConnectivityCubit());
 
 }

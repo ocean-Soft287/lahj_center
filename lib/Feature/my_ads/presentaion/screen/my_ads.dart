@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart' show AppColors;
-import 'package:lahijcenter/core/constans/fonts.dart' show Fonts;
+import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/constans/responsve_font.dart' show getFontSize;
 
 import '../../mange/myadd_cubit.dart';
@@ -44,6 +44,29 @@ class MyAdsScreen extends StatelessWidget {
             BlocBuilder<MyaddCubit, MyaddState>(
               builder: (context, state) {
                 if (state is Allmyadditemsuccful) {
+                  if (state.advertisementResponse.items.isEmpty) {
+    return const SliverToBoxAdapter(
+      child: Center(
+        child: Padding(
+
+          padding: EdgeInsets.only(top: 150),
+          child: Column(
+            children: [
+             Icon(Icons.campaign_outlined, size: 100, color:Colors.green),
+
+              Text("لا توجد إعلانات حالياً",
+              style:TextStyle(
+                color: Colors.grey,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                fontFamily: Fonts.font
+              ),),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
                   return SliverList(
                     delegate: SliverChildBuilderDelegate(
                           (context, index) {
