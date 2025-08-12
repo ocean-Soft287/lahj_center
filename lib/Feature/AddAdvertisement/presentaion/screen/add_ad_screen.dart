@@ -131,7 +131,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
 
@@ -143,8 +143,9 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   green: green,
                   controller: _phoneController,
                 ),
-              ),Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               buildRowLabelField(
@@ -154,7 +155,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     return buildDropdown<Services>(
                       value: selectedService,
                       items: state.items,
-                      displayText: (item) => item.name ,
+                      displayText: (item) => item.name,
                       onChanged: (val) => setState(() => selectedService = val),
                       hint: "اختر الخدمة",
                       green: green,
@@ -163,7 +164,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               Padding(
@@ -180,7 +181,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                               return buildDropdown<ModelCurrency>(
                                 value: selectedCurrency,
                                 items: state.items,
-                                displayText: (item) => item.arName ,
+                                displayText: (item) => item.arName,
                                 onChanged: (val) =>
                                     setState(() => selectedCurrency = val),
                                 hint: 'اختر العملة',
@@ -193,7 +194,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               Row(
@@ -209,7 +210,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
 
@@ -236,7 +237,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
               ),
               SizedBox(height: 12.h),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
 
@@ -257,7 +258,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
               buildRowLabelField(
@@ -277,10 +278,10 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
-               Row(
+              Row(
                 children: [
                   SizedBox(width: 100.w, child: label('المنطقه', green)),
                   Expanded(
@@ -292,14 +293,15 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   ),
                 ],
               ),
-               Padding(
-                padding: const EdgeInsets.only(right: 20,left: 20),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
 
               Align(
                 alignment: Alignment.topRight,
-                child: label('صور الاعلان', green)),
+                child: label('صور الاعلان', green),
+              ),
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
@@ -438,7 +440,8 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
               SizedBox(height: 12.h),
               Align(
                 alignment: Alignment.topRight,
-                child: label("وصف الاعلان", green)),
+                child: label("وصف الاعلان", green),
+              ),
               SizedBox(height: 10.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -466,44 +469,48 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   height: 50.h,
                   child: BlocConsumer<AddAdvertisementBloc, BaseState<void>>(
                     listener: (context, state) {
-                     if (state.isSuccess) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("شكراً لك",
-        style: TextStyle(
-          fontFamily: Fonts.font,
-          color: Colors.black,
-          fontSize: 12,
-          fontWeight: FontWeight.w300,
-
-        ),),
-        content: const Text("تم إضافة الإعلان بنجاح.",
-        style: TextStyle(
-          fontFamily: Fonts.font,
-          color: Colors.black,
-          fontSize: 10,
-          fontWeight: FontWeight.w300,
-
-        ),),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); 
-            },
-            child:  Text("حسناً",
-            style: TextStyle(color:AppColors.mainAppColor,
-            fontFamily: Fonts.font,
-            fontSize: 8.sp,
-            fontWeight: FontWeight.w600,
-            ),),
-          ),
-        ],
-      );
-    },
-  );
-
+                      if (state.isSuccess) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                "شكراً لك",
+                                style: TextStyle(
+                                  fontFamily: Fonts.font,
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              content: const Text(
+                                "تم إضافة الإعلان بنجاح.",
+                                style: TextStyle(
+                                  fontFamily: Fonts.font,
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    "حسناً",
+                                    style: TextStyle(
+                                      color: AppColors.mainAppColor,
+                                      fontFamily: Fonts.font,
+                                      fontSize: 8.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
 
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -544,7 +551,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                                       groupId: selectedCategory?.id ?? 0,
                                       serviceId: selectedService?.id ?? 0,
                                       area: _areaController.text.trim(),
-                                     
+
                                       price:
                                           num.tryParse(
                                             _priceController.text.trim(),
@@ -554,7 +561,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                                       currencyId: selectedCurrency?.id ?? 0,
                                       governorateId:
                                           selectedGovernorate?.id ?? 0,
-                                      
+
                                       description: _descController.text.trim(),
                                       images: _selectedImages,
                                     ),
@@ -585,8 +592,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
 
   Widget buildRowLabelField(String title, Widget field) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h,
-      top: 10),
+      padding: EdgeInsets.only(bottom: 12.h, top: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

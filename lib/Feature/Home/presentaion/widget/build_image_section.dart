@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
@@ -24,7 +25,7 @@ class BuildImageSection extends StatelessWidget {
   });
 
   final PageController pageController;
-  final List imagecache;
+  final List<String> imagecache;
   final String name;
   final String price;
   final String currency;
@@ -70,6 +71,7 @@ class BuildImageSection extends StatelessWidget {
       margin: EdgeInsets.all(12.sp),
       color: Colors.white,
       child: Column(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           imagecache.isEmpty
@@ -79,15 +81,31 @@ class BuildImageSection extends StatelessWidget {
                   child: PageView.builder(
                     controller: pageController,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: 3,
+                    itemCount: imagecache.length,
                     itemBuilder: (context, index) {
-                      return CachedNetworkImage(
-                        height: 200.h,
-                        width: double.infinity,
-                        fit: BoxFit.fill,
-                        imageUrl: "$imageadd$imagecache",
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                      return Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15), // هنا نحدد البورد راديوس
+
+                          child: CachedNetworkImage(
+                            height: 200.h,
+                            width: double.infinity,
+                            fit: BoxFit.fill,
+                            imageUrl: imagecache[index],
+                            placeholder: (context, url) {
+                              return Skeletonizer(
+                                enabled: true,
+                                child: Container(
+                                  height: 200.h,
+                                  width: double.infinity,
+                                  color: Colors.grey[300],
+                                ),
+                              );
+                            },
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                          ),
+                        ),
                       );
                     },
                   ),

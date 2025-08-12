@@ -49,7 +49,7 @@ class ItemDetailsScreen extends StatelessWidget {
                     BuildImageSection(
                       govrnment: state.item.governorateName,
                       pageController: pageController,
-                      imagecache: state.item.advertisementImages,
+                      imagecache: state.item.advertisementImages.map((e)=>e.imageName).toList(),
                       name: state.item.name,
                       price: state.item.price.toString(),
                       currency: state.item.currencyName,

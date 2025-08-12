@@ -150,7 +150,7 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         if (!await image.exists()) continue;
         final fileName = image.path.split('/').last;
         final multipartFile = await MultipartFile.fromFile(image.path, filename: fileName);
-        formData.files.add(MapEntry('ImagesToAdd[$i]', multipartFile));
+        formData.files.add(MapEntry('ImagesToAdd', multipartFile));
       }
 
       final response = await dioConsumer.post(

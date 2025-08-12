@@ -8,7 +8,7 @@ class ItemDetailsCubit extends Cubit<ItemDetailsState> {
   ItemDetailsCubit(this.homerepo) : super(ItemDetailsInitial());
 
   final Homerepo homerepo;
-  Item? item; // تم تعديل النوع إلى Item بدلاً من List<Item>
+  Item? item; 
 
   void getData(int id) async {
     emit(ItemDetailsLoad());

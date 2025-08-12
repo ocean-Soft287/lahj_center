@@ -45,7 +45,7 @@ class EndPoint {
   static String deletemyadd="${baseUrl}Advertisement/DeleteAdvertisement";
   static String editmyadd="${baseUrl}Advertisements/Edit";
   /// comment
-  static String addcomment="${baseUrl}AdvertisementComments/Create";
+  static String addcomment="${baseUrl}Advertisement/addComment";
   static String getComments(int id,int page,int pagesize) =>"${baseUrl}Advertisement/Comments/By-AdvertIdPaged/$id?page=$page&pageSize=$pagesize";
   ///profile
   static String deleteprofile =

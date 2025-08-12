@@ -100,54 +100,54 @@ final item=Item.fromJson(response);
   }
 
  
-  @override
-  Future<Either<Failure, CommentModel>> fetchcoomentbyid({
-    required int pagesize,
-    required int number,
-    required int page,
-  }) async {
-    try {
-      final response = await dioConsumer.get(
-        EndPoint.getComments(number, page, pagesize),
-        useCache: true,
-        cacheDuration: const Duration(hours: 1),
-      );
+  //@override
+  //Future<Either<Failure, CommentModel>> fetchcoomentbyid({
+   // required int pagesize,
+   // required int number,
+    //required int page,
+  //}) async {
+    //try {
+     // final response = await dioConsumer.get(
+       // EndPoint.getComments(number, page, pagesize),
+       // useCache: true,
+      //  cacheDuration: const Duration(hours: 1),
+    //  );
 
-      if (response.toString().isNotEmpty) {
-        final res = CommentModel.fromJson(response);
-        return Right(res);
-      } else {
-        return const Left(ServerFailure('Empty or null response from server'));
-      }
-    } catch (e) {
-      return Left(ServerFailure('Failed to fetch comments: ${e.toString()}'));
-    }
-  }
+    //  if (response.toString().isNotEmpty) {
+      //  final res = CommentModel.fromJson(response);
+      //  return Right(res);
+    //  } else {
+       // return const Left(ServerFailure('Empty or null response from server'));
+     // }
+  //  } catch (e) {
+    //  return Left(ServerFailure('Failed to fetch comments: ${e.toString()}'));
+  //  }
+ // }
 
-  @override
-  Future<Either<Failure, CommentItem>> addcomment({
-    required int advertisementid,
-    required String comment,
-  }) async {
-    try {
-      final Map<String, dynamic> data = {
-        "advertisementId": advertisementid,
-        "comment": comment,
-      };
+ // @override
+  //Future<Either<Failure, CommentItem>> addcomment({
+  //  required int advertisementid,
+  //  required String comment,
+  //}) async {
+  //  try {
+   //  final Map<String, dynamic> data = {
+     //   "advertisementId": advertisementid,
+     //   "comment": comment,
+     // };
 
-      final response = await dioConsumer.post(
-        EndPoint.addcomment,
-        data: data,
-      );
+     // final response = await dioConsumer.post(
+     //   EndPoint.addcomment,
+      //  data: data,
+     // );
 
-      final commentItem = CommentItem.fromJson(response);
-      return right(commentItem);
-    } on DioException catch (e) {
-      return left(_handleDioError(e));
-    } catch (e) {
-      return left(ServerFailure("Failed to add comment: ${e.toString()}"));
-    }
-  }
+     // final commentItem = CommentItem.fromJson(response);
+     // return right(commentItem);
+  //  } on DioException catch (e) {
+     // return left(_handleDioError(e));
+   // } catch (e) {
+   //   return left(ServerFailure("Failed to add comment: ${e.toString()}"));
+   // }
+ // }
 
 
   Failure _handleDioError(DioException error) {

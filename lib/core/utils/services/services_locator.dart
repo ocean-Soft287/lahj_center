@@ -2,8 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_cubit.dart';
+import 'package:lahijcenter/Feature/Home/Data/repo/get_all_comment_repo.dart';
+import 'package:lahijcenter/Feature/Home/Data/repo/get_all_comment_repo_impl.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/home_repo.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/home_repo_imp.dart';
+import 'package:lahijcenter/Feature/Home/Data/repo/post_repo_impl_comment.dart';
+import 'package:lahijcenter/Feature/Home/Data/repo/repo_post_comment.dart';
+import 'package:lahijcenter/Feature/Home/manager/commentcubit/get_all_comment_cubit.dart';
+import 'package:lahijcenter/Feature/Home/manager/commentcubit/post_comment_cubit.dart';
 import 'package:lahijcenter/Feature/Home/manager/homecubit/item_details_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo_imp.dart';
@@ -147,5 +153,17 @@ sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>())
 
   await AddAdvertismentServiceLocator.execute(getIt: sl);
   sl.registerSingleton<ConnectivityCubit>(ConnectivityCubit());
+  //post comment
+  sl.registerLazySingleton<RepoPostComment>(() => PostRepoImplComment(dioConsumer: sl<DioConsumer>()));
+  sl.registerFactory<PostCommentCubit>(() => PostCommentCubit(sl<RepoPostComment>()));
+//get all comment
+  sl.registerLazySingleton<GetAllCommentRepo>(() => GetAllCommentRepoImpl(dioConsumer: sl<DioConsumer>()));
+  sl.registerFactory<GetAllCommentCubit>(() => GetAllCommentCubit(sl<GetAllCommentRepo>()));
+  
+  
+
+
+
+
 
 }

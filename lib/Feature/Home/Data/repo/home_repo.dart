@@ -12,11 +12,7 @@ abstract class Homerepo {
   Future<Either<Failure, AdvertisementResponse>> fetchallitems();
   Future<Either<Failure, AdvertisementResponse>> fetchitemsbygroup({required int number});
   Future<Either<Failure,Item>> fetchitemsbyid({required int number});
-  Future<Either<Failure, CommentModel>> fetchcoomentbyid({
- required int pagesize,
-  required int number,
-  required int page,
-});
-  Future<Either<Failure, CommentItem>>addcomment({required int advertisementid,required String comment});
+ 
+  
 
 }

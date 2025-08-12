@@ -73,6 +73,9 @@ class MyApp extends StatelessWidget {
             builder: (context, child) {
               return ConnectivityWrapper(child: child!);
             },
+            theme: ThemeData(
+              appBarTheme: AppBarTheme( iconTheme: IconThemeData(color: Colors.white))
+            ),
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
