@@ -10,7 +10,7 @@ class Categorygroups extends Equatable {
 
   factory Categorygroups.fromJson(Map<String, dynamic> json) {
     return Categorygroups(
-      id: json['id'] ?? 0, // لو null يرجعه 0
+      id: json['id'] ?? 0, 
       arName: json['arName'] ?? 'الكل',
       enName: json['enName'] ?? 'All',
     );

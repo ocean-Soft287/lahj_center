@@ -52,7 +52,7 @@ class Customdrawer extends StatelessWidget {
                         children: [
                           Container(
                             width: 70.w,
-                            height: 70.h,
+                            height: 60.h,
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               boxShadow: [

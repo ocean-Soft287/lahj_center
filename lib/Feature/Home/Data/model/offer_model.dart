@@ -106,7 +106,7 @@ class OfferItem {
       'StockQuantity': stockQuantity,
       'ProductcImage': productImage,
       'DiscountPercent': discountPercent,
-      'IsFavorite': isFavorite ? 1 : 0, // تحويل bool إلى عدد
+      'IsFavorite': isFavorite ? 1 : 0, 
       'CustomerQuantity': customerQuantity,
       'TotalQuantity': totalQuantity,
       'RequiredQTY': requiredQTY,

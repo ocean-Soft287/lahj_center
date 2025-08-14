@@ -249,6 +249,8 @@ class CommentList extends StatelessWidget {
                               ),
                               curve: Curves.easeOutBack,
                               child: CommentContainer(
+                                advertCommentId: comment.id,
+                                
                                 comment: comment.comment,
                                 customerImage: comment.memberImageUrl ?? "",
                                 customerName: comment.memberFullName.toString(),

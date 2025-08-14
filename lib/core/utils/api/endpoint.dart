@@ -3,17 +3,16 @@ class EndPoint {
   static String baseUrl = "http://78.89.159.126:9393/TheOneAPILahj/api/";
 
   ///search
-  static String search(String x,int page,) => "${baseUrl}Advertisement/search?keyword=$x&page=$page&pageSize=50";
+  static String search(String x, int page) =>
+      "${baseUrl}Advertisement/search?keyword=$x&page=$page&pageSize=50";
 
   ///auth
   static String login = "${baseUrl}Member/login";
   static String signup = "${baseUrl}Member/register";
-  static String otpverifyaccount="${baseUrl}Member/verify-otp";
+  static String otpverifyaccount = "${baseUrl}Member/verify-otp";
   static String phone = "${baseUrl}Customer/AddCustomer";
-  static String changePass =
-      "${baseUrl}Member/forgotpassword";
-  static String changePassconfirm =
-      "${baseUrl}Member/resetpassword";
+  static String changePass = "${baseUrl}Member/forgotpassword";
+  static String changePassconfirm = "${baseUrl}Member/resetpassword";
 
   ///categories
   static String categories = "${baseUrl}Group/getAllGroups";
@@ -27,7 +26,7 @@ class EndPoint {
   static String getitembyid(int x) => "${baseUrl}Advertisement/By-Id/$x";
 
   /// data
-  static String getcurrency =    "${baseUrl}Currency/getAllCurrencies";
+  static String getcurrency = "${baseUrl}Currency/getAllCurrencies";
   static String getAllGovernorates = "${baseUrl}Governorate/getAllGovernorates";
   static String getallServices = "${baseUrl}Service/getAllServices";
   static String getallGroups = "${baseUrl}Group/getAllGroups";
@@ -42,20 +41,20 @@ class EndPoint {
   static String myadds =
       "${baseUrl}Advertisement/myAdvertisementsPaged?page=1&pageSize=900000";
   static String addads = "${baseUrl}Advertisement/AddAdvertisement";
-  static String deletemyadd="${baseUrl}Advertisement/DeleteAdvertisement";
-  static String editmyadd="${baseUrl}Advertisements/Edit";
+  static String deletemyadd = "${baseUrl}Advertisement/DeleteAdvertisement";
+  static String editmyadd = "${baseUrl}Advertisements/Edit";
+
   /// comment
-  static String addcomment="${baseUrl}Advertisement/addComment";
-  static String getComments(int id,int page,int pagesize) =>"${baseUrl}Advertisement/Comments/By-AdvertIdPaged/$id?page=$page&pageSize=$pagesize";
+  static String addcomment = "${baseUrl}Advertisement/addComment";
+  static String getComments(int id, int page, int pagesize) =>
+      "${baseUrl}Advertisement/Comments/By-AdvertIdPaged/$id?page=$page&pageSize=$pagesize";
+
   ///profile
   static String deleteprofile =
       "${baseUrl}Customer/DeleteCustomerByCustomerID?CustomerID=";
-  static String editprofile =
-      "${baseUrl}Customer/EditProfile";
-  static String getProfile="${baseUrl}Member/profile";
-  static String Updateprofile="${baseUrl}Member/updateProfile";
-  static String Newpassword ="${baseUrl}Member/updatePassword";
-
-
-
+  static String editprofile = "${baseUrl}Customer/EditProfile";
+  static String getProfile = "${baseUrl}Member/profile";
+  static String Updateprofile = "${baseUrl}Member/updateProfile";
+  static String Newpassword = "${baseUrl}Member/updatePassword";
+  static String reportcomment = '${baseUrl}Advertisement/ReportComment';
 }

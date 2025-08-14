@@ -26,17 +26,28 @@ class CommentSection extends StatelessWidget {
       create: (_) => GetIt.instance<PostCommentCubit>(),
       child: BlocConsumer<PostCommentCubit, BaseState<CommentItem>>(
         listener: (context, state) {
-          if (state.isSuccess) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('تم إضافة التعليق بنجاح')));
+          if (state.isLoading) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) =>  Center(child: CircularProgressIndicator(
+              color: AppColors.mainAppColor,
+              )),
+            );
+          } else if (state.isSuccess) {
+            Navigator.pop(context); 
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('تم إضافة التعليق بنجاح')),
+            );
             controller.clear();
           } else if (state.isFailure) {
+            Navigator.pop(context); 
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.errorMessage ?? "")));
           }
         },
+
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.all(16.0.w),
@@ -103,16 +114,13 @@ class CommentSection extends StatelessWidget {
                     ),
                     TextButton.icon(
                       onPressed: () async {
-                       
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
                                 CommentList(postId: advertisementId),
-                          
                           ),
                         );
-                        // }
                       },
                       icon: Icon(Icons.comment, color: AppColors.mainAppColor),
                       label: Text(
@@ -126,13 +134,8 @@ class CommentSection extends StatelessWidget {
                     ),
                   ],
                 ),
-
-                // Button to fetch and display existing comments
-
               ],
             ),
-
-            // Display a loading indicator while comments are being processed
           );
         },
       ),
