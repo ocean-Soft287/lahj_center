@@ -20,7 +20,7 @@ class Myadscontainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
-              height: SizeUtility(context).height * 0.12,
+              height:13,
               child: AspectRatio(
                 aspectRatio: 2 / 1.4,
                 child: Container(
@@ -151,6 +151,45 @@ class Myadscontainer extends StatelessWidget {
           ],
         )
       ],
+    );
+  }
+}
+class MainTitle extends StatelessWidget {
+  final String text;
+  final Color? color;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final TextAlign? textAlign;
+  final TextDecoration? decoration;
+  final int? maxLines;
+  final TextOverflow? overflow;
+
+  const MainTitle({
+    super.key,
+    required this.text,
+    this.color = Colors.green,
+    required this.fontSize,
+    required this.fontWeight,
+    this.textAlign,
+    this.decoration = TextDecoration.none,
+    this.maxLines,
+    this.overflow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        decoration: decoration,
+        decorationColor: AppColors.mainAppColor,
+        color: color,
+      ),
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 }

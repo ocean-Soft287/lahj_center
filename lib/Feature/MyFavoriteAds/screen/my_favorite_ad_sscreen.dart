@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lahijcenter/Feature/MyFavoriteAds/manger/favourite_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/model/get_all_favourite_model.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/get_all_favourite_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/screen/widget/favourite_container.dart';
+import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import '../../../../../core/constans/responsve_font.dart';
-import '../../../core/network/local/flutter_secure_storage.dart';
 
 class MyFavoriteAdsScreen extends StatelessWidget {
   const MyFavoriteAdsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => GetIt.instance<FavouriteCubit>()..getallitems(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+       value:
+              GetIt.instance<GetAllFavouriteCubit>()..fetchFavouriteData(),
+        ),
+        BlocProvider(create: (context) => GetIt.instance<UnlikeCubit>()),
+      ],
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: AppColors.mainAppColor,
@@ -40,13 +48,13 @@ class MyFavoriteAdsScreen extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.white,
-        body: BlocConsumer<FavouriteCubit, FavouriteState>(
+        body: BlocConsumer<GetAllFavouriteCubit, BaseState<GetAllFavourite>>(
           listener: (context, state) {},
           builder: (context, state) {
-            FavouriteCubit favouritecubit = BlocProvider.of(context);
+            final favouriteCubit = context.read<GetAllFavouriteCubit>();
             List<Widget> slivers = [];
 
-            if (state is Allfavouriteitemsuccfulload) {
+            if (state.isLoading) {
               slivers.add(
                 const SliverToBoxAdapter(
                   child: Center(
@@ -57,8 +65,7 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (state is Allfavouriteitemsuccful &&
-                state.advertisementResponse.items.isEmpty) {
+            } else if (state.isSuccess && state.data!.items.isEmpty) {
               slivers.add(
                 SliverToBoxAdapter(
                   child: Padding(
@@ -75,7 +82,7 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 20.h),
                         Text(
-                          "لا توجد منتجات في المفضله ",
+                          "لا توجد منتجات في المفضلة ",
                           style: TextStyle(
                             fontSize: 20.sp,
                             color: Colors.green,
@@ -88,39 +95,69 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                   ),
                 ),
               );
-            } else if (state is Allfavouriteitemsuccful) {
-              final items = state.advertisementResponse.items;
+            }
+            
+            else if (state.isSuccess && state.data != null) {
+              final items = state.data!.items;
               slivers.add(
                 SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return FavouriteContainer(
-                        item: items[index],
-                        onTap: () async {
-                          final idString = await SecureStorageService.read(
-                              SecureStorageService.customerid);
-                          final int id =
-                              int.tryParse(idString ?? '') ?? 0;
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return FavouriteContainer(
+                      item: items[index],
+                     onTap: () async {
+  final unlikeCubit = context.read<UnlikeCubit>();
 
-                          favouritecubit.delete(items[index].id);
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "تم الحذف من المفضلة",
-                                style: TextStyle(
-                                  fontFamily: Fonts.font,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              backgroundColor: Colors.red,
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    childCount: items.length,
+  await unlikeCubit.unlikeAd(items[index].id);
+
+  items.removeAt(index);
+  favouriteCubit.emit(
+    state.copyWith(
+      data: GetAllFavourite(
+        items: List.from(items), 
+        page: state.data!.page,
+        pageSize: state.data!.pageSize,
+        totalItems: state.data!.totalItems - 1,
+        totalPages: state.data!.totalPages,
+      ),
+      status: Status.success,
+    ),
+  );
+
+ 
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        "تم الحذف من المفضلة",
+        style: TextStyle(
+          fontFamily: Fonts.font,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      backgroundColor: Colors.red,
+      duration: const Duration(seconds: 2),
+    ),
+  );
+},
+                    );
+                  }, childCount: items.length),
+                ),
+              );
+            } 
+            // حالة الفشل
+            else if (state.isFailure) {
+              slivers.add(
+                SliverToBoxAdapter(
+                  child: Center(
+                    child: Text(
+                      state.errorMessage ?? "حدث خطأ غير متوقع",
+                      style: TextStyle(
+                        fontFamily: Fonts.font,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.red,
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -132,53 +169,4 @@ class MyFavoriteAdsScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class MainTitle extends StatelessWidget {
-  final String text;
-  final Color? color;
-  final double fontSize;
-  final FontWeight fontWeight;
-  final TextAlign? textAlign;
-  final TextDecoration? decoration;
-  final int? maxLines;
-  final TextOverflow? overflow;
-
-  const MainTitle(
-      {super.key,
-      required this.text,
-      this.color = Colors.green,
-      required this.fontSize,
-      required this.fontWeight,
-      this.textAlign,
-      this.decoration = TextDecoration.none,
-      this.maxLines,
-      this.overflow});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontFamily: Fonts.font,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        decoration: decoration,
-        decorationColor: AppColors.mainAppColor,
-        color: color,
-      ),
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-    );
-  }
-}
-
-class SizeUtility {
-  BuildContext context;
-
-  SizeUtility(this.context);
-
-  double get width => MediaQuery.of(context).size.width;
-  double get height => MediaQuery.of(context).size.height;
 }

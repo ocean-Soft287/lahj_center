@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../../MyFavoriteAds/manger/post_like_cubit.dart';
 import '../../Data/model/advertismint_response.dart';
 import '../../manager/categorycubit/category_cubit.dart';
 import 'advertsiminte_container.dart';
@@ -44,9 +46,12 @@ class Listofitems extends StatelessWidget {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-
+                  
+                    
                 },
-                child: AdvertsiminteContainer(item: state.data!.items[index]),
+                child:         BlocProvider(create: (context) => GetIt.instance<PostLikeCubit>(),
+
+                  child: AdvertsiminteContainer(item: state.data!.items[index])),
               );
             },
           );

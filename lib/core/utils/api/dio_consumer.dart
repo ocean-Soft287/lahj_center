@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import '../../network/local/flutter_secure_storage.dart';
 import 'endpoint.dart';
 import 'api_consumer.dart';
@@ -75,6 +74,7 @@ class DioConsumer extends ApiConsumer {
         queryParameters: queryParameters,
         options: Options(
           headers: await _buildHeaders(withAuth: withAuth),
+
           contentType: isFromData ? 'multipart/form-data' : 'application/json',
         ),
       );

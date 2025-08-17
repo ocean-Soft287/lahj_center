@@ -53,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     currentLang = CacheHelper.getData(key: 'changeLang') ?? 'ar';
-   // final currentLocale = context.locale;
+   
 
     return BlocProvider(
       create: (context) => GetIt.instance<RegisterViewCubit>(),
@@ -63,7 +63,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             navigato(context, OTPScreen(email: emailController.text,),);
 
           }
-          if (state is RegisterViewStateError) {}
+          if (state is RegisterViewStateError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("خطا في التسجيل"),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         },
         builder: (context, state) {
           final cubit = BlocProvider.of<RegisterViewCubit>(context);
@@ -99,7 +106,7 @@ fontFamily: Fonts.font,
                       ),
                       10.verticalSpace,
 
-                      /// الاسم الأول
+                     
                       CustomTextFormField(
                         textInputType: TextInputType.text,
                         hintText: 'الاسم الأول',
@@ -108,7 +115,7 @@ fontFamily: Fonts.font,
                         controller: firstNameController,
                       ),
 
-                      /// اسم العائلة
+                   
                       CustomTextFormField(
                         textInputType: TextInputType.text,
                         hintText: 'اسم العائلة',
@@ -117,7 +124,7 @@ fontFamily: Fonts.font,
                         controller: lastNameController,
                       ),
 
-                      /// البريد الإلكتروني
+                      
                       CustomTextFormField(
                         textInputType: TextInputType.emailAddress,
                         hintText: "البريد الإلكتروني",
@@ -131,7 +138,7 @@ fontFamily: Fonts.font,
                         controller: emailController,
                       ),
 
-                      /// النشاط
+                     
                       CustomTextFormField(
                         textInputType: TextInputType.text,
                         hintText: 'النشاط',
@@ -140,7 +147,7 @@ fontFamily: Fonts.font,
                         controller: activityController,
                       ),
 
-                      /// رقم الجوال
+                      
                       CustomTextFormField(
                         textInputType: TextInputType.phone,
                         hintText: 'رقم الجوال',
@@ -152,8 +159,7 @@ fontFamily: Fonts.font,
                         controller: phonecontroller,
                       ),
 
-                      /// كلمة المرور
-                      /// كلمة المرور
+                     
                       CustomTextFormField(
                         hintText: "كلمة المرور",
                         textInputType: TextInputType.visiblePassword,
@@ -186,14 +192,13 @@ fontFamily: Fonts.font,
                       ),
 
 
-                      /// تأكيد كلمة المرور
-                      /// تأكيد كلمة المرور
+                     
                       CustomTextFormField(
                         textInputType: TextInputType.visiblePassword,
                         hintText: 'تأكيد كلمة المرور',
-                        obscureText: cubit.isPasswordConfirm, // ✅ الصحيح
+                        obscureText: cubit.isPasswordConfirm, 
                         subfix: IconButton(
-                          onPressed: cubit.changIconPasswordConfirm, // ✅ دي هي الـ toggle
+                          onPressed: cubit.changIconPasswordConfirm, 
                           icon: Icon(
                             cubit.subfixConfirm,
                             color: AppColors.mainAppColor,
@@ -213,12 +218,13 @@ fontFamily: Fonts.font,
 
                       20.verticalSpace,
 
-                      /// زر إنشاء حساب
+                      
                       Row(
                         children: [
                           GestureDetector(
                             onTap: () {
                               if (keyForm.currentState!.validate()) {
+
                                 cubit.registerUser(
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,
@@ -228,7 +234,9 @@ fontFamily: Fonts.font,
                                 );
                               }
                             },
-                            child: Container(
+                            child:
+                            state is RegisterViewStateLoading ? Center(child: CircularProgressIndicator(color: AppColors.mainAppColor,)) :  
+                             Container(
                               decoration: BoxDecoration(
                                 color: AppColors.mainAppColor,
                                 borderRadius: BorderRadius.circular(25),
@@ -260,7 +268,7 @@ fontFamily: Fonts.font,
 
                       50.verticalSpace,
 
-                      /// تسجيل الدخول
+                     
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

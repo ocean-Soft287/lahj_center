@@ -15,17 +15,28 @@ import '../../../../core/constans/responsve_font.dart';
 import '../../../../core/network/local/flutter_secure_storage.dart';
 import '../../../../core/sharde/widget/text_forn_field.dart';
 import '../../../main/bottomNavbar/Bottomnav.dart';
-import '../../Data/model/user_model.dart';
 import '../../manger/login-cubit/login_view_cubit.dart';
 import '../../manger/login-cubit/login_view_state.dart';
 import 'forgot_password_screen.dart';
 
-var keyForm = GlobalKey<FormState>();
-final emailController = TextEditingController();
-final passwordController = TextEditingController();
-
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final keyForm = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,139 +44,160 @@ class LoginScreen extends StatelessWidget {
       create: (context) => GetIt.instance<LoginViewCubit>(),
       child: BlocConsumer<LoginViewCubit, LoginViewState>(
         listener: (context, state) async {
-if (state is LoginViewStateSuccess){
-  final user = state.dataUser;
+          if (state is LoginViewStateSuccess) {
+            final user = state.dataUser;
 
-  // تخزين البيانات
-  await SecureStorageService.write(SecureStorageService.token, user.token);
-  await SecureStorageService.write(SecureStorageService.email, user.email);
-  await SecureStorageService.write(SecureStorageService.name, '${user.firstName} ${user.lastName}');
-  await SecureStorageService.write(SecureStorageService.image, user.imageUrl);
-  await SecureStorageService.write(SecureStorageService.mobile, user.phoneNumber);
+            await SecureStorageService.write(
+              SecureStorageService.token,
+              user.token,
+            );
+            await SecureStorageService.write(
+              SecureStorageService.email,
+              user.email,
+            );
+            await SecureStorageService.write(
+              SecureStorageService.name,
+              '${user.firstName} ${user.lastName}',
+            );
+            await SecureStorageService.write(
+              SecureStorageService.image,
+              user.imageUrl,
+            );
+            await SecureStorageService.write(
+              SecureStorageService.mobile,
+              user.phoneNumber,
+            );
 
-  Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => const Bottomnav()),
-        (Route<dynamic> route) => false,
-  );
-}
-//
-
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const Bottomnav()),
+              (Route<dynamic> route) => false,
+            );
+          }
+          if (state is LoginViewStateError) {
+            if (state.failure is VerifyOtpFailure) {
+              navigato(
+                context,
+                OTPScreen(email: emailController.text),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.failure.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          }
         },
         builder: (context, state) {
+          final cubit = BlocProvider.of<LoginViewCubit>(context);
           return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
               backgroundColor: Colors.white,
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                scrolledUnderElevation: 0,
-              ),
-              body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
+              scrolledUnderElevation: 0,
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: keyForm,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        AppAssets.logo,
-                        width: 100,
-                        height: 100,
-                      ),
+                      Image.asset(AppAssets.logo, width: 100, height: 100),
                       30.verticalSpace,
                       Text(
                         'مرحبا بعودتك ! سعداء لرؤيتك مرة اخري',
                         style: Textstylefont.titlewelcome(context),
                       ),
                       30.verticalSpace,
-                      CustomTextFormField(
 
+                      /// Email
+                      CustomTextFormField(
                         hintText: "البريد الالكتروني",
                         validator: (value) {
-                          if (value == null || value.isEmpty) return "برجاء إدخال رقم الهاتف";
-                          if (value.length != 12) return "برجاء إدخال رقم الهاتف الصحيح";
+                          if (value == null || value.isEmpty) {
+                            return "الرجاء إدخال البريد الإلكتروني";
+                          }
+                          if (!value.contains("@") || !value.contains(".")) {
+                            return "يرجى إدخال بريد إلكتروني صحيح";
+                          }
                           return null;
                         },
                         controller: emailController,
                       ),
+
+                      /// Password
                       CustomTextFormField(
                         hintText: "كلمه المرور",
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'please_enter_password'.tr();
                           }
-
                           return null;
                         },
                         controller: passwordController,
                         subfix: IconButton(
-                          onPressed: () {
-                            BlocProvider.of<LoginViewCubit>(context)
-                                .changeIconPassword();
-                          },
+                          onPressed: () => cubit.changeIconPassword(),
                           icon: Icon(
-                            BlocProvider.of<LoginViewCubit>(context).subfix,
+                            cubit.subfix,
                             color: AppColors.mainAppColor,
                             size: 25.0,
                           ),
                         ),
                         textInputType: TextInputType.visiblePassword,
-                        obscureText:
-                            BlocProvider.of<LoginViewCubit>(context).isPassword,
+                        obscureText: cubit.isPassword,
                       ),
                       20.verticalSpace,
+
+                      /// Login Button + Forgot Password
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          BlocConsumer<LoginViewCubit, LoginViewState>(
-                            listener: (context,state){
-                              if(state is LoginViewStateSuccess){
-                                navigato(context, Bottomnav());
-                              }
-                              if(state is LoginViewStateError){
-                                if(state.failure is VerifyOtpFailure){
-                                  navigato(context,OTPScreen(email: emailController.text));
-                                }else{
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(state.failure.message),
-                                    ),
-                                  );
-                                }
+                          InkWell(
+                            onTap: () {
+                              if (keyForm.currentState!.validate()) {
+                                cubit.userLogin(
+                                  password: passwordController.text,
+                                  email: emailController.text,
+                                );
                               }
                             },
-                            builder: (context,state) {
-                              return InkWell(
-                                onTap: () {
-                                  BlocProvider.of<LoginViewCubit>(context).userLogin(password:passwordController.text, email: emailController.text,);
-
-                                  // navigato(context,
-                                  //     const HomeScreen());
-                                },
-                                child:state is LoginViewStateLoading ? Center(child: CircularProgressIndicator(color: AppColors.mainAppColor,)) : Container(
+                            child: state is LoginViewStateLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.mainAppColor,
+                                    ),
+                                  )
+                                : Container(
                                     decoration: BoxDecoration(
-                                        color: AppColors.mainAppColor,
-                                        borderRadius: BorderRadius.circular(25)),
+                                      color: AppColors.mainAppColor,
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
                                     padding: const EdgeInsets.all(8),
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 5),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                      ),
                                       child: Row(
                                         children: [
                                           const Icon(
                                             Icons.arrow_back,
                                             color: Colors.white,
                                           ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
+                                          const SizedBox(width: 5),
                                           Text(
                                             "تسجيل الدخول",
-                                            style: Textstylefont.logintext(context),
+                                            style: Textstylefont.logintext(
+                                              context,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    )),
-                              );
-                            }
+                                    ),
+                                  ),
                           ),
                           InkWell(
                             onTap: () {
@@ -183,20 +215,24 @@ if (state is LoginViewStateSuccess){
                                 decorationThickness: 2,
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
+
                       50.verticalSpace,
+
+                      /// Register Link
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "ليس لديك حساب ؟  ",
                             style: TextStyle(
-fontFamily: Fonts.font,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(context, 14)),
+                              fontFamily: Fonts.font,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: getFontSize(context, 14),
+                            ),
                           ),
                           InkWell(
                             onTap: () {
@@ -205,10 +241,11 @@ fontFamily: Fonts.font,
                             child: Text(
                               "انشاء حساب",
                               style: TextStyle(
-                                  fontFamily: Fonts.font,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: getFontSize(context, 14)),
+                                fontFamily: Fonts.font,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: getFontSize(context, 14),
+                              ),
                             ),
                           ),
                         ],
@@ -216,7 +253,9 @@ fontFamily: Fonts.font,
                     ],
                   ),
                 ),
-              ));
+              ),
+            ),
+          );
         },
       ),
     );

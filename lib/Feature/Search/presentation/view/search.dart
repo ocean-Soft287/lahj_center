@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import '../../../../core/constans/fonts.dart';
 import '../../../Home/presentaion/widget/advertsiminte_container.dart';
 import '../../../MyFavoriteAds/manger/favourite_cubit.dart';
+import '../../../MyFavoriteAds/manger/post_like_cubit.dart';
 import '../../manager/search_cubit.dart';
 
 
@@ -134,7 +135,9 @@ class _SearchState extends State<Search> {
                         itemCount: state.results.length,
                         itemBuilder: (context, index) {
                           final item = state.results[index];
-                          return AdvertsiminteContainer(item: item);
+                          return BlocProvider(create: (context) => GetIt.instance<PostLikeCubit>(),
+
+                              child: AdvertsiminteContainer(item: item));
                         },
                       );
                     } else if (state is SearchFailure) {

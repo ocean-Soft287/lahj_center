@@ -56,3 +56,4 @@ class ForgetandchangepassSuccessMessage extends LoginViewState {
 
   ForgetandchangepassSuccessMessage({required this.message});
 }
+class ForgetpasswordLoading extends LoginViewState{}

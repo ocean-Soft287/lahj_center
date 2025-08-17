@@ -14,6 +14,7 @@ import '../../../../core/network/local/chachehelper.dart';
 import '../../../../core/sharde/widget/navigation.dart';
 import '../widget/otp_component.dart';
 import 'login_screen.dart';
+
 class OTPScreen extends StatefulWidget {
   final String email;
 
@@ -25,7 +26,8 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   final keyForm = GlobalKey<FormState>();
-  final List<TextEditingController> _otpControllers = List.generate(6, (_) => TextEditingController());
+  final List<TextEditingController> _otpControllers =
+      List.generate(6, (_) => TextEditingController());
 
   @override
   void dispose() {
@@ -50,18 +52,13 @@ class _OTPScreenState extends State<OTPScreen> {
           if (state is otpError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text("خطا في التسجيل"),
                 backgroundColor: Colors.red,
               ),
             );
           }
-          if(state is otpSuccess){
-
-            navigatofinsh(
-                context,
-                LoginScreen()
-                ,false);
-
+          if (state is otpSuccess) {
+            navigatofinsh(context, const LoginScreen(), false);
           }
         },
         builder: (context, state) {
@@ -123,45 +120,56 @@ class _OTPScreenState extends State<OTPScreen> {
                         width: double.infinity,
                         height: 48.h,
                         child: ElevatedButton(
-                          onPressed:  () {
-                            if (keyForm.currentState!.validate()) {
-                              final otp = getEnteredOTP();
-                              cubit.verifotp(
-                                otp: otp, email: widget.email,
-                              );
-                              print(otp);
-                              // print(_otpControllers);
-                            }
-                          },
+                          onPressed: state is otpLoading
+                              ? null // لو لودينج ممنوع يضغط
+                              : () {
+                                  if (keyForm.currentState!.validate()) {
+                                    final otp = getEnteredOTP();
+                                    cubit.verifotp(
+                                      otp: otp,
+                                      email: widget.email,
+                                    );
+                                    print("OTP Entered: $otp");
+                                  }
+                                },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.mainAppColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25),
                             ),
                           ),
-                          child:Text(
-                            'تأكيد الرمز',
-                            style: TextStyle(
-                              fontFamily: Fonts.font,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: getFontSize(context, 16),
-                            ),
-                          ),
+                          child: state is otpLoading
+                              ? const SizedBox(
+                                  width: 25,
+                                  height: 25,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  'تأكيد الرمز',
+                                  style: TextStyle(
+                                    fontFamily: Fonts.font,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: getFontSize(context, 16),
+                                  ),
+                                ),
                         ),
-                      // ),
-                        ),
+                      ),
                       50.verticalSpace,
 
-                      /// Back to login (optional)
+                      /// Back to login
                       TextButton(
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                (route) => false,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginScreen()),
+                            (route) => false,
                           );
-                          },
+                        },
                         child: Text(
                           'الرجوع لتسجيل الدخول',
                           style: TextStyle(
@@ -171,11 +179,11 @@ class _OTPScreenState extends State<OTPScreen> {
                           ),
                         ),
                       ),
-                    ], )
+                    ],
                   ),
                 ),
               ),
-
+            ),
           );
         },
       ),

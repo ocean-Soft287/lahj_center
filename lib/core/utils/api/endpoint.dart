@@ -57,4 +57,8 @@ class EndPoint {
   static String Updateprofile = "${baseUrl}Member/updateProfile";
   static String Newpassword = "${baseUrl}Member/updatePassword";
   static String reportcomment = '${baseUrl}Advertisement/ReportComment';
+  static String getallFavourite =
+      '${baseUrl}Advertisement/myFavoriteAdvertisementsPaged';
+  static String unlikefavourite = "${baseUrl}Advertisement/UnLike/{Id}";
+  static String postfavourite(int x) => "${baseUrl}Advertisement/Like/$x";
 }

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lahijcenter/core/constans/constants.dart';
-
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/constans/fonts.dart';
@@ -51,6 +49,14 @@ class _ForgetPasswordChangeState extends State<ForgetPasswordChange> {
               context,
               MaterialPageRoute(builder: (context) => const Bottomnav()),
                   (route) => false,
+            );
+          }
+          if (state is LoginViewStateError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("خطا في التسجيل"),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         },
@@ -143,20 +149,23 @@ class _ForgetPasswordChangeState extends State<ForgetPasswordChange> {
 
                       20.verticalSpace,
                       Align(
-                        alignment: Alignment.bottomCenter,
-                        child: DefaultButton(
-                          function: () {
-                            if (keyForm.currentState!.validate()) {
-                              BlocProvider.of<LoginViewCubit>(context).forgetandchangepass(
-                                email: widget.email,
-                                token: codeController.text,
-                                newpass: passwordController.text,
-                              );
-                            }
-                          },
-                          text: "تحديث",
-                        ),
-                      ),
+  alignment: Alignment.bottomCenter,
+  child: state is ForgetpasswordLoading
+      ?  CircularProgressIndicator(color: AppColors.mainAppColor)
+      : DefaultButton(
+          function: () {
+            if (keyForm.currentState!.validate()) {
+              BlocProvider.of<LoginViewCubit>(context).forgetandchangepass(
+                email: widget.email,
+                token: codeController.text,
+                newpass: passwordController.text,
+              );
+            }
+          },
+          text: "تحديث",
+        ),
+),
+
                     ],
                   ),
                 ),

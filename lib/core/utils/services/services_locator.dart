@@ -16,7 +16,16 @@ import 'package:lahijcenter/Feature/Home/manager/commentcubit/post_comment_cubit
 import 'package:lahijcenter/Feature/Home/manager/homecubit/item_details_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo_imp.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/get_all_repo.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/get_all_repo_impl.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/post_like_repo.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/post_like_repo_impl.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/unlike_model_repo_imp.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/unlike_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/favourite_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/get_all_favourite_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/post_like_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_cubit.dart';
 import 'package:lahijcenter/Feature/Search/data/repo/search_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo_impl.dart';
@@ -167,9 +176,35 @@ sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>())
   sl.registerLazySingleton<GetReportRepo>(() => GetReportRepoImpl(dioConsumer: sl<DioConsumer>()));
   sl.registerFactory<GetReportCubit>(() => GetReportCubit(sl<GetReportRepo>()));
   
+//get all favourite
+ sl.registerLazySingleton<GetAllFavouriteRepo>(
+    () => GetAllFavouriteRepoImpl(sl<ApiConsumer>()),
+  );
+
+ 
+  sl.registerLazySingleton<GetAllFavouriteCubit>(
+    () => GetAllFavouriteCubit(sl<GetAllFavouriteRepo>()),
+  );
+  //unlike favourite
 
 
+  sl.registerLazySingleton<UnlikeRepo>(
+    () => UnlikeRepoImpl(apiConsumer: sl<ApiConsumer>()),
+  );
 
+  
+  sl.registerFactory<UnlikeCubit>(
+    () => UnlikeCubit(sl<UnlikeRepo>()),
+  );
+  //post like
+  sl.registerLazySingleton<PostLikeRepo>(
+    () => PostLikeRepoImpl(apiConsumer: sl<ApiConsumer>()),
+  );
+
+  sl.registerFactory<PostLikeCubit>(
+    () => PostLikeCubit(sl<PostLikeRepo>()));
+
+  
 
 
 }

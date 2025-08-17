@@ -36,7 +36,14 @@ class ForgotPasswordScreen extends StatelessWidget {
 
 
       }
-      },
+      if(state is LoginViewStateError){
+         ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("خطا في التسجيل "),
+                backgroundColor: Colors.red,
+              ),
+            );
+      }},
 
         builder: (context,state){
 
@@ -85,35 +92,45 @@ fontFamily: Fonts.font,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                           onTap: (){
-                             loginViewCubit.forgetPassword(email: emailcontroller.text);
-                             },
-                            child: Container(
-                                decoration: BoxDecoration(  color: AppColors.mainAppColor,
-                                    borderRadius: BorderRadius.circular(25)
-                                ),
+                         GestureDetector(
+  onTap: () {
+    if (keyForm.currentState!.validate()) {
+      loginViewCubit.forgetPassword(email: emailcontroller.text);
+    }
+  },
+  child: state is LoginViewStateLoading
+      ?  Center(
+          child: CircularProgressIndicator(
+            color: AppColors.mainAppColor,
+          ),
+        )
+      : Container(
+          decoration: BoxDecoration(
+            color: AppColors.mainAppColor,
+            borderRadius: BorderRadius.circular(25),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Row(
+              children: [
+                const Icon(Icons.arrow_back, color: Colors.white),
+                const SizedBox(width: 5),
+                Text(
+                  'send_code'.tr(),
+                  style: TextStyle(
+                    fontFamily: Fonts.font,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: getFontSize(context, 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+),
 
-                                padding: const EdgeInsets.all(8),
-                                child:
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.arrow_back,color: Colors.white,),
-                                      const SizedBox(width: 5,),
-                                      Text('send_code'.tr(),style: TextStyle(
-fontFamily: Fonts.font,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: getFontSize(context,16)
-                                      ),),
-
-                                    ],
-                                  ),
-                                )
-                            ),
-                          ),
                          const Spacer()
                   
                         ],

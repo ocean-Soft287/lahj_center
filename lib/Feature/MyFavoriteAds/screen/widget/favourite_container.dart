@@ -2,14 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lahijcenter/Feature/Home/Data/model/item_model.dart';
+import 'package:intl/intl.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/model/get_all_favourite_model.dart';
 import '../../../../core/constans/app_colors.dart';
-import '../my_favorite_ad_sscreen.dart';
 
 class FavouriteContainer extends StatelessWidget {
-  const FavouriteContainer({super.key, required this.item, this.onTap});
+  const FavouriteContainer({
+    super.key,
+    required this.item,
+    this.onTap,
+  });
 
-  final Item item;
+ 
+  final FavouriteItem item;
   final void Function()? onTap;
 
   String formatDate(dynamic rawDate) {
@@ -18,7 +23,7 @@ class FavouriteContainer extends StatelessWidget {
     if (rawDate is String) {
       try {
         itemDate = DateTime.parse(rawDate);
-      } catch (e) {
+      } catch (_) {
         return 'تاريخ غير صالح';
       }
     } else if (rawDate is DateTime) {
@@ -47,6 +52,18 @@ class FavouriteContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final displayDate = formatDate(item.date);
 
+
+    String? imageUrl;
+    if (item.advertisementImages.isNotEmpty) {
+      final first = item.advertisementImages.first;
+      if (first is String) {
+        imageUrl = first;
+      } else if (first is Map) {
+        final m = Map<String, dynamic>.from(first as Map);
+        imageUrl = (m['imageName'] ?? m['url'] ?? m['image'])?.toString();
+      }
+    }
+
     return Column(
       children: [
         Padding(
@@ -62,6 +79,7 @@ class FavouriteContainer extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  
                   Container(
                     width: 80,
                     height: 80,
@@ -77,19 +95,15 @@ class FavouriteContainer extends StatelessWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: item.advertisementImages.isEmpty
-                          ?  SizedBox.shrink(
-                            child: Container(
-                            color: Colors.grey[300],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              color: Colors.grey[600],
-                              size: 30,
-                            ),
-                          ),
-                  
-                )
-                          
+                      child: (imageUrl == null || imageUrl.isEmpty)
+                          ? Container(
+                              color: Colors.grey[300],
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey[600],
+                                size: 30,
+                              ),
+                            )
                           : CachedNetworkImage(
                               progressIndicatorBuilder:
                                   (context, url, progress) => Center(
@@ -97,21 +111,23 @@ class FavouriteContainer extends StatelessWidget {
                                   value: progress.progress,
                                 ),
                               ),
-                              imageUrl: item.advertisementImages[0].imageName,
+                              imageUrl: imageUrl,
                               fit: BoxFit.cover,
                               width: 80,
                               height: 80,
                             ),
                     ),
                   ),
+
                   SizedBox(width: 10.w),
+
+                  
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: MainTitle(
@@ -133,10 +149,12 @@ class FavouriteContainer extends StatelessWidget {
                             )
                           ],
                         ),
+
                         SizedBox(height: 10.h),
+
+                   
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: MainTitle(
@@ -158,15 +176,16 @@ class FavouriteContainer extends StatelessWidget {
                             ),
                           ],
                         ),
+
                         SizedBox(height: 5.h),
+
+                      
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Flexible(
                               child: MainTitle(
-                                text:
-                                    " ${item.area}،${item.governorateName}",
+                                text: " ${item.area ?? ''}،${item.governorateName}",
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.hintTextColor,
@@ -177,8 +196,7 @@ class FavouriteContainer extends StatelessWidget {
                             SizedBox(width: 30.w),
                             Expanded(
                               child: Row(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Icon(
                                     Icons.person,
@@ -209,6 +227,47 @@ class FavouriteContainer extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+
+class MainTitle extends StatelessWidget {
+  final String text;
+  final Color? color;
+  final double fontSize;
+  final FontWeight fontWeight;
+  final TextAlign? textAlign;
+  final TextDecoration? decoration;
+  final int? maxLines;
+  final TextOverflow? overflow;
+
+  const MainTitle({
+    super.key,
+    required this.text,
+    this.color = Colors.green,
+    required this.fontSize,
+    required this.fontWeight,
+    this.textAlign,
+    this.decoration = TextDecoration.none,
+    this.maxLines,
+    this.overflow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        decoration: decoration,
+        decorationColor: AppColors.mainAppColor,
+        color: color,
+      ),
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 }
