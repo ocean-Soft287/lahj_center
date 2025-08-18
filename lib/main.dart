@@ -125,7 +125,7 @@ class _StartAppState extends State<StartApp> {
 
     FlutterNativeSplash.remove();
 
-    // Debug
+ 
     print("TOKEN: $token");
 
     if (token != null && token.isNotEmpty) {

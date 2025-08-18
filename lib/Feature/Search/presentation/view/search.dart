@@ -48,8 +48,8 @@ class _SearchState extends State<Search> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<SearchCubit>.value(value: searchCubit),
-        BlocProvider<FavouriteCubit>(
-          create: (_) => GetIt.instance<FavouriteCubit>(),
+        BlocProvider<FavouriteCubit>.value(
+          value:GetIt.instance<FavouriteCubit>(),
         ),
       ],
       child: Scaffold(

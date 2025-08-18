@@ -31,8 +31,8 @@ class HomeScreenWi extends StatelessWidget {
         BlocProvider(
           create: (context) => CategoryCubit(GetIt.instance<Homerepo>())..getallitems(),
         ),
-        BlocProvider(
-          create: (context) => GetIt.instance<FavouriteCubit>()..getallitems(),
+        BlocProvider.value(
+          value: GetIt.instance<FavouriteCubit>()..getallitems(),
         ),
         BlocProvider(
           create: (context) => GetIt.instance<SearchCubit>(),

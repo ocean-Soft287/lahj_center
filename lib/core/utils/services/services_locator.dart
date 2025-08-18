@@ -20,12 +20,15 @@ import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/get_all_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/get_all_repo_impl.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/post_like_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/post_like_repo_impl.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/unlike_home_repo.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/unlike_home_repo_impl.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/unlike_model_repo_imp.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/unlike_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/favourite_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/get_all_favourite_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/post_like_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_home_cubit.dart';
 import 'package:lahijcenter/Feature/Search/data/repo/search_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo_impl.dart';
@@ -114,7 +117,7 @@ Future<void> setup() async {
       dioConsumer: sl<DioConsumer>(),
     ),
   );
-  sl.registerFactory<FavouriteCubit>(() => FavouriteCubit(sl<Favrepo>()));
+  sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit(sl<Favrepo>()));
 
   ///myadds
   sl.registerLazySingleton<Myaddrepo>(
@@ -188,7 +191,7 @@ sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>())
   //unlike favourite
 
 
-  sl.registerLazySingleton<UnlikeRepo>(
+  sl.registerFactory<UnlikeRepo>(
     () => UnlikeRepoImpl(apiConsumer: sl<ApiConsumer>()),
   );
 
@@ -203,6 +206,13 @@ sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>())
 
   sl.registerFactory<PostLikeCubit>(
     () => PostLikeCubit(sl<PostLikeRepo>()));
+    //unlike home
+    sl.registerLazySingleton<UnlikeHomeRepo>(
+    () => UnlikeHomeRepoImpl(apiConsumer: sl<ApiConsumer>()),
+    );
+
+  sl.registerFactory<UnlikeHomeCubit>(
+    () => UnlikeHomeCubit(sl<UnlikeHomeRepo>()));
 
   
 

@@ -10,17 +10,29 @@ import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import '../../../../../core/constans/responsve_font.dart';
+import '../data/model/unlike_model.dart';
 
-class MyFavoriteAdsScreen extends StatelessWidget {
+class MyFavoriteAdsScreen extends StatefulWidget {
   const MyFavoriteAdsScreen({super.key});
 
+  @override
+  State<MyFavoriteAdsScreen> createState() => _MyFavoriteAdsScreenState();
+}
+
+class _MyFavoriteAdsScreenState extends State<MyFavoriteAdsScreen> {
+  int? _currentUnlikingAdId;
+@override
+  void initState() {
+  GetIt.instance<GetAllFavouriteCubit>().fetchFavouriteData();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(
        value:
-              GetIt.instance<GetAllFavouriteCubit>()..fetchFavouriteData(),
+              GetIt.instance<GetAllFavouriteCubit>(),
         ),
         BlocProvider(create: (context) => GetIt.instance<UnlikeCubit>()),
       ],
@@ -48,9 +60,65 @@ class MyFavoriteAdsScreen extends StatelessWidget {
           ),
         ),
         backgroundColor: Colors.white,
-        body: BlocConsumer<GetAllFavouriteCubit, BaseState<GetAllFavourite>>(
-          listener: (context, state) {},
-          builder: (context, state) {
+        body: BlocListener<UnlikeCubit, BaseState<UnlikeModel>>(
+          listener: (context, unlikeState) {
+            if (unlikeState.isSuccess && _currentUnlikingAdId != null) {
+              // Update the favorites list only on successful unlike
+              final favouriteCubit = context.read<GetAllFavouriteCubit>();
+              final currentState = favouriteCubit.state;
+              
+              if (currentState.isSuccess && currentState.data != null) {
+                final updatedItems = currentState.data!.items
+                    .where((item) => item.id != _currentUnlikingAdId)
+                    .toList();
+                
+                favouriteCubit.removeFromFavourite(_currentUnlikingAdId??0);
+                
+                // Show success message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      unlikeState.data?.message ?? "تم الحذف من المفضلة",
+                      style: TextStyle(
+                        fontFamily: Fonts.font,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    backgroundColor: Colors.green,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+                
+                // Reset the current unliking ad ID
+                setState(() {
+                  _currentUnlikingAdId = null;
+                });
+              }
+            } else if (unlikeState.isFailure) {
+              // Show error message on failure
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    unlikeState.errorMessage ?? "فشل في حذف الإعلان من المفضلة",
+                    style: TextStyle(
+                      fontFamily: Fonts.font,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  backgroundColor: Colors.red,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+              
+              // Reset the current unliking ad ID on failure too
+              setState(() {
+                _currentUnlikingAdId = null;
+              });
+            }
+          },
+          child: BlocConsumer<GetAllFavouriteCubit, BaseState<GetAllFavourite>>(
+            listener: (context, state) {},
+            builder: (context, state) {
             final favouriteCubit = context.read<GetAllFavouriteCubit>();
             List<Widget> slivers = [];
 
@@ -104,41 +172,17 @@ class MyFavoriteAdsScreen extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate((context, index) {
                     return FavouriteContainer(
                       item: items[index],
-                     onTap: () async {
-  final unlikeCubit = context.read<UnlikeCubit>();
 
-
-  await unlikeCubit.unlikeAd(items[index].id);
-
-  items.removeAt(index);
-  favouriteCubit.emit(
-    state.copyWith(
-      data: GetAllFavourite(
-        items: List.from(items), 
-        page: state.data!.page,
-        pageSize: state.data!.pageSize,
-        totalItems: state.data!.totalItems - 1,
-        totalPages: state.data!.totalPages,
-      ),
-      status: Status.success,
-    ),
-  );
-
- 
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        "تم الحذف من المفضلة",
-        style: TextStyle(
-          fontFamily: Fonts.font,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      backgroundColor: Colors.red,
-      duration: const Duration(seconds: 2),
-    ),
-  );
-},
+                     onTap: () {
+                        // Store the ad ID that we're trying to unlike
+                        setState(() {
+                          _currentUnlikingAdId = items[index].id;
+                        });
+                        
+                        // Call the unlike function - BlocListener will handle UI updates
+                        final unlikeCubit = context.read<UnlikeCubit>();
+                        unlikeCubit.unlikeAd(items[index].id);
+                      },
                     );
                   }, childCount: items.length),
                 ),
@@ -167,6 +211,6 @@ class MyFavoriteAdsScreen extends StatelessWidget {
           },
         ),
       ),
-    );
+      ));
   }
 }

@@ -4,7 +4,22 @@ class GetAllFavourite {
   final int pageSize;
   final int totalItems;
   final int totalPages;
-
+  //copyWith
+  GetAllFavourite copyWith({
+    List<FavouriteItem>? items,
+    int? page,
+    int? pageSize,
+    int? totalItems,
+    int? totalPages,
+  }){
+    return GetAllFavourite(
+      items: items ?? this.items,
+      page: page ?? this.page,
+      pageSize: pageSize ?? this.pageSize,
+      totalItems: totalItems ?? this.totalItems,
+      totalPages: totalPages ?? this.totalPages,
+    );
+  }
   GetAllFavourite({
     required this.items,
     required this.page,
@@ -82,6 +97,66 @@ class FavouriteItem {
     required this.date,
     required this.advertisementImages,
   });
+
+
+  //copyWith
+  FavouriteItem copyWith({
+    int? id,
+    String? name,
+    String? phone,
+    int? groupId,
+    String? groupName,
+    String? groupEName,
+    int? serviceId,
+    String? serviceName,
+    String? serviceEName,
+    int? price,
+    int? currencyId,
+    String? currencyName,
+    String? currencyEName,
+    int? governorateId,
+    String? governorateName,
+    String? governorateEName,
+    String? area,
+    String? description,
+    String? memberId,
+    String? memberName,
+    String? status,
+    String? deletionReason,
+    bool? isCloseReplies,
+    bool? isLiked,
+    String? date,
+    List<dynamic>? advertisementImages,
+  }) {
+   return FavouriteItem(
+     id: id ?? this.id,
+     name: name ?? this.name,
+     phone: phone ?? this.phone,
+     groupId: groupId ?? this.groupId,
+     groupName: groupName ?? this.groupName,
+     groupEName: groupEName ?? this.groupEName,
+     serviceId: serviceId ?? this.serviceId,
+     serviceName: serviceName ?? this.serviceName,
+     serviceEName: serviceEName ?? this.serviceEName,
+     price: price ?? this.price,
+     currencyId: currencyId ?? this.currencyId,
+     currencyName: currencyName ?? this.currencyName,
+     currencyEName: currencyEName ?? this.currencyEName,
+     governorateId: governorateId ?? this.governorateId,
+     governorateName: governorateName ?? this.governorateName,
+     governorateEName: governorateEName ?? this.governorateEName,
+     area: area ?? this.area,
+     description: description ?? this.description,
+     memberId: memberId ?? this.memberId,
+     memberName: memberName ?? this.memberName,
+     status: status ?? this.status,
+     deletionReason: deletionReason ?? this.deletionReason,
+     isCloseReplies: isCloseReplies ?? this.isCloseReplies,
+     isLiked: isLiked ?? this.isLiked,
+     date: date ?? this.date,
+     advertisementImages: advertisementImages ?? this.advertisementImages,
+   );
+  }
 
   factory FavouriteItem.fromJson(Map<String, dynamic> json) {
     return FavouriteItem(

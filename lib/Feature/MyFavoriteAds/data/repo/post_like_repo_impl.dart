@@ -11,13 +11,15 @@ class PostLikeRepoImpl implements PostLikeRepo{
   PostLikeRepoImpl({required this.apiConsumer});
   
   @override
-  Future<Either<Failure, void>> postlike(int id)async {
+  Future<Either<Failure, PostLikeModel>> postlike(int id)async {
   try{
     final responce=await apiConsumer.post(
       EndPoint.postfavourite(id),
     );
       final model=PostLikeModel.fromJson(responce);
-      return Right(null);
+      return Right(
+        model,
+      );
   }catch(e){
     return Left(ServerFailure(e.toString()));
 

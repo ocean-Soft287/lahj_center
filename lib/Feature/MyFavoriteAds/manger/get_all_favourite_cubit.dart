@@ -28,5 +28,9 @@ class GetAllFavouriteCubit extends Cubit<BaseState<GetAllFavourite>> {
       )),
     );
   }
+  void removeFromFavourite(int id) {
+    final items = state.data!.items.where((item) => item.id != id).toList();
+    emit(state.copyWith(data: state.data!.copyWith(items: items)));
+  }
 }
 

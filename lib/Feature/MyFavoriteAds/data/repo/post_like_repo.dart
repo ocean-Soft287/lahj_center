@@ -5,7 +5,7 @@ import 'package:lahijcenter/core/Failure/failure.dart';
 abstract class PostLikeRepo {
 
 
-  Future<Either<Failure,void>>postlike(
+  Future<Either<Failure,PostLikeModel>>postlike(
     int id
   );
   

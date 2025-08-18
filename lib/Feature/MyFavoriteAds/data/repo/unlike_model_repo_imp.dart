@@ -19,15 +19,21 @@ class UnlikeRepoImpl implements UnlikeRepo {
   Future<Either<Failure, UnlikeModel>> unlikeAd(int adId) async{
   try{
     final responce=await apiConsumer.delete(
-       EndPoint.unlikefavourite.replaceFirst('{Id}', id.toString()));
-       final model=UnlikeModel.fromJson(responce);
-       return Right(model);
+       EndPoint.unlikefavourite(adId));
+       
+    // Handle both string and JSON responses
+    UnlikeModel model;
+    if (responce is String) {
+      model = UnlikeModel(message: responce);
+    } else if (responce is Map<String, dynamic>) {
+      model = UnlikeModel.fromJson(responce);
+    } else {
+      model = UnlikeModel(message: "تم حذف الإعلان من المفضلة بنجاح");
+    }
+    
+    return Right(model);
   }catch(error){
     return Left(ServerFailure(error.toString()));
-
-
-
-
   }
   }
 }

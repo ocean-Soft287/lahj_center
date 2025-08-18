@@ -1,21 +1,21 @@
-class PostLikeModel {
+class UnlikeHome {
   final String message;
 
-  PostLikeModel({
+  UnlikeHome({
     required this.message,
   });
 
-  factory PostLikeModel.fromJson(dynamic json) {
+  factory UnlikeHome.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) {
-      return PostLikeModel(
+      return UnlikeHome(
         message: json['message']?.toString() ?? '',
       );
     } else if (json is String) {
-      return PostLikeModel(
+      return UnlikeHome(
         message: json,
       );
     } else {
-      return PostLikeModel(message: '');
+      return UnlikeHome(message: '');
     }
   }
 }

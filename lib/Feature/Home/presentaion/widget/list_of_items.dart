@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/get_all_favourite_cubit.dart';
+import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_home_cubit.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
@@ -10,7 +12,6 @@ import '../../../MyFavoriteAds/manger/post_like_cubit.dart';
 import '../../Data/model/advertismint_response.dart';
 import '../../manager/categorycubit/category_cubit.dart';
 import 'advertsiminte_container.dart';
-
 
 class Listofitems extends StatelessWidget {
   const Listofitems({super.key, required this.x});
@@ -29,9 +30,7 @@ class Listofitems extends StatelessWidget {
                   child: ListTile(
                     title: Skeleton.leaf(child: Text("")),
                     subtitle: Skeleton.leaf(child: Text("")),
-                    leading: Skeleton.leaf(
-                      child: CircleAvatar(radius: 24),
-                    ),
+                    leading: Skeleton.leaf(child: CircleAvatar(radius: 24)),
                   ),
                 ),
               );
@@ -40,35 +39,58 @@ class Listofitems extends StatelessWidget {
         }
 
         if (state.isSuccess) {
-          print("-------------------------- Allitemsuccful ${state.data?.items.length}");
+          print(
+            "-------------------------- Allitemsuccful ${state.data?.items.length}",
+          );
           return ListView.builder(
             itemCount: state.data!.items.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {
-                  
-                    
-                },
-                child:         BlocProvider(create: (context) => GetIt.instance<PostLikeCubit>(),
+                onTap: () {},
+                child: BlocProvider(
+                  create: (context) => GetIt.instance<PostLikeCubit>(),
 
-                  child: AdvertsiminteContainer(item: state.data!.items[index])),
+                  child:  MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value:
+              GetIt.instance<GetAllFavouriteCubit>()..fetchFavouriteData(),
+        ),
+        BlocProvider(
+          create: (context) => GetIt.instance<PostLikeCubit>(),
+        ),
+        BlocProvider(
+          create: (context) => GetIt.instance<UnlikeHomeCubit>(),
+        ),
+      ],
+                    child: AdvertsiminteContainer(
+                      item: state.data!.items[index],
+                    ),
+                  ),
+                ),
               );
             },
           );
         }
 
-        return  Center(
+        return Center(
           child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
-            SizedBox(height: 50
-              ,),Text(" لاتوجد بيانات",style: TextStyle(color: AppColors.mainAppColor,
-            fontFamily: Fonts.font,
-            fontWeight: FontWeight.w500,
-            fontSize: 25),)
-          ],),
+              SizedBox(height: 50),
+              Text(
+                " لاتوجد بيانات",
+                style: TextStyle(
+                  color: AppColors.mainAppColor,
+                  fontFamily: Fonts.font,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
-  }}
+  }
+}

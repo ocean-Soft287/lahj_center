@@ -59,6 +59,7 @@ class EndPoint {
   static String reportcomment = '${baseUrl}Advertisement/ReportComment';
   static String getallFavourite =
       '${baseUrl}Advertisement/myFavoriteAdvertisementsPaged';
-  static String unlikefavourite = "${baseUrl}Advertisement/UnLike/{Id}";
+  static String unlikefavourite(int id) => "${baseUrl}Advertisement/UnLike/$id";
   static String postfavourite(int x) => "${baseUrl}Advertisement/Like/$x";
+  static String postunlike(int x) => "${baseUrl}Advertisement/UnLike/$x";
 }

@@ -63,7 +63,7 @@ dependencies:
   flutter_native_splash: ^2.4.6
   pretty_dio_logger: 
   internet_connection_checker: ^1.0.0+1
-
+  package_info_plus: ^8.3.1
 
 
 

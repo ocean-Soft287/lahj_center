@@ -4,7 +4,6 @@ import '../../../../core/constans/app_colors.dart';
 import '../../../../core/sharde/widget/default_button.dart';
 import '../../../AddAdvertisement/presentaion/screen/edit_add.dart';
 import '../../../Home/Data/model/item_model.dart';
-import '../../../MyFavoriteAds/screen/my_favorite_ad_sscreen.dart';
 
 class Myadscontainer extends StatelessWidget {
   const Myadscontainer({super.key, required this.item, required this.function,});

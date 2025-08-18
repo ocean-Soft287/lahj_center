@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/main/bottomNavbar/widget/drawer.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
+import 'package:lahijcenter/core/sharde/widget/share_app.dart';
 import '../../../core/constans/app_assets.dart';
 import '../../../core/constans/app_colors.dart';
 import '../../../core/constans/responsve_font.dart';
@@ -239,7 +240,7 @@ void showPlatformDialog(BuildContext context) {
 
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                ShareAppHelper.shareAndroidAppLink();
               },
               child: Container(
                 width: 120.w,
@@ -288,7 +289,7 @@ void showPlatformDialog(BuildContext context) {
             // خيار iOS
             GestureDetector(
               onTap: () {
-                Navigator.pop(context);
+                ShareAppHelper.shareIOSAppLink();
                 // يمكنك هنا إضافة منطق مشاركة خاص بـ iOS
               },
               child: Container(
