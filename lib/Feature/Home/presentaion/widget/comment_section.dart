@@ -11,10 +11,12 @@ import '../../Data/model/post_model_comment.dart';
 
 class CommentSection extends StatelessWidget {
   final TextEditingController controller;
-
   final int advertisementId;
 
-  const CommentSection({
+  // مفتاح الـ Form
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  CommentSection({
     super.key,
     required this.controller,
     required this.advertisementId,
@@ -30,24 +32,25 @@ class CommentSection extends StatelessWidget {
             showDialog(
               context: context,
               barrierDismissible: false,
-              builder: (_) =>  Center(child: CircularProgressIndicator(
-              color: AppColors.mainAppColor,
-              )),
+              builder: (_) => Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.mainAppColor,
+                ),
+              ),
             );
           } else if (state.isSuccess) {
-            Navigator.pop(context); 
+            Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('تم إضافة التعليق بنجاح')),
             );
             controller.clear();
           } else if (state.isFailure) {
-            Navigator.pop(context); 
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.errorMessage ?? "")));
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage ?? "")),
+            );
           }
         },
-
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.all(16.0.w),
@@ -64,15 +67,28 @@ class CommentSection extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
 
-                TextField(
-                  controller: controller,
-                  decoration: InputDecoration(
-                    hintText: '.....اكتب تعليقك هنا',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.r),
+                // ✅ هنا عملنا Form + TextFormField
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: controller,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: '.....اكتب تعليقك هنا',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'الرجاء إدخال تعليقك';
+                      }
+                      if (value.trim().length < 5) {
+                        return 'التعليق يجب ألا يقل عن 5 أحرف';
+                      }
+                      return null;
+                    },
                   ),
-                  maxLines: 3,
                 ),
                 SizedBox(height: 10.h),
 
@@ -81,10 +97,12 @@ class CommentSection extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        context.read<PostCommentCubit>().postComment(
-                          advertisementId: advertisementId,
-                          comment: controller.text,
-                        );
+                        if (_formKey.currentState!.validate()) {
+                          context.read<PostCommentCubit>().postComment(
+                                advertisementId: advertisementId,
+                                comment: controller.text.trim(),
+                              );
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -113,7 +131,7 @@ class CommentSection extends StatelessWidget {
                       ),
                     ),
                     TextButton.icon(
-                      onPressed: () async {
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(

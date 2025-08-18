@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.failure.message),
+                  content: Text("خطا في كلمه كلمه المرور او البريد الالكتروني"),
                   backgroundColor: Colors.red,
                 ),
               );

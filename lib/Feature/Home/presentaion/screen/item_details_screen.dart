@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Home/manager/homecubit/item_details_cubit.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/constans/fonts.dart';
 import '../../Data/repo/home_repo.dart';

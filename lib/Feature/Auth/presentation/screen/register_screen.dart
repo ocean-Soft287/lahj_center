@@ -39,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final emailController = TextEditingController();
 
   final activityController = TextEditingController();
-@override
+  @override
   void dispose() {
     phonecontroller.dispose();
     confirmPasswordController.dispose();
@@ -50,18 +50,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     activityController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     currentLang = CacheHelper.getData(key: 'changeLang') ?? 'ar';
-   
 
     return BlocProvider(
       create: (context) => GetIt.instance<RegisterViewCubit>(),
       child: BlocConsumer<RegisterViewCubit, RegisterViewState>(
         listener: (context, state) {
           if (state is RegisterViewStateSuccess) {
-            navigato(context, OTPScreen(email: emailController.text,),);
-
+            navigato(context, OTPScreen(email: emailController.text));
           }
           if (state is RegisterViewStateError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -89,16 +88,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        AppAssets.logo,
-                        width: 70.w,
-                        height: 70.h,
-                      ),
+                      Image.asset(AppAssets.logo, width: 70.w, height: 70.h),
                       10.verticalSpace,
                       Text(
                         "مرحبا! قم بالتسجيل للبدء",
                         style: TextStyle(
-fontFamily: Fonts.font,
+                          fontFamily: Fonts.font,
                           color: AppColors.secondAppColor,
                           fontWeight: FontWeight.w700,
                           fontSize: getFontSize(context, 24),
@@ -106,30 +101,30 @@ fontFamily: Fonts.font,
                       ),
                       10.verticalSpace,
 
-                     
                       CustomTextFormField(
                         textInputType: TextInputType.text,
                         hintText: 'الاسم الأول',
-                        validator: (value) =>
-                        value == null || value.isEmpty ? 'الرجاء إدخال الاسم الأول' : null,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'الرجاء إدخال الاسم الأول'
+                            : null,
                         controller: firstNameController,
                       ),
 
-                   
                       CustomTextFormField(
                         textInputType: TextInputType.text,
                         hintText: 'اسم العائلة',
-                        validator: (value) =>
-                        value == null || value.isEmpty ? 'الرجاء إدخال اسم العائلة' : null,
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'الرجاء إدخال اسم العائلة'
+                            : null,
                         controller: lastNameController,
                       ),
 
-                      
                       CustomTextFormField(
                         textInputType: TextInputType.emailAddress,
                         hintText: "البريد الإلكتروني",
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'الرجاء إدخال البريد الإلكتروني';
+                          if (value == null || value.isEmpty)
+                            return 'الرجاء إدخال البريد الإلكتروني';
                           if (!value.contains("@") || !value.contains(".")) {
                             return "يرجى إدخال بريد إلكتروني صحيح";
                           }
@@ -137,68 +132,120 @@ fontFamily: Fonts.font,
                         },
                         controller: emailController,
                       ),
+                      Align(
+                        alignment: Alignment.topRight,
 
-                     
-                      CustomTextFormField(
-                        textInputType: TextInputType.text,
-                        hintText: 'النشاط',
-                        validator: (value) =>
-                        value == null || value.isEmpty ? 'الرجاء إدخال النشاط' : null,
-                        controller: activityController,
-                      ),
-
-                      
-                      CustomTextFormField(
-                        textInputType: TextInputType.phone,
-                        hintText: 'رقم الجوال',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) return "برجاء إدخال رقم الهاتف";
-                          if (value.length != 12) return "برجاء إدخال رقم الهاتف الصحيح";
-                          return null;
-                        },
-                        controller: phonecontroller,
-                      ),
-
-                     
-                      CustomTextFormField(
-                        hintText: "كلمة المرور",
-                        textInputType: TextInputType.visiblePassword,
-                        obscureText: cubit.isPassword,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) return 'الرجاء إدخال كلمة المرور';
-                          if (value.length < 8) return 'كلمة المرور يجب ألا تقل عن 8 أحرف';
-                          if (!RegExp(r'[A-Z]').hasMatch(value)) return 'يجب أن تحتوي على حرف كبير واحد على الأقل';
-                          if (!RegExp(r'[a-z]').hasMatch(value)) return 'يجب أن تحتوي على حرف صغير واحد على الأقل';
-                          if (!RegExp(r'[0-9]').hasMatch(value)) return 'يجب أن تحتوي على رقم واحد على الأقل';
-                          if (!RegExp(r'[!@#\$&*~%^()_+=\[\]{};:"\\|,.<>/?-]').hasMatch(value)) {
-                            return 'يجب أن تحتوي على رمز خاص واحد على الأقل';
-                          }
-                          if (confirmPasswordController.text.isNotEmpty &&
-                              confirmPasswordController.text != value) {
-                            return 'كلمة المرور غير متطابقة مع التأكيد';
-                          }
-                          return null;
-                        },
-
-                        controller: passwordController,
-                        subfix: IconButton(
-                          onPressed: cubit.changIconPassword,
-                          icon: Icon(
-                            cubit.subfix,
-                            color: AppColors.mainAppColor,
-                            size: 25.0,
+                        child: Text(
+                          "البريد الإلكتروني يجب ان يتحوي علي @  ",
+                          style: TextStyle(
+                            fontFamily: Fonts.font,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(context, 8),
                           ),
                         ),
                       ),
 
+                      CustomTextFormField(
+                        textInputType: TextInputType.text,
+                        hintText: 'النشاط',
+                        validator: (value) => value == null || value.isEmpty
+                            ? 'الرجاء إدخال النشاط'
+                            : null,
+                        controller: activityController,
+                      ),
 
-                     
+                      CustomTextFormField(
+                        textInputType: TextInputType.phone,
+                        hintText: 'رقم الجوال',
+                        validator: (value) {
+                          if (value == null || value.isEmpty)
+                            return "برجاء إدخال رقم الهاتف";
+                          if (value.length != 12)
+                            return "برجاء إدخال رقم الهاتف الصحيح";
+                          return null;
+                        },
+                        controller: phonecontroller,
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+
+                        child: Text(
+                          "رقم الجوال يجب ألا يقل عن 12 رقم",
+                          style: TextStyle(
+                            fontFamily: Fonts.font,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(context, 8),
+                          ),
+                        ),
+                      ),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextFormField(
+                            hintText: "كلمة المرور",
+                            textInputType: TextInputType.visiblePassword,
+                            obscureText: cubit.isPassword,
+                            controller: passwordController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'الرجاء إدخال كلمة المرور';
+                              }
+                              if (value.length < 8) {
+                                return 'كلمة المرور يجب ألا تقل عن 8 أحرف';
+                              }
+                              if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                                return 'يجب أن تحتوي على حرف كبير واحد على الأقل';
+                              }
+                              if (!RegExp(r'[a-z]').hasMatch(value)) {
+                                return 'يجب أن تحتوي على حرف صغير واحد على الأقل';
+                              }
+                              if (!RegExp(r'[0-9]').hasMatch(value)) {
+                                return 'يجب أن تحتوي على رقم واحد على الأقل';
+                              }
+                              if (!RegExp(
+                                r'[!@#\$&*~%^()_+=\[\]{};:"\\|,.<>/?-]',
+                              ).hasMatch(value)) {
+                                return 'يجب أن تحتوي على رمز خاص واحد على الأقل';
+                              }
+                              if (confirmPasswordController.text.isNotEmpty &&
+                                  confirmPasswordController.text != value) {
+                                return 'كلمة المرور غير متطابقة مع التأكيد';
+                              }
+                              return null;
+                            },
+                            subfix: IconButton(
+                              onPressed: cubit.changIconPassword,
+                              icon: Icon(
+                                cubit.subfix,
+                                color: AppColors.mainAppColor,
+                                size: 25.0,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              "كلمة المرور يجب أن تحتوي على (A, a, 0, !@#...)",
+                              style: TextStyle(
+                                fontFamily: Fonts.font,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                                fontSize: getFontSize(context, 8),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
                       CustomTextFormField(
                         textInputType: TextInputType.visiblePassword,
                         hintText: 'تأكيد كلمة المرور',
-                        obscureText: cubit.isPasswordConfirm, 
+                        obscureText: cubit.isPasswordConfirm,
                         subfix: IconButton(
-                          onPressed: cubit.changIconPasswordConfirm, 
+                          onPressed: cubit.changIconPasswordConfirm,
                           icon: Icon(
                             cubit.subfixConfirm,
                             color: AppColors.mainAppColor,
@@ -206,7 +253,8 @@ fontFamily: Fonts.font,
                           ),
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty) return 'الرجاء تأكيد كلمة المرور';
+                          if (value == null || value.isEmpty)
+                            return 'الرجاء تأكيد كلمة المرور';
                           if (value != passwordController.text) {
                             return "كلمة المرور غير متطابقة";
                           }
@@ -218,49 +266,60 @@ fontFamily: Fonts.font,
 
                       20.verticalSpace,
 
-                      
                       Row(
                         children: [
                           GestureDetector(
                             onTap: () {
                               if (keyForm.currentState!.validate()) {
-
                                 cubit.registerUser(
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,
                                   email: emailController.text,
                                   password: passwordController.text,
-                                  phone: phonecontroller.text, activity: activityController.text,
+                                  phone: phonecontroller.text,
+                                  activity: activityController.text,
                                 );
                               }
                             },
-                            child:
-                            state is RegisterViewStateLoading ? Center(child: CircularProgressIndicator(color: AppColors.mainAppColor,)) :  
-                             Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.mainAppColor,
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              padding: const EdgeInsets.all(8),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.arrow_back, color: Colors.white),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'إنشاء حساب',
-                                      style: TextStyle(
-                                        fontFamily: Fonts.font,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: getFontSize(context, 16),
+                            child: state is RegisterViewStateLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.mainAppColor,
+                                    ),
+                                  )
+                                : Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.mainAppColor,
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    padding: const EdgeInsets.all(8),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.arrow_back,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            'إنشاء حساب',
+                                            style: TextStyle(
+                                              fontFamily: Fonts.font,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: getFontSize(
+                                                context,
+                                                16,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                                  ),
                           ),
                           const Spacer(),
                         ],
@@ -268,7 +327,6 @@ fontFamily: Fonts.font,
 
                       50.verticalSpace,
 
-                     
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -296,7 +354,6 @@ fontFamily: Fonts.font,
                         ],
                       ),
                       50.verticalSpace,
-
                     ],
                   ),
                 ),
