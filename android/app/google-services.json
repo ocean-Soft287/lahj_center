@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "109978753522",
-    "project_id": "lahj-center",
-    "storage_bucket": "lahj-center.firebasestorage.app"
+    "project_number": "234188519283",
+    "project_id": "lahj-center-d5d0f",
+    "storage_bucket": "lahj-center-d5d0f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:109978753522:android:adac76634298d42ca2736b",
+        "mobilesdk_app_id": "1:234188519283:android:5ff3a57956e638f02c3706",
         "android_client_info": {
           "package_name": "com.example.lahijcenter"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDjQfNGPEkX1-q5RV2rmG93jBsk5eIA0yc"
+          "current_key": "AIzaSyA3SNQiL_IbXybWx3efwhUw6VOVdJsQQdA"
         }
       ],
       "services": {

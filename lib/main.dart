@@ -52,6 +52,9 @@ Future<void> main() async {
       child: MyApp(locale: Locale(currentLang!)),
     ),
   );
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+  });
 }
 
 class MyApp extends StatelessWidget {
