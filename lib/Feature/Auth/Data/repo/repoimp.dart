@@ -30,7 +30,8 @@ class Loginrepoimp implements Loginrepo {
     required String activity,
   }) async {
     try {
-      final fcmtoken = "fcm";
+      final fcmtoken = await FirebaseMessaging.instance.getToken();
+
       MultipartFile? imageFile;
       if (image != null) {
         imageFile = await MultipartFile.fromFile(image.path);
@@ -132,7 +133,7 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
     required String password,
   }) async {
     ///TODO : add fcmtoken
-    final fcmtoken = "fcm";
+    final fcmtoken = await FirebaseMessaging.instance.getToken();
 
     try {
       final response = await dioConsumer.post(

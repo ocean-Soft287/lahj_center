@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +35,6 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await CacheHelper.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FcmApi().initNotifications();
   await Hive.initFlutter();
 
   currentLang = CacheHelper.getData(key: 'changeLang') ?? 'ar';
@@ -53,7 +54,14 @@ Future<void> main() async {
     ),
   );
   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+     MessagingConfig.initFirebaseMessaging();
+     FirebaseMessaging.onBackgroundMessage(MessagingConfig.messageHandler);
 
+      }else{
+      log("Context is null");
+    }
   });
 }
 
@@ -73,6 +81,8 @@ class MyApp extends StatelessWidget {
         child: BlocProvider(
           create: (context) => sl<ConnectivityCubit>(),
           child: MaterialApp(
+            navigatorKey: navigatorKey,
+           scaffoldMessengerKey: scaffoldMessengerKey,
             builder: (context, child) {
               return ConnectivityWrapper(child: child!);
             },
@@ -149,3 +159,5 @@ class _StartAppState extends State<StartApp> {
     return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
