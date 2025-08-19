@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/main/bottomNavbar/widget/drawer.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';

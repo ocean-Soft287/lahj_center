@@ -47,7 +47,6 @@ import '../../../Feature/Auth/Data/repo/repo.dart';
 import '../../../Feature/Auth/Data/repo/repoimp.dart';
 import '../../../Feature/Auth/manger/login-cubit/login_view_cubit.dart';
 import '../../../Feature/Home/manager/categorycubit/category_cubit.dart';
-import '../../../Feature/Home/manager/commentcubit/comment_cubit.dart';
 import '../../../Feature/Home/manager/homecubit/home_cubit.dart';
 import '../../../Feature/Search/data/repo/search_repo_imp.dart';
 import '../../../Feature/Search/manager/search_cubit.dart';
@@ -98,7 +97,6 @@ Future<void> setup() async {
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<Homerepo>()));
   sl.registerFactory<CategoryCubit>(() => CategoryCubit(sl<Homerepo>()));
   sl.registerFactory<ItemDetailsCubit>(() => ItemDetailsCubit(sl<Homerepo>()));
-  sl.registerFactory<CommentCubit>(() => CommentCubit(sl<Homerepo>()));
 
   ///add comment
   ///CommentCubit

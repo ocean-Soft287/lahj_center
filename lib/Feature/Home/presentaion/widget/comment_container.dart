@@ -42,7 +42,10 @@ class _CommentContainerState extends State<CommentContainer> {
           
           if (state.status == Status.success) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("تم إرسال الإبلاغ بنجاح")),
+               SnackBar(
+               backgroundColor :AppColors.mainAppColor,
+                content: Text("تم إرسال الإبلاغ بنجاح"),
+              ),
             );
           } else if (state.status == Status.failure) {
             ScaffoldMessenger.of(context).showSnackBar(

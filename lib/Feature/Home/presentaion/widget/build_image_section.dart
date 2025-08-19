@@ -7,7 +7,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
-import '../../../../core/constans/constants.dart';
 import '../../../../core/constans/fonts.dart';
 import '../../Data/model/item_model.dart';
 

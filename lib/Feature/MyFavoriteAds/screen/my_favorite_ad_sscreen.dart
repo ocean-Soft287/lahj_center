@@ -74,7 +74,6 @@ class _MyFavoriteAdsScreenState extends State<MyFavoriteAdsScreen> {
                 
                 favouriteCubit.removeFromFavourite(_currentUnlikingAdId??0);
                 
-                // Show success message
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(

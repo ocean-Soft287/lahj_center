@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:lahijcenter/Feature/Home/Data/model/advertismint_response.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo.dart';
 
-import '../../Home/Data/model/item_model.dart';
 
 part 'favourite_state.dart';
 
