@@ -72,7 +72,7 @@ class MessagingConfig {
       });
 
       const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('@mipmap/launcher_icon');
 
       // Configure iOS notification settings
       const DarwinInitializationSettings initializationSettingsIOS =
@@ -148,11 +148,13 @@ class MessagingConfig {
       }
 
       FirebaseMessaging.instance.onTokenRefresh.listen((newFCM) async {
+        log('FCM token refreshed: $newFCM');
         // getIt<FCMDataSource>().updateFCMToken(fcmToken: newFCM);
       });
 
 
         FirebaseMessaging.instance.getToken().then((token) async {
+          log('FCM token: $token');
           // Handle token with your backend
           // getIt<FCMDataSource>().updateFCMToken(fcmToken: token ?? "");
         });
@@ -178,7 +180,7 @@ class MessagingConfig {
                   'High Importance Notifications',
                   channelDescription:
                   'This channel is used for important notifications.',
-                  icon: '@mipmap/ic_launcher',
+                  icon: '@mipmap/launcher_icon',
                 ),
                 iOS: iOSPlatformChannelSpecifics,
               ),

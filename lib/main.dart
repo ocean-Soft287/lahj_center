@@ -42,7 +42,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]);
+  ]).then((value){
 
   runApp(
     EasyLocalization(
@@ -53,16 +53,14 @@ Future<void> main() async {
       child: MyApp(locale: Locale(currentLang!)),
     ),
   );
-  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    final context = navigatorKey.currentContext;
-    if (context != null) {
-     MessagingConfig.initFirebaseMessaging();
-     FirebaseMessaging.onBackgroundMessage(MessagingConfig.messageHandler);
+  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    await MessagingConfig.initFirebaseMessaging();
+    FirebaseMessaging.onBackgroundMessage(MessagingConfig.messageHandler);
 
-      }else{
-      log("Context is null");
-    }
   });
+  });
+
+
 }
 
 class MyApp extends StatelessWidget {
