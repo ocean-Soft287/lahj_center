@@ -81,36 +81,13 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
     selectedGovernorateArabic = widget.item.area;
     selectedGovernorateEnglish = widget.item.area;
 
-    governmentListFuture = loadGovernmentFromHive();
-    categorylistfuture = loadCattegoryyFromHive();
-    servicesListFuture = loadServicesFromHive();
-    currencyListFuture = loadCurrencyFromHive();
+   
+  
   }
 
-  Future<List<Categorygroups>> loadCattegoryyFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "category");
-    if (rawData == null) return [];
-    return rawData.map((e) => Categorygroups.fromJson(e as Map<String, dynamic>)).toList();
-  }
+  
 
-  Future<List<Government>> loadGovernmentFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "government");
-    if (rawData == null) return [];
-    return rawData.map((e) => Government.fromJson(e as Map<String, dynamic>)).toList();
-  }
-
-  Future<List<Services>> loadServicesFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "services");
-    if (rawData == null) return [];
-    return rawData.map((e) => Services.fromJson(e as Map<String, dynamic>)).toList();
-  }
-
-  Future<List<ModelCurrency>> loadCurrencyFromHive() async {
-    final rawData = await HiveCrudManager.readList("shared_data_box", "currency");
-    if (rawData == null) return [];
-    return rawData.map((e) => ModelCurrency.fromJson(e as Map<String, dynamic>)).toList();
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return BlocProvider(

@@ -54,6 +54,7 @@ class ItemDetailsScreen extends StatelessWidget {
                       currency: state.item.currencyName,
                       area: state.item.area,
                       item: state.item,
+                      
                     ),
                     Divider(thickness: 5, color: Color(0xffD9D9D9)),
                     BuildAdvertiserSection(item: state.item),

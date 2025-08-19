@@ -16,61 +16,57 @@ class Myadscontainer extends StatelessWidget {
     return Column(
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height:13,
-              child: AspectRatio(
-                aspectRatio: 2 / 1.4,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),  
-                    ]
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: item.advertisementImages.isEmpty
-                        ?  SizedBox.shrink(
-                            child: Container(
-                            color: Colors.grey[300],
-                            child: Icon(
-                              Icons.image_not_supported,
-                              color: Colors.grey[600],
-                              size: 30,
-                            ),
+              width: 100.w,
+              height: 100.w,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),  
+                  ]
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: item.advertisementImages.isEmpty
+                      ? Container(
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey[600],
+                            size: 40.sp,
                           ),
-                  
-                )
-                        : Image.network(
-                            item.advertisementImages[0].imageName,
-                            fit: BoxFit.cover, 
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                  ),
+                        )
+                      : Image.network(
+                          item.advertisementImages[0].imageName,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
+
+            SizedBox(width: 10.w),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(
                         child: MainTitle(
                           text: item.name,
                           fontSize: 17.sp,
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                           color: AppColors.mainAppColor,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -79,32 +75,27 @@ class Myadscontainer extends StatelessWidget {
                       GestureDetector(
                         onTap: () {},
                         child: Icon(
-                          Icons.forward_10_outlined,
+                          Icons.reply,
                           color: Colors.green,
-                          size: 30.sp,
+                          size: 24.sp,
                         ),
                       )
                     ],
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.h),
+
+                  
                   MainTitle(
-                    text: "",
+                    text: "${item.governorateName}، ${item.area}",
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.hintTextColor,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                  const SizedBox(height: 5),
-                  MainTitle(
-                    text: "${item.governorateName}، ${item.area},",
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.hintTextColor,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  const SizedBox(height: 5),
+                  SizedBox(height: 5.h),
+
+               
                   MainTitle(
                     text: item.serviceName,
                     fontSize: 14.sp,
@@ -113,12 +104,14 @@ class Myadscontainer extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                  SizedBox(height: 10.h),
                 ],
               ),
             )
           ],
         ),
+
+        SizedBox(height: 10.h),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -153,6 +146,7 @@ class Myadscontainer extends StatelessWidget {
     );
   }
 }
+
 class MainTitle extends StatelessWidget {
   final String text;
   final Color? color;
