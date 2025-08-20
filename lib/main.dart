@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+
 
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:lahijcenter/Feature/profile/manager/deleate_account_cubit.dart';
 import 'package:lahijcenter/core/connectivity/cubit/connectivity_cubit.dart';
 import 'package:lahijcenter/core/connectivity/cubit/widget/connectivity_wraper.dart';
 import 'Feature/Home/presentaion/screen/item_details_screen.dart';
@@ -42,25 +44,21 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((value){
-
-  runApp(
-    EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      fallbackLocale: const Locale('ar'),
-      startLocale: const Locale('ar'),
-      path: 'assets/lang',
-      child: MyApp(locale: Locale(currentLang!)),
-    ),
-  );
-  WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-    await MessagingConfig.initFirebaseMessaging();
-    FirebaseMessaging.onBackgroundMessage(MessagingConfig.messageHandler);
-
+  ]).then((value) {
+    runApp(
+      EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('ar')],
+        fallbackLocale: const Locale('ar'),
+        startLocale: const Locale('ar'),
+        path: 'assets/lang',
+        child: MyApp(locale: Locale(currentLang!)),
+      ),
+    );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await MessagingConfig.initFirebaseMessaging();
+      FirebaseMessaging.onBackgroundMessage(MessagingConfig.messageHandler);
+    });
   });
-  });
-
-
 }
 
 class MyApp extends StatelessWidget {
@@ -76,16 +74,21 @@ class MyApp extends StatelessWidget {
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        child: BlocProvider(
-          create: (context) => sl<ConnectivityCubit>(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => sl<ConnectivityCubit>()),
+            BlocProvider(create: (context) => GetIt.instance<DeleateAccountCubit>()),
+          ],
           child: MaterialApp(
             navigatorKey: navigatorKey,
-           scaffoldMessengerKey: scaffoldMessengerKey,
+            scaffoldMessengerKey: scaffoldMessengerKey,
             builder: (context, child) {
               return ConnectivityWrapper(child: child!);
             },
             theme: ThemeData(
-              appBarTheme: AppBarTheme( iconTheme: IconThemeData(color: Colors.white))
+              appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(color: Colors.white),
+              ),
             ),
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
@@ -136,7 +139,6 @@ class _StartAppState extends State<StartApp> {
 
     FlutterNativeSplash.remove();
 
- 
     print("TOKEN: $token");
 
     if (token != null && token.isNotEmpty) {
@@ -157,5 +159,7 @@ class _StartAppState extends State<StartApp> {
     return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();

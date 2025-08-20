@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lahijcenter/Feature/profile/screen/password_changed_success.dart';
+import 'package:lahijcenter/Feature/Auth/presentation/screen/login_screen.dart';
+import 'package:lahijcenter/Feature/profile/data/models/deleate_account_model.dart';
+import 'package:lahijcenter/Feature/profile/manager/deleate_account_cubit.dart';
+import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_state.dart';
@@ -68,6 +71,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       providers: [
         BlocProvider.value(value: getProfileCubit),
         BlocProvider.value(value: updateProfileCubit),
+        
+      
+        
       ],
       child: BlocListener<UpdateProfileCubit, UpdateProfileState>(
         listener: (context, state) async {
@@ -77,12 +83,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 content: Text("تم التحديث بنجاح "),
                 backgroundColor: Colors.green,
                 behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 margin: EdgeInsets.all(16),
               ),
             );
 
-            await getProfileCubit.fetchProfile(); // جلب البيانات من جديد
+            await getProfileCubit.fetchProfile();
             Navigator.pop(context, true);
           } else if (state is UpdateProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -90,7 +98,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 content: Text("خطأ: ${state.message}"),
                 backgroundColor: Colors.red,
                 behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 margin: EdgeInsets.all(16),
               ),
             );
@@ -106,7 +116,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.mainAppColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.mainAppColor,
+                        ),
                         strokeWidth: 3,
                       ),
                       SizedBox(height: 16),
@@ -187,7 +199,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         shape: BoxShape.circle,
                                         boxShadow: [
                                           BoxShadow(
-                                            color: AppColors.mainAppColor.withOpacity(0.2),
+                                            color: AppColors.mainAppColor
+                                                .withOpacity(0.2),
                                             blurRadius: 15,
                                             offset: Offset(0, 5),
                                           ),
@@ -195,12 +208,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                       child: CircleAvatar(
                                         radius: 60,
-                                        backgroundColor: AppColors.mainAppColor.withOpacity(0.1),
+                                        backgroundColor: AppColors.mainAppColor
+                                            .withOpacity(0.1),
                                         backgroundImage: selectedImage != null
                                             ? FileImage(selectedImage!)
-                                            : (profile.imageUrl != null && profile.imageUrl!.isNotEmpty
-                                            ? NetworkImage(profile.imageUrl!)
-                                            : const AssetImage("assets/images/default_user.png")) as ImageProvider,
+                                            : (profile.imageUrl != null &&
+                                                          profile
+                                                              .imageUrl!
+                                                              .isNotEmpty
+                                                      ? NetworkImage(
+                                                          profile.imageUrl!,
+                                                        )
+                                                      : const AssetImage(
+                                                          "assets/images/default_user.png",
+                                                        ))
+                                                  as ImageProvider,
                                       ),
                                     ),
                                     InkWell(
@@ -213,13 +235,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: AppColors.mainAppColor.withOpacity(0.4),
+                                              color: AppColors.mainAppColor
+                                                  .withOpacity(0.4),
                                               blurRadius: 8,
                                               offset: Offset(0, 2),
                                             ),
                                           ],
                                         ),
-                                        child: Icon(Icons.camera_alt, size: 20, color: Colors.white),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -286,24 +313,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: () {},
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
                                   child: Container(
                                     padding: EdgeInsets.all(20),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         InkWell(
-                                          onTap:(){
-                                            Navigator.push(context, MaterialPageRoute(builder: (context)=>PasswordUpdateScreen()));
-
-                                  },
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PasswordUpdateScreen(),
+                                              ),
+                                            );
+                                          },
                                           child: Row(
                                             children: [
                                               Container(
                                                 padding: EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
-                                                  color: AppColors.mainAppColor.withOpacity(0.1),
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  color: AppColors.mainAppColor
+                                                      .withOpacity(0.1),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                 ),
                                                 child: Icon(
                                                   Icons.lock_outline,
@@ -324,7 +361,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ],
                                           ),
                                         ),
-                                        Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16)
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.grey[400],
+                                          size: 16,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -337,24 +378,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   onTap: () => showDialog(
                                     context: context,
                                     builder: (_) => AlertDialog(
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
                                       title: Row(
                                         children: [
-                                          Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
+                                          Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: Colors.red,
+                                            size: 24,
+                                          ),
                                           SizedBox(width: 8),
                                           Text(
                                             'تأكيد الحذف',
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
                                           ),
                                         ],
                                       ),
                                       content: Text(
                                         'هل أنت متأكد أنك تريد حذف الحساب؟',
-                                        style: TextStyle(fontSize: 16, height: 1.5),
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          height: 1.5,
+                                        ),
                                       ),
                                       actions: [
                                         TextButton(
-                                          onPressed: () => Navigator.pop(context),
+                                          onPressed: () =>
+                                              Navigator.pop(context),
                                           child: Text(
                                             'إلغاء',
                                             style: TextStyle(
@@ -363,37 +417,84 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {},
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                            foregroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                          ),
-                                          child: Text(
-                                            'حذف',
-                                            style: TextStyle(fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
+                                       BlocConsumer<DeleateAccountCubit, BaseState<DeleateAccountModel>>(
+  listener: (context, state) {
+    if (state.isSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("تم حذف الحساب بنجاح"),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ),
+        (route) => false,
+      );
+    } else if (state.isFailure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("حدث خطأ أثناء حذف الحساب"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  },
+  builder: (context, state) {
+    return ElevatedButton(
+      onPressed: () {
+        context.read<DeleateAccountCubit>().deleteAccount(
+              profile.id.toString(),
+            );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      ),
+      child: state.isLoading
+          ? CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(
+                AppColors.mainAppColor,
+              ),
+            )
+          : const Text(
+              'حذف',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+    );
+  },
+),
+
                                       ],
                                     ),
                                   ),
-                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+                                  borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(20),
+                                  ),
                                   child: Container(
                                     padding: EdgeInsets.all(20),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
                                             Container(
                                               padding: EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                color: Colors.red.withOpacity(0.1),
-                                                borderRadius: BorderRadius.circular(8),
+                                                color: Colors.red.withOpacity(
+                                                  0.1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
                                               ),
                                               child: Icon(
                                                 Icons.delete_outline,
@@ -412,7 +513,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           ],
                                         ),
-                                        Icon(Icons.arrow_forward_ios, color: Colors.grey[400], size: 16),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.grey[400],
+                                          size: 16,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -432,7 +537,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.mainAppColor.withOpacity(0.3),
+                                    color: AppColors.mainAppColor.withOpacity(
+                                      0.3,
+                                    ),
                                     blurRadius: 15,
                                     offset: Offset(0, 6),
                                   ),
@@ -440,54 +547,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               child: updateState is UpdateProfileLoading
                                   ? Container(
-                                decoration: BoxDecoration(
-                                  color: AppColors.mainAppColor.withOpacity(0.7),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Center(
-                                  child: SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                      strokeWidth: 3,
-                                    ),
-                                  ),
-                                ),
-                              )
+                                      decoration: BoxDecoration(
+                                        color: AppColors.mainAppColor
+                                            .withOpacity(0.7),
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Center(
+                                        child: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  Colors.white,
+                                                ),
+                                            strokeWidth: 3,
+                                          ),
+                                        ),
+                                      ),
+                                    )
                                   : ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.mainAppColor,
-                                  minimumSize: const Size.fromHeight(45),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  elevation: 0,
-                                ),
-                                onPressed: () {
-                                  updateProfileCubit.updateProfile(
-                                    name: nameController.text,
-                                    email: emailController.text,
-                                    phone: phoneController.text,
-                                    imageBase64: imageBase64,
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.save_outlined, color: Colors.white, size: 20),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      "حفظ",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.mainAppColor,
+                                        minimumSize: const Size.fromHeight(45),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                        ),
+                                        elevation: 0,
+                                      ),
+                                      onPressed: () {
+                                        updateProfileCubit.updateProfile(
+                                          name: nameController.text,
+                                          email: emailController.text,
+                                          phone: phoneController.text,
+                                          imageBase64: imageBase64,
+                                        );
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.save_outlined,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            "حفظ",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
                             );
                           },
                         ),
@@ -525,7 +643,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.mainAppColor,
                           foregroundColor: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),

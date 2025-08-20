@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lahijcenter/core/sharde/widget/default_button.dart';
 
 import '../../../../../core/constans/fonts.dart';
-import '../../Auth/presentation/screen/login_screen.dart';
 import '../../main/bottomNavbar/Bottomnav.dart';
 
 

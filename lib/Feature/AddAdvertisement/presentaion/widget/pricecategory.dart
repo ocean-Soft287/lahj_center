@@ -112,7 +112,6 @@ class _PriceCategoryState extends State<PriceCategory> {
         ),
         const Divider(thickness: 1, color: Color(0xff868686)),
 
-        // الخدمة
         buildDropdown<Services>(
           label: "الخدمة",
           future: widget.servicesListFuture,

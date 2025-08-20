@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lahijcenter/Feature/profile/data/models/update_profile_model.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/update_profile_repo.dart';
 import 'update_profile_state.dart';
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import '../../../../core/constans/app_colors.dart';
-import '../../../../core/network/local/hive_crud_manager.dart';
 import '../../../../core/sharde/widget/default_button.dart';
 import '../../../Home/Data/model/categories.dart';
 import '../../../Home/Data/model/item_model.dart';
@@ -179,11 +178,10 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
                   CommentSectionrrSW(comment: comment),
                   BlocBuilder<AddadvertisminteCubit, AddadvertisminteState>(
                     builder: (context, state) {
-                      final cubit = context.read<AddadvertisminteCubit>();
+                    //  final cubit = context.read<AddadvertisminteCubit>();
                       return DefaultButton(
                         text: "تحديث الإعلان",
                         function: () async {
-                          // مكان تنفيذ عملية التحديث
                         },
                       );
                     },

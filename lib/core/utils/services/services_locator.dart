@@ -30,10 +30,16 @@ import 'package:lahijcenter/Feature/MyFavoriteAds/manger/post_like_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/manger/unlike_home_cubit.dart';
 import 'package:lahijcenter/Feature/Search/data/repo/search_repo.dart';
+import 'package:lahijcenter/Feature/main/bottomNavbar/manager/cubit_notfication.dart';
+import 'package:lahijcenter/Feature/main/bottomNavbar/repo/notfication_repo.dart';
+import 'package:lahijcenter/Feature/main/bottomNavbar/repo/notfication_repo_impl.dart';
+import 'package:lahijcenter/Feature/profile/data/repo/deleate_account_repo.dart';
+import 'package:lahijcenter/Feature/profile/data/repo/deleate_account_repo_impl.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/get_profile_repo_impl.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/new_password_repo.dart';
 import 'package:lahijcenter/Feature/profile/data/repo/new_password_repo_impl.dart';
+import 'package:lahijcenter/Feature/profile/manager/deleate_account_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/new_password_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
@@ -211,6 +217,23 @@ sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>())
 
   sl.registerFactory<UnlikeHomeCubit>(
     () => UnlikeHomeCubit(sl<UnlikeHomeRepo>()));
+  //delete account
+ sl.registerLazySingleton<DeleteAccountRepo>(
+  () => DeleateAccountRepoImpl(apiConsumer: sl<ApiConsumer>()),
+);
+
+sl.registerFactory<DeleateAccountCubit>(
+  () => DeleateAccountCubit(deleteAccountRepo: sl<DeleteAccountRepo>()),
+);
+//get notifications
+  sl.registerLazySingleton<NotificationRepo>(
+    () => NotficationRepoImpl(apiConsumer: sl<ApiConsumer>()),
+  );
+
+  // Register NotificationCubit
+  sl.registerFactory<CubitNotfication>(
+    () => CubitNotfication(sl<NotificationRepo>()),
+  );
 
   
 

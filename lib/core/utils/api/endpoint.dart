@@ -62,4 +62,7 @@ class EndPoint {
   static String unlikefavourite(int id) => "${baseUrl}Advertisement/UnLike/$id";
   static String postfavourite(int x) => "${baseUrl}Advertisement/Like/$x";
   static String postunlike(int x) => "${baseUrl}Advertisement/UnLike/$x";
+  static String deleateAccount(id) => "${baseUrl}Member/delete?userId=$id";
+  static String getNotifications =
+      "${baseUrl}Member/myNotifications";
 }
