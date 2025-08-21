@@ -49,7 +49,7 @@ class _CommentContainerState extends State<CommentContainer> {
             );
           } else if (state.status == Status.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("فشل الإرسال: ${state.errorMessage}")),
+              SnackBar(content: Text("فشل في إرسال الإبلاغ")),
             );
           }
         },
