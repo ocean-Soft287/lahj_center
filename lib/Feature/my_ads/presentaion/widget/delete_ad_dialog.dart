@@ -57,20 +57,20 @@ class _DeleteAdDialogState extends State<DeleteAdDialog> {
               ),
               const SizedBox(height: 20),
               RadioOption(
-                title: "تم البيع في لحج سنتر",
-                isSelected: selectedReason == "تم البيع في لحج سنتر",
+                title: "تم البيع في لحج دوت كوم",
+                isSelected: selectedReason == "تم البيع في لحج دوت كوم",
                 onChanged: (value) {
                   setState(() {
-                    selectedReason = "تم البيع في لحج سنتر";
+                    selectedReason = "تم البيع في لحج دوت كوم";
                   });
                 },
               ),
               RadioOption(
-                title: "تم البيع خارج لحج سنتر",
-                isSelected: selectedReason == "تم البيع خارج لحج سنتر",
+                title: "تم البيع خارج لحج دوت كوم",
+                isSelected: selectedReason == "تم البيع خارج لحج دوت كوم",
                 onChanged: (value) {
                   setState(() {
-                    selectedReason = "تم البيع خارج لحج سنتر";
+                    selectedReason = "تم البيع خارج لحج دوت كوم";
                   });
                 },
               ),
@@ -96,7 +96,7 @@ class _DeleteAdDialogState extends State<DeleteAdDialog> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        "اذا حذفت هذا الإعلان , لن تتمكن من نشر إعلان جديد قبل 6 ساعات",
+                        "اذا حذفت هذا الإعلان , لن تتمكن من نشر إعلان جديد قبل 2 ساعات",
                         style: TextStyle(
                           fontFamily: Fonts.font,
                           color: Colors.black,

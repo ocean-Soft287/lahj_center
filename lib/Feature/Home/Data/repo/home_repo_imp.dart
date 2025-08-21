@@ -5,7 +5,6 @@ import '../../../../core/Failure/failure.dart';
 import '../../../../core/utils/api/dio_consumer.dart';
 import '../../../../core/utils/api/endpoint.dart';
 import '../model/advertismint_response.dart';
-import '../model/comment_model.dart';
 import 'home_repo.dart';
 
 class Homerepoimp implements Homerepo {
@@ -150,7 +149,7 @@ final item=Item.fromJson(response);
  // }
 
 
-  Failure _handleDioError(DioException error) {
+  Failure handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:

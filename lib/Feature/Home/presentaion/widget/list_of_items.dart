@@ -50,23 +50,22 @@ class Listofitems extends StatelessWidget {
                 child: BlocProvider(
                   create: (context) => GetIt.instance<PostLikeCubit>(),
 
-                  child:  MultiBlocProvider(
-      providers: [
-        BlocProvider.value(
-          value:
+                  child: MultiBlocProvider(
+              providers: [
+              BlocProvider.value(
+              value:
               GetIt.instance<GetAllFavouriteCubit>()..fetchFavouriteData(),
-        ),
-        BlocProvider(
-          create: (context) => GetIt.instance<PostLikeCubit>(),
-        ),
-        BlocProvider(
-          create: (context) => GetIt.instance<UnlikeHomeCubit>(),
-        ),
-      ],
-                    child: AdvertsiminteContainer(
-                      item: state.data!.items[index],
-                    ),
-                  ),
+              ),
+              BlocProvider(
+              create: (context) => GetIt.instance<PostLikeCubit>(),
+              ),
+              BlocProvider(
+              create: (context) => GetIt.instance<UnlikeHomeCubit>(),
+              ),
+              ],
+              child: AdvertsiminteContainer(
+              item: state.data!.items[index],
+              ),)
                 ),
               );
             },

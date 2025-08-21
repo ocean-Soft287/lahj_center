@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,36 +38,35 @@ class _ForgetPasswordChangeState extends State<ForgetPasswordChange> {
       create: (context) => GetIt.instance<LoginViewCubit>(),
       child: BlocConsumer<LoginViewCubit, LoginViewState>(
         listener: (context, state) {
-          if (state is ForgetandchangepassSuccessMessage && widget.name == 'forgetpassword') {
+          if (state is ForgetandchangepassSuccessMessage &&
+              widget.name == 'forgetpassword') {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const LoginScreen()),
-                  (route) => false,
+              (route) => false,
             );
-          } else if (state is ForgetandchangepassSuccessMessage && widget.name == 'change') {
-            SecureStorageService.write(SecureStorageService.password, passwordController.text);
+          } else if (state is ForgetandchangepassSuccessMessage &&
+              widget.name == 'change') {
+            SecureStorageService.write(
+              SecureStorageService.password,
+              passwordController.text,
+            );
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const Bottomnav()),
-                  (route) => false,
+              CupertinoPageRoute(builder: (context) => const Bottomnav()),
+              (route) => false,
             );
           }
           if (state is LoginViewStateError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("خطا في التسجيل"),
-                backgroundColor: Colors.red,
-              ),
+              SnackBar(content: Text("خطا في التسجيل"), backgroundColor: Colors.red),
             );
           }
         },
         builder: (context, state) {
           return Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              scrolledUnderElevation: 0,
-            ),
+            appBar: AppBar(backgroundColor: Colors.white, scrolledUnderElevation: 0),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: SingleChildScrollView(
@@ -149,23 +149,24 @@ class _ForgetPasswordChangeState extends State<ForgetPasswordChange> {
 
                       20.verticalSpace,
                       Align(
-  alignment: Alignment.bottomCenter,
-  child: state is ForgetpasswordLoading
-      ?  CircularProgressIndicator(color: AppColors.mainAppColor)
-      : DefaultButton(
-          function: () {
-            if (keyForm.currentState!.validate()) {
-              BlocProvider.of<LoginViewCubit>(context).forgetandchangepass(
-                email: widget.email,
-                token: codeController.text,
-                newpass: passwordController.text,
-              );
-            }
-          },
-          text: "تحديث",
-        ),
-),
-
+                        alignment: Alignment.bottomCenter,
+                        child: state is ForgetpasswordLoading
+                            ? CircularProgressIndicator(color: AppColors.mainAppColor)
+                            : DefaultButton(
+                                function: () {
+                                  if (keyForm.currentState!.validate()) {
+                                    BlocProvider.of<LoginViewCubit>(
+                                      context,
+                                    ).forgetandchangepass(
+                                      email: widget.email,
+                                      token: codeController.text,
+                                      newpass: passwordController.text,
+                                    );
+                                  }
+                                },
+                                text: "تحديث",
+                              ),
+                      ),
                     ],
                   ),
                 ),

@@ -13,7 +13,6 @@ class FavouriteContainer extends StatelessWidget {
     this.onTap,
   });
 
- 
   final FavouriteItem item;
   final void Function()? onTap;
 
@@ -52,177 +51,282 @@ class FavouriteContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final displayDate = formatDate(item.date);
 
-
     String? imageUrl;
     if (item.advertisementImages.isNotEmpty) {
       final first = item.advertisementImages.first;
       if (first is String) {
         imageUrl = first;
       } else if (first is Map) {
-        final m = Map<String, dynamic>.from(first as Map);
+        final m = Map<String, dynamic>.from(first);
         imageUrl = (m['imageName'] ?? m['url'] ?? m['image'])?.toString();
       }
     }
 
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.all(8.sp),
-          child: Card(
-            elevation: 4,
-            shadowColor: Colors.black.withOpacity(0.8),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(8.sp),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 6,
-                          offset: const Offset(0, 3),
+        Card(
+          margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(14.sp),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      width: 100.w,
+                      height: 100.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.r),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.grey[200]!,
+                            Colors.grey[300]!,
+                          ],
                         ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: (imageUrl == null || imageUrl.isEmpty)
-                          ? Container(
-                              color: Colors.grey[300],
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Colors.grey[600],
-                                size: 30,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha:0.1),
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16.r),
+                        child: (imageUrl == null || imageUrl.isEmpty)
+                            ? Center(
+                          child: Icon(
+                            Icons.image_not_supported_outlined,
+                            color: Colors.grey[500],
+                            size: 36.sp,
+                          ),
+                        )
+                            : CachedNetworkImage(
+                          progressIndicatorBuilder: (context, url, progress) => Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                              strokeWidth: 2.5,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.mainAppColor,
                               ),
-                            )
-                          : CachedNetworkImage(
-                              progressIndicatorBuilder:
-                                  (context, url, progress) => Center(
-                                child: CircularProgressIndicator(
-                                  value: progress.progress,
+                            ),
+                          ),
+                          imageUrl: imageUrl,
+                          fit: BoxFit.cover,
+                          width: 100.w,
+                          height: 100.h,
+                          errorWidget: (context, url, error) => Center(
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: Colors.grey[500],
+                              size: 36.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Favourite Badge
+
+                  ],
+                ),
+
+                SizedBox(width: 16.w),
+
+                // Content Column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title and Remove Button Row
+                      Row(
+                        children: [
+                          Expanded(
+                            child: MainTitle(
+                              text: item.name,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1F2937),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          // Remove from Favourite Button
+                          Container(
+                            width: 38.w,
+                            height: 38.h,
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha:0.1),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.green.withValues(alpha:0.3),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(19.r),
+                                onTap: onTap,
+                                child: Center(
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: AppColors.mainAppColor,
+                                    size: 20.sp,
+                                  ),
                                 ),
                               ),
-                              imageUrl: imageUrl,
-                              fit: BoxFit.cover,
-                              width: 80,
-                              height: 80,
                             ),
-                    ),
-                  ),
+                          ),
+                        ],
+                      ),
 
-                  SizedBox(width: 10.w),
+                      SizedBox(height: 10.h),
 
-                  
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: MainTitle(
-                                text: item.name,
-                                fontSize: 17.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.mainAppColor,
+                      // Service Category Badge
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.mainAppColor.withValues(alpha:0.08),
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.category_outlined,
+                                  size: 13.sp,
+                                  color: AppColors.mainAppColor,
+                                ),
+                                SizedBox(width: 6.w),
+                                Flexible(
+                                  child: MainTitle(
+                                    text: item.serviceName,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.mainAppColor,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(4.sp),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(6.r),
+                                ),
+                                child: Icon(
+                                  Icons.location_on,
+                                  size: 14.sp,
+                                  color: Color(0xFF6B7280),
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                              MainTitle(
+                                text: "${item.area ?? ''}، ${item.governorateName}",
+                                fontSize: 13.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF6B7280),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: onTap,
-                              child: const Icon(
-                                Icons.favorite,
-                                color: Colors.green,
-                                size: 30,
+                            ],
+                          ),
+                        ],
+                      ),
+
+
+
+
+                      SizedBox(height: 8.h),
+
+                      // Bottom Row: Date and Member
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Date with icon
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time_rounded,
+                                size: 13.sp,
+                                color: Color(0xFF9CA3AF),
                               ),
-                            )
-                          ],
-                        ),
-
-                        SizedBox(height: 10.h),
-
-                   
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: MainTitle(
+                              SizedBox(width: 4.w),
+                              MainTitle(
                                 text: displayDate,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.hintTextColor,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF9CA3AF),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
+                            ],
+                          ),
+                          // Member Badge
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
                             ),
-                            MainTitle(
-                              text: item.serviceName,
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.hintTextColor,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
-                          ],
-                        ),
-
-                        SizedBox(height: 5.h),
-
-                      
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: MainTitle(
-                                text: " ${item.area ?? ''}،${item.governorateName}",
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.hintTextColor,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                            SizedBox(width: 30.w),
-                            Expanded(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 18.w,
+                                  height: 18.h,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.mainAppColor.withValues(alpha:0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
                                     Icons.person,
-                                    color: AppColors.thrideAppColor,
+                                    size: 11.sp,
+                                    color: AppColors.mainAppColor,
                                   ),
-                                  SizedBox(width: 5.w),
-                                  Flexible(
-                                    child: MainTitle(
-                                      text: item.memberName,
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.hintTextColor,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
+                                ),
+                                SizedBox(width: 5.w),
+                                Flexible(
+                                  child: MainTitle(
+                                    text: item.memberName,
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF4B5563),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -230,7 +334,6 @@ class FavouriteContainer extends StatelessWidget {
     );
   }
 }
-
 
 class MainTitle extends StatelessWidget {
   final String text;

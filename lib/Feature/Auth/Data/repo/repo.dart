@@ -9,7 +9,7 @@ import '../model/user_model.dart';
 
 abstract class Loginrepo {
   Future<Either<Failure, String>> verifyOtp({
-    required String email,
+    required String phoneNumber,
     required String otp,
   });
   Future<Either<Failure ,RegisterResponseModel>> register({
@@ -20,11 +20,12 @@ abstract class Loginrepo {
     required String phone,
     File? image,
     required String activity,
+    required String gender,
   });
 
   Future<Either<Failure, UserModel>> login({
-    required String email,
-    required String password,
+    required String phonenumber,
+    //required String password,
   });
 
   Future<Either<Failure, String>> forgetpassword({

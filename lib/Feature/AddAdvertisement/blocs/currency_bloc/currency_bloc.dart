@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_event.dart';
-import 'package:lahijcenter/Feature/Home/Data/model/currency_model.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 import '../../data/model/currency.dart';
 import '../../data/repo/repo.dart';

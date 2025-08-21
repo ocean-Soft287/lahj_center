@@ -1,8 +1,12 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/register_screen.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/verify_account_with_otp.dart';
 import 'package:lahijcenter/core/Failure/failure.dart';
@@ -28,12 +32,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final keyForm = GlobalKey<FormState>();
-  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
+
 
   @override
   void dispose() {
-    emailController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -69,24 +74,24 @@ class _LoginScreenState extends State<LoginScreen> {
             );
 
             Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const Bottomnav()),
-              (Route<dynamic> route) => false,
+              CupertinoPageRoute(
+                builder: (context) => OTPScreen(
+                  phonenumber: phoneController.text,
+                ),
+              ),
+                  (Route<dynamic> route) => false,
             );
           }
+
           if (state is LoginViewStateError) {
-            if (state.failure is VerifyOtpFailure) {
-              navigato(
-                context,
-                OTPScreen(email: emailController.text),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("خطا في  كلمه المرور او البريد الالكتروني"),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
+            String serverMessage = state.failure.message;
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(serverMessage, style: TextStyle(color: Colors.white)),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
         builder: (context, state) {
@@ -98,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
               scrolledUnderElevation: 0,
             ),
             body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: SingleChildScrollView(
                 child: Form(
                   key: keyForm,
@@ -106,150 +111,211 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(AppAssets.logo, width: 100, height: 100),
+                      Image.asset(AppAssets.logo, width: 100.w, height: 100.h),
                       30.verticalSpace,
                       Text(
                         'مرحبا بعودتك ! سعداء لرؤيتك مرة اخري',
                         style: Textstylefont.titlewelcome(context),
+                        textAlign: TextAlign.center,
                       ),
                       30.verticalSpace,
 
-                      /// Email
-                      CustomTextFormField(
-                        hintText: "البريد الالكتروني",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "الرجاء إدخال البريد الإلكتروني";
-                          }
-                          if (!value.contains("@") || !value.contains(".")) {
-                            return "يرجى إدخال بريد إلكتروني صحيح";
-                          }
-                          return null;
-                        },
-                        controller: emailController,
-                      ),
-
-                      /// Password
-                      CustomTextFormField(
-                        hintText: "كلمه المرور",
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please_enter_password'.tr();
-                          }
-                          return null;
-                        },
-                        controller: passwordController,
-                        subfix: IconButton(
-                          onPressed: () => cubit.changeIconPassword(),
-                          icon: Icon(
-                            cubit.subfix,
-                            color: AppColors.mainAppColor,
-                            size: 25.0,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 8.h, right: 4.w),
+                          child: Row(
+                            children: [
+                              Icon(Icons.phone_android_outlined,color: AppColors.mainAppColor,),
+                              SizedBox(
+                                width: 10.w,
+                              ),
+                              Text(
+                                'رقم الجوال',
+                                style: TextStyle(
+                                  fontFamily: Fonts.font,
+                                  fontSize: getFontSize(context, 15),
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        textInputType: TextInputType.visiblePassword,
-                        obscureText: cubit.isPassword,
                       ),
+                      SizedBox(
+                        width: 10.w,
+                      ),
+
+
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: IntlPhoneField(
+                          textAlign: TextAlign.center,
+
+                          // حجم الرقم الذي يكتبه المستخدم
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.sp, // <--- تصغير حجم الرقم
+                          ),
+
+                          // حجم كود الدولة في Dropdown
+                          dropdownTextStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.sp, // <--- تصغير حجم كود الدولة في القائمة
+                          ),
+
+
+
+                          pickerDialogStyle: PickerDialogStyle(
+                            countryCodeStyle: TextStyle(fontSize: 14.sp, color: Colors.black),
+                            searchFieldInputDecoration: InputDecoration(
+                              hintText: "ابحث عن الدوله ",
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.outline.withAlpha(80),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          decoration: InputDecoration(
+                            hintText: "XXX XXX XXX",
+                            counterStyle: TextStyle(color: Colors.grey),
+                            border: OutlineInputBorder(borderSide: BorderSide()),
+                          ),
+
+                          initialCountryCode: 'EG',
+                          onChanged: (phone) {
+                            phoneController.text = phone.completeNumber;
+                          },
+
+                          validator: (value) {
+                            if (value == null || value.number.isEmpty) {
+                              return "LocaleKeys.phone_number_required.tr()";
+                            }
+                            try {
+                              if (!value.isValidNumber()) {
+                                return "LocaleKeys.phone_number_invalid.tr()";
+                              }
+                            } catch (e) {
+                              return "LocaleKeys.phone_number_invalid.tr()";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+
+
+
                       20.verticalSpace,
 
-                      /// Login Button + Forgot Password
+
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              if (keyForm.currentState!.validate()) {
-                                cubit.userLogin(
-                                  password: passwordController.text,
-                                  email: emailController.text,
-                                );
-                              }
-                            },
-                            child: state is LoginViewStateLoading
-                                ? Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.mainAppColor,
-                                    ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      color: AppColors.mainAppColor,
-                                      borderRadius: BorderRadius.circular(25),
-                                    ),
-                                    padding: const EdgeInsets.all(8),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 5,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.arrow_back,
-                                            color: Colors.white,
-                                          ),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            "تسجيل الدخول",
-                                            style: Textstylefont.logintext(
-                                              context,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                if (keyForm.currentState!.validate()) {
+                                  cubit.userLogin(
+                                   // password: passwordController.text,
+                                    phonenumber:  phoneController.text,
+                                  );
+                                }
+                              },
+                              child: state is LoginViewStateLoading
+                                  ? Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.mainAppColor,
+                                ),
+                              )
+                                  : Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.mainAppColor,
+                                  borderRadius: BorderRadius.circular(15.r),
+                                ),
+                                padding: EdgeInsets.all(8.w),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.w,
                                   ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              navigato(context, const ForgotPasswordScreen());
-                            },
-                            child: Text(
-                              "هل نسيت كلمه السر؟",
-                              style: TextStyle(
-                                fontFamily: Fonts.font,
-                                color: AppColors.mainAppColor,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(context, 16),
-                                decoration: TextDecoration.underline,
-                                decorationColor: Colors.green,
-                                decorationThickness: 2,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+
+                                      Text(
+                                        "تسجيل الدخول",
+                                        style: Textstylefont.logintext(
+                                          context,
+                                        ),
+                                      ),
+                                      SizedBox(width: 5.w),
+                                      Icon(
+                                        Icons.arrow_forward,
+                                        color: Colors.white,
+                                        size: 20.sp,
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                      //     InkWell(
+                      //       onTap: () {
+                      //         navigato(context, const ForgotPasswordScreen());
+                      //       },
+                      //       child: Text(
+                      //         "هل نسيت كلمه السر؟",
+                      //         style: TextStyle(
+                      //           fontFamily: Fonts.font,
+                      //           color: AppColors.mainAppColor,
+                      //           fontWeight: FontWeight.w500,
+                      //           fontSize: getFontSize(context, 16),
+                      //           decoration: TextDecoration.underline,
+                      //           decorationColor: AppColors.mainAppColor,
+                      //           decorationThickness: 2,
+                      //         ),
+                      //       ),
+                      //     ),
+                         ],
+                       ),
 
-                      50.verticalSpace,
-
-                      /// Register Link
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "ليس لديك حساب ؟  ",
-                            style: TextStyle(
-                              fontFamily: Fonts.font,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: getFontSize(context, 14),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              navigato(context, RegisterScreen());
-                            },
-                            child: Text(
-                              "انشاء حساب",
-                              style: TextStyle(
-                                fontFamily: Fonts.font,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: getFontSize(context, 14),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                       50.verticalSpace,
+                      //
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     Text(
+                      //       "ليس لديك حساب ؟  ",
+                      //       style: TextStyle(
+                      //         fontFamily: Fonts.font,
+                      //         color: Colors.black,
+                      //         fontWeight: FontWeight.w500,
+                      //         fontSize: getFontSize(context, 14),
+                      //       ),
+                      //     ),
+                      //     InkWell(
+                      //       onTap: () {
+                      //         navigato(context, RegisterScreen());
+                      //       },
+                      //       child: Text(
+                      //         "انشاء حساب",
+                      //         style: TextStyle(
+                      //           fontFamily: Fonts.font,
+                      //           color: AppColors.mainAppColor,
+                      //           fontWeight: FontWeight.w500,
+                      //           fontSize: getFontSize(context, 14),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                 ),

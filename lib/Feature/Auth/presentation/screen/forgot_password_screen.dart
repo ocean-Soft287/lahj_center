@@ -9,7 +9,6 @@ import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 
 import '../../../../../core/constans/app_assets.dart';
 import '../../../../../core/constans/app_colors.dart';
-
 import '../../../../../core/sharde/widget/text_forn_field.dart';
 import '../../manger/login-cubit/login_view_cubit.dart';
 import '../../manger/login-cubit/login_view_state.dart';
@@ -25,125 +24,125 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GetIt.instance<LoginViewCubit>(),
-      child: BlocConsumer<LoginViewCubit,LoginViewState>(
-        listener: (context,state)  {
-
-
-       if(state is LoginViewStateSuccessMessage ){
-
-       navigato(context,  ForgetPasswordChange(name:  'forgetpassword', email: emailcontroller.text));
-
-
-
-      }
-      if(state is LoginViewStateError){
-         ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+      child: BlocConsumer<LoginViewCubit, LoginViewState>(
+        listener: (context, state) {
+          if (state is LoginViewStateSuccessMessage) {
+            navigato(
+              context,
+              ForgetPasswordChange(
+                name: 'forgetpassword',
+                email: emailcontroller.text,
+              ),
+            );
+          }
+          if (state is LoginViewStateError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
                 content: Text("خطا في التسجيل "),
                 backgroundColor: Colors.red,
               ),
             );
-      }},
-
-        builder: (context,state){
-
-          LoginViewCubit loginViewCubit=BlocProvider.of(context);
+          }
+        },
+        builder: (context, state) {
+          LoginViewCubit loginViewCubit = BlocProvider.of(context);
           return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
               backgroundColor: Colors.white,
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                scrolledUnderElevation: 0,
-              ),
-              body: Padding(
-
-                padding:const EdgeInsets.symmetric(horizontal: 10),
-                child: SingleChildScrollView(
+              scrolledUnderElevation: 0,
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: keyForm,
                   child: Column(
-                  
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(child: Image.asset(AppAssets.forgotPassword)),
-
                       30.verticalSpace,
-                      Text('forgot_password'.tr(),style: TextStyle(
+                      Text(
+                        'forgot_password'.tr(),
+                        style: TextStyle(
                           color: AppColors.secondAppColor,
-fontFamily: Fonts.font,
+                          fontFamily: Fonts.font,
                           fontWeight: FontWeight.w700,
-                          fontSize: getFontSize(context,24)
-                      ),),
-                  
+                          fontSize: getFontSize(context, 24),
+                        ),
+                      ),
+                      20.verticalSpace,
                       CustomTextFormField(
                         hintText: 'البريد الالكتروني',
                         validator: (value) {
-                  
                           if (value == null || value.isEmpty) {
                             return 'please_enter_email'.tr();
                           }
-                  
-                  
-                  
-                  
                           return null;
                         },
                         controller: emailcontroller,
                       ),
-                    
                       20.verticalSpace,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                         GestureDetector(
-  onTap: () {
-    if (keyForm.currentState!.validate()) {
-      loginViewCubit.forgetPassword(email: emailcontroller.text);
-    }
-  },
-  child: state is LoginViewStateLoading
-      ?  Center(
-          child: CircularProgressIndicator(
-            color: AppColors.mainAppColor,
-          ),
-        )
-      : Container(
-          decoration: BoxDecoration(
-            color: AppColors.mainAppColor,
-            borderRadius: BorderRadius.circular(25),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              children: [
-                const Icon(Icons.arrow_back, color: Colors.white),
-                const SizedBox(width: 5),
-                Text(
-                  'send_code'.tr(),
-                  style: TextStyle(
-                    fontFamily: Fonts.font,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: getFontSize(context, 16),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-),
-
-                         const Spacer()
-                  
+                          GestureDetector(
+                            onTap: () {
+                              if (keyForm.currentState!.validate()) {
+                                loginViewCubit.forgetPassword(
+                                  email: emailcontroller.text,
+                                );
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.mainAppColor,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.arrow_back,
+                                        color: Colors.white),
+                                    const SizedBox(width: 5),
+                                    state is LoginViewStateLoading
+                                        ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                        : Text(
+                                      'send_code'.tr(),
+                                      style: TextStyle(
+                                        fontFamily: Fonts.font,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize:
+                                        getFontSize(context, 16),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
                         ],
                       ),
-                  
-                  
                     ],
                   ),
                 ),
-              )
+              ),
+            ),
           );
         },
-
       ),
     );
   }

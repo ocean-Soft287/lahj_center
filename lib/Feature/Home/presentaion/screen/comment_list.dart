@@ -45,7 +45,7 @@ class CommentList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20.r),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha:0.1),
                               blurRadius: 20,
                               offset: const Offset(0, 10),
                             ),
@@ -95,7 +95,7 @@ class CommentList extends StatelessWidget {
                             borderRadius: BorderRadius.circular(25.r),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha:0.1),
                                 blurRadius: 20,
                                 offset: const Offset(0, 10),
                               ),
@@ -165,7 +165,7 @@ class CommentList extends StatelessWidget {
                       leading: Container(
                         margin: EdgeInsets.all(8.w),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha:0.2),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: IconButton(
@@ -183,7 +183,7 @@ class CommentList extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.all(8.w),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha:0.2),
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Icon(
@@ -210,7 +210,7 @@ class CommentList extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: Fonts.font,
                                   fontSize: 12.sp,
-                                  color: Colors.white.withOpacity(0.9),
+                                  color: Colors.white.withValues(alpha:0.9),
                                 ),
                               ),
                             ],
@@ -236,7 +236,7 @@ class CommentList extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
+                                  color: Colors.black.withValues(alpha:0.3),
                                   blurRadius: 20,
                                   offset: const Offset(0, 10),
                                 ),
@@ -285,7 +285,7 @@ date: DateFormat('yyyy-MM-dd').format(DateTime.parse(comment.createdAt.toString(
                       borderRadius: BorderRadius.circular(25.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha:0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -297,7 +297,7 @@ date: DateFormat('yyyy-MM-dd').format(DateTime.parse(comment.createdAt.toString(
                         Container(
                           padding: EdgeInsets.all(16.w),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
+                            color: Colors.red.withValues(alpha:0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(

@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../main.dart';
 
@@ -324,7 +321,7 @@ class MessagingConfig {
     }
   }
 
-  static void _goToScreen(Widget widget) {
+  static void goToScreen(Widget widget) {
     if (navigatorKey.currentState != null) {
       // navigatorKey.currentState?.context.push(widget);
     } else {

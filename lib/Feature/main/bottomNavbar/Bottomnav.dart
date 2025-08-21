@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lahijcenter/Feature/main/bottomNavbar/widget/drawer.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import 'package:lahijcenter/core/sharde/widget/share_app.dart';
@@ -28,30 +27,27 @@ class Bottomnav extends StatelessWidget {
           Bottomcubit homeCubit = BlocProvider.of(context);
           return Scaffold(
             resizeToAvoidBottomInset: true,
-            appBar: homeCubit.currentIndex != 0
+            appBar: (homeCubit.currentIndex == 1 || homeCubit.currentIndex == 2)
                 ? AppBar(
-                    backgroundColor: AppColors.mainAppColor,
-                    title: Text(
-                      homeCubit.currentIndex == 1
-                          ? "البريد الالكتروني"
-                          : homeCubit.currentIndex == 2
-                          ? "الاشعارات"
-                          : "",
-                      style: TextStyle(
-                        fontFamily: Fonts.font,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: getFontSize(context, 15),
-                      ),
-                    ),
-                    leading: const SizedBox(),
-                    centerTitle: true,
-                  )
+              backgroundColor: AppColors.mainAppColor,
+              title: Text(
+                homeCubit.currentIndex == 1 ? "البريد الالكتروني" : "الاشعارات",
+                style: TextStyle(
+                  fontFamily: Fonts.font,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: getFontSize(context, 15),
+                ),
+              ),
+              leading: const SizedBox(),
+              centerTitle: true,
+            )
                 : null,
+
+
             key: scaffoldKey,
             backgroundColor: Colors.white,
             body: SafeArea(child: homeCubit.screen[homeCubit.currentIndex]),
-            drawer: Customdrawer(cubit: homeCubit),
             bottomNavigationBar: Directionality(
               textDirection: TextDirection.rtl,
               child: BottomAppBar(
@@ -84,10 +80,10 @@ class Bottomnav extends StatelessWidget {
                     NavItem(
                       currentIndex: homeCubit.currentIndex,
                       icon: AppAssets.personIcon,
-                      label: "المزيد",
+                      label: "حسابي",
                       index: 3,
-                      isMenu: true,
-                      scaffoldKey: scaffoldKey,
+                     // isMenu: true,
+                     // scaffoldKey: scaffoldKey,
                     ),
                   ],
                 ),
@@ -101,7 +97,7 @@ class Bottomnav extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha:0.1),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -147,7 +143,7 @@ class CustomDrawerTile extends StatelessWidget {
         iconPath,
         width: 24,
         height: 24,
-        color: AppColors.mainAppColor,
+        colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
       ),
       title: Text(
         title,
@@ -170,6 +166,8 @@ class NavItem extends StatelessWidget {
   final int index;
   final bool isMenu;
   final GlobalKey<ScaffoldState>? scaffoldKey;
+  final bool wight;
+
 
   const NavItem({
     super.key,
@@ -179,6 +177,7 @@ class NavItem extends StatelessWidget {
     required this.index,
     this.isMenu = false,
     this.scaffoldKey,
+     this.wight=false,
   });
 
   @override
@@ -199,7 +198,8 @@ class NavItem extends StatelessWidget {
         children: [
           SvgPicture.asset(
             icon,
-            color: isActive ? Colors.white : Colors.grey[400],
+            colorFilter:
+            isActive?ColorFilter.mode(Colors.white, BlendMode.srcIn):ColorFilter.mode(Colors.black, BlendMode.srcIn),
             width: 24,
             height: 19,
           ),
@@ -207,8 +207,9 @@ class NavItem extends StatelessWidget {
             label,
             style: TextStyle(
               fontFamily: Fonts.font,
-              color: isActive ? Colors.white : Colors.grey[400],
-              fontSize: 10,
+              color: isActive ? Colors.white : Colors.black,
+              fontSize: getFontSize(context, 10),
+              fontWeight: wight?FontWeight.bold:FontWeight.w500,
             ),
           ),
         ],
@@ -249,7 +250,7 @@ void showPlatformDialog(BuildContext context) {
                   borderRadius: BorderRadius.circular(14.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
+                      color: Colors.black.withValues(alpha:0.15),
                       blurRadius: 10,
                       offset: Offset(0, 6),
                     ),
@@ -299,7 +300,7 @@ void showPlatformDialog(BuildContext context) {
                   borderRadius: BorderRadius.circular(14.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
+                      color: Colors.black.withValues(alpha:0.15),
                       blurRadius: 10,
                       offset: Offset(0, 6),
                     ),

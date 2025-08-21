@@ -38,7 +38,7 @@ static TextStyle titlewelcome(BuildContext context){
         fontFamily: Fonts.font,
         color: AppColors.secondAppColor,
         fontWeight: FontWeight.w700,
-        fontSize: getFontSize(context, 24));
+        fontSize: getFontSize(context, 20));
 
 }
 static TextStyle logintext(BuildContext context){

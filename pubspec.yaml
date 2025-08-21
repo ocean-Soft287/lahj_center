@@ -64,6 +64,9 @@ dependencies:
   pretty_dio_logger: 
   internet_connection_checker: ^1.0.0+1
   package_info_plus: ^8.3.1
+  carousel_slider: ^5.1.1
+  intl_phone_field: ^3.2.0
+  intl_phone_number_input: ^0.7.5
 
 
 

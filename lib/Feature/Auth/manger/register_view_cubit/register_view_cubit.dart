@@ -28,13 +28,13 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
   }
 
   Future<void> verifotp({
-    required String email,
+    required String phoneNumber,
     required String otp,
   }) async {
 
     emit(otpLoading());
 
-    final result = await loginrepo.verifyOtp(email: email, otp: otp
+    final result = await loginrepo.verifyOtp(phoneNumber: phoneNumber, otp: otp
 
     );
 
@@ -55,6 +55,8 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
     required String email,
     required String password,
     required String phone,
+    required String gender,
+
     File? image,
     required String activity,
   }) async {
@@ -67,6 +69,7 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
       phone: phone,
       image: image,
       activity: activity,
+      gender: gender,
     );
 
     result.fold(

@@ -49,7 +49,7 @@ class _CommentContainerState extends State<CommentContainer> {
             );
           } else if (state.status == Status.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("فشل الإرسال: ${state.errorMessage}")),
+              SnackBar(content: Text("فشل في إرسال الإبلاغ")),
             );
           }
         },
@@ -62,7 +62,7 @@ class _CommentContainerState extends State<CommentContainer> {
               borderRadius: BorderRadius.circular(12.r),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.white.withOpacity(0.15),
+                  color: AppColors.white.withValues(alpha:0.15),
                   offset: const Offset(0, 3),
                   blurRadius: 6,
                 ),

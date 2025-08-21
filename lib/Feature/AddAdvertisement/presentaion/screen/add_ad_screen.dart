@@ -4,15 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/add_advertisement_bloc/add_advertisement_bloc.dart';
 import 'dart:io';
-
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/government_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/government_model.dart';
-import 'package:lahijcenter/Feature/main/bottomNavbar/Bottomnav.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
-import 'package:lahijcenter/core/constans/app_colors.dart';
-import 'package:lahijcenter/core/constans/fonts.dart';
-
 import '../../../../core/utils/services/services_locator.dart';
 import '../../blocs/add_advertisement_bloc/add_advertisement_event.dart';
 import '../../blocs/category_bloc/category_bloc.dart';
@@ -477,49 +472,27 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                               title: const Text(
                                 "شكراً لك",
                                 style: TextStyle(
-                                  fontFamily: Fonts.font,
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              content: const Text(
-                                "تم إضافة الإعلان بنجاح.",
-                                style: TextStyle(
-                                  fontFamily: Fonts.font,
-                                  color: Colors.black,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
+                              content: const Text("تم إضافة الإعلان بنجاح."),
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    Navigator.of(
+                                      context,
+                                    ).pop();
+
                                   },
-                                  child: Text(
-                                    "حسناً",
-                                    style: TextStyle(
-                                      color: AppColors.mainAppColor,
-                                      fontFamily: Fonts.font,
-                                      fontSize: 8.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+                                  child: const Text("حسناً"),
                                 ),
                               ],
                             );
                           },
                         );
-
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Bottomnav(),
-                          ),
-                          (route) => false,
-                        );
                       }
+
                       if (state.isFailure) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

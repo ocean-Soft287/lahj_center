@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:lahijcenter/Feature/Search/data/repo/search_repo.dart';
-import '../../Home/Data/model/advertismint_response.dart';
 import '../../Home/Data/model/item_model.dart';
 
 part 'search_state.dart';

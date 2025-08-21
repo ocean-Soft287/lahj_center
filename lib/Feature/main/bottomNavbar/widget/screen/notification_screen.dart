@@ -134,41 +134,7 @@ class NotificationScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    // Header
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade200,
-                            blurRadius: 10,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.notifications_active,
-                            color: Colors.blue.shade600,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            "الإشعارات",
-                            style: TextStyle(
-                              fontFamily: Fonts.font,
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w700,
-                              fontSize: getFontSize(context, 16),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Empty state
+
                     Expanded(
                       child: Center(
                         child: Column(

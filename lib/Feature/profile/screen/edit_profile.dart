@@ -78,6 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: BlocListener<UpdateProfileCubit, UpdateProfileState>(
         listener: (context, state) async {
           if (state is UpdateProfileSuccess) {
+
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("تم التحديث بنجاح "),
@@ -91,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
 
             await getProfileCubit.fetchProfile();
-            Navigator.pop(context, true);
+
           } else if (state is UpdateProfileError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -144,6 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Scaffold(
                 backgroundColor: Colors.grey[50],
                 appBar: AppBar(
+
                   title: Text(
                     "تعديل الملف الشخصي",
                     style: TextStyle(
@@ -163,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        AppColors.mainAppColor.withOpacity(0.05),
+                        AppColors.mainAppColor.withValues(alpha:0.05),
                         Colors.grey[50]!,
                       ],
                     ),
@@ -180,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha:0.08),
                                 blurRadius: 20,
                                 offset: Offset(0, 4),
                               ),
@@ -200,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         boxShadow: [
                                           BoxShadow(
                                             color: AppColors.mainAppColor
-                                                .withOpacity(0.2),
+                                                .withValues(alpha:0.2),
                                             blurRadius: 15,
                                             offset: Offset(0, 5),
                                           ),
@@ -209,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: CircleAvatar(
                                         radius: 60,
                                         backgroundColor: AppColors.mainAppColor
-                                            .withOpacity(0.1),
+                                            .withValues(alpha:0.1),
                                         backgroundImage: selectedImage != null
                                             ? FileImage(selectedImage!)
                                             : (profile.imageUrl != null &&
@@ -236,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           boxShadow: [
                                             BoxShadow(
                                               color: AppColors.mainAppColor
-                                                  .withOpacity(0.4),
+                                                  .withValues(alpha:0.4),
                                               blurRadius: 8,
                                               offset: Offset(0, 2),
                                             ),
@@ -272,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha:0.08),
                                 blurRadius: 20,
                                 offset: Offset(0, 4),
                               ),
@@ -301,7 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha:0.08),
                                 blurRadius: 20,
                                 offset: Offset(0, 4),
                               ),
@@ -338,7 +340,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 padding: EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
                                                   color: AppColors.mainAppColor
-                                                      .withOpacity(0.1),
+                                                      .withValues(alpha:0.1),
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),
@@ -490,7 +492,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             Container(
                                               padding: EdgeInsets.all(8),
                                               decoration: BoxDecoration(
-                                                color: Colors.red.withOpacity(
+                                                color: Colors.red.withValues(alpha:
                                                   0.1,
                                                 ),
                                                 borderRadius:
@@ -537,7 +539,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.mainAppColor.withOpacity(
+                                    color: AppColors.mainAppColor.withValues(alpha:
                                       0.3,
                                     ),
                                     blurRadius: 15,
@@ -549,7 +551,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ? Container(
                                       decoration: BoxDecoration(
                                         color: AppColors.mainAppColor
-                                            .withOpacity(0.7),
+                                            .withValues(alpha:0.7),
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                       child: Center(

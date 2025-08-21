@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_cubit.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_state.dart';
+import 'package:lahijcenter/Feature/Auth/presentation/screen/register_screen.dart';
 import 'package:lahijcenter/core/constans/app_assets.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/constants.dart';
@@ -16,9 +17,9 @@ import '../widget/otp_component.dart';
 import 'login_screen.dart';
 
 class OTPScreen extends StatefulWidget {
-  final String email;
+  final String  phonenumber;
 
-  const OTPScreen({super.key, required this.email});
+  const OTPScreen({super.key, required this.phonenumber});
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -52,13 +53,16 @@ class _OTPScreenState extends State<OTPScreen> {
           if (state is otpError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("خطا في التسجيل"),
+                content: Text(state.message),
                 backgroundColor: Colors.red,
               ),
             );
           }
           if (state is otpSuccess) {
-            navigatofinsh(context, const LoginScreen(), false);
+            navigatofinsh(context,  RegisterScreen(
+              phoneNumber: widget.phonenumber,
+
+            ),true);
           }
         },
         builder: (context, state) {
@@ -69,6 +73,7 @@ class _OTPScreenState extends State<OTPScreen> {
             appBar: AppBar(
               backgroundColor: Colors.white,
               scrolledUnderElevation: 0,
+
             ),
             body: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -85,7 +90,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       10.verticalSpace,
                       Text(
-                        "تأكيد رقم الحساب",
+                        " كود التحقق",
                         style: TextStyle(
                           fontFamily: Fonts.font,
                           color: AppColors.secondAppColor,
@@ -95,8 +100,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       10.verticalSpace,
                       Text(
-                        "تم إرسال رمز التحقق عبر البريد الالكتروني",
-                        style: TextStyle(
+"لقد ارسلنا كود التحقق المكون من ٦ أرقام الي رقم الهاتف" ,                       style: TextStyle(
                           fontFamily: Fonts.font,
                           color: Colors.grey[600],
                           fontWeight: FontWeight.w400,
@@ -115,21 +119,21 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       40.verticalSpace,
 
-                      /// Verify Button
+
                       SizedBox(
                         width: double.infinity,
                         height: 48.h,
                         child: ElevatedButton(
                           onPressed: state is otpLoading
-                              ? null // لو لودينج ممنوع يضغط
+                              ? null
                               : () {
                                   if (keyForm.currentState!.validate()) {
                                     final otp = getEnteredOTP();
                                     cubit.verifotp(
                                       otp: otp,
-                                      email: widget.email,
+                                      phoneNumber: widget.phonenumber,
                                     );
-                                    print("OTP Entered: $otp");
+                                   // print("OTP Entered: $otp");
                                   }
                                 },
                           style: ElevatedButton.styleFrom(
@@ -148,7 +152,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                   ),
                                 )
                               : Text(
-                                  'تأكيد الرمز',
+                                  'تأكيد الكود',
                                   style: TextStyle(
                                     fontFamily: Fonts.font,
                                     color: Colors.white,
@@ -161,24 +165,24 @@ class _OTPScreenState extends State<OTPScreen> {
                       50.verticalSpace,
 
                       /// Back to login
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginScreen()),
-                            (route) => false,
-                          );
-                        },
-                        child: Text(
-                          'الرجوع لتسجيل الدخول',
-                          style: TextStyle(
-                            fontFamily: Fonts.font,
-                            fontSize: getFontSize(context, 14),
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.pushAndRemoveUntil(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => const LoginScreen()),
+                      //       (route) => false,
+                      //     );
+                      //   },
+                      //   child: Text(
+                      //     'الرجوع لتسجيل الدخول',
+                      //     style: TextStyle(
+                      //       fontFamily: Fonts.font,
+                      //       fontSize: getFontSize(context, 14),
+                      //       color: Colors.grey[600],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

@@ -44,6 +44,7 @@ import 'package:lahijcenter/Feature/profile/manager/new_password_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
 import 'package:lahijcenter/core/connectivity/cubit/connectivity_cubit.dart';
+import 'package:lahijcenter/core/network/local/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../../Feature/AddAdvertisement/data/repo/repo.dart';
@@ -56,6 +57,8 @@ import '../../../Feature/Home/manager/categorycubit/category_cubit.dart';
 import '../../../Feature/Home/manager/homecubit/home_cubit.dart';
 import '../../../Feature/Search/data/repo/search_repo_imp.dart';
 import '../../../Feature/Search/manager/search_cubit.dart';
+import '../../../Feature/main/bottomNavbar/manager/slider_cubit.dart';
+import '../../../Feature/main/bottomNavbar/repo/slider_repo.dart';
 import '../../../Feature/my_ads/data/my_ad_repo/myad_imp.dart';
 import '../../../Feature/my_ads/data/my_ad_repo/myad_repo.dart';
 import '../../../Feature/my_ads/mange/myadd_cubit.dart';
@@ -72,8 +75,9 @@ import 'add_advertisment_service_locator.dart';
 final sl = GetIt.instance;
 Future<void> setup() async {
   // Dio instance registration
+  final  token = await SecureStorageService.read("token");
   sl.registerLazySingleton<Dio>(
-      () => Dio(BaseOptions(baseUrl: EndPoint.baseUrl))
+      () => Dio(BaseOptions(baseUrl: EndPoint.baseUrl,headers: {'Authorization': 'Bearer $token'}))
         ..interceptors.add(PrettyDioLogger(
           request: true,
           requestHeader: true,
@@ -234,6 +238,10 @@ sl.registerFactory<DeleateAccountCubit>(
   sl.registerFactory<CubitNotfication>(
     () => CubitNotfication(sl<NotificationRepo>()),
   );
+  // slidder banner
+  sl.registerLazySingleton<SliderRepo>(() => SliderRepoImpl( sl<DioConsumer>()));
+
+  sl.registerFactory<SliderCubit>(() => SliderCubit(sl<SliderRepo>()));
 
   
 

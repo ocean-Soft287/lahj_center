@@ -68,9 +68,9 @@ class _MyFavoriteAdsScreenState extends State<MyFavoriteAdsScreen> {
               final currentState = favouriteCubit.state;
               
               if (currentState.isSuccess && currentState.data != null) {
-                final updatedItems = currentState.data!.items
-                    .where((item) => item.id != _currentUnlikingAdId)
-                    .toList();
+               // final updatedItems = currentState.data!.items
+                   // .where((item) => item.id != _currentUnlikingAdId)
+                   // .toList();
                 
                 favouriteCubit.removeFromFavourite(_currentUnlikingAdId??0);
                 
@@ -118,7 +118,7 @@ class _MyFavoriteAdsScreenState extends State<MyFavoriteAdsScreen> {
           child: BlocConsumer<GetAllFavouriteCubit, BaseState<GetAllFavourite>>(
             listener: (context, state) {},
             builder: (context, state) {
-            final favouriteCubit = context.read<GetAllFavouriteCubit>();
+           // final favouriteCubit = context.read<GetAllFavouriteCubit>();
             List<Widget> slivers = [];
 
             if (state.isLoading) {
@@ -173,12 +173,10 @@ class _MyFavoriteAdsScreenState extends State<MyFavoriteAdsScreen> {
                       item: items[index],
 
                      onTap: () {
-                        // Store the ad ID that we're trying to unlike
                         setState(() {
                           _currentUnlikingAdId = items[index].id;
                         });
                         
-                        // Call the unlike function - BlocListener will handle UI updates
                         final unlikeCubit = context.read<UnlikeCubit>();
                         unlikeCubit.unlikeAd(items[index].id);
                       },
@@ -193,7 +191,7 @@ class _MyFavoriteAdsScreenState extends State<MyFavoriteAdsScreen> {
                 SliverToBoxAdapter(
                   child: Center(
                     child: Text(
-                      state.errorMessage ?? "حدث خطأ غير متوقع",
+                      "حدث خطأ غير متوقع",
                       style: TextStyle(
                         fontFamily: Fonts.font,
                         fontSize: 16.sp,

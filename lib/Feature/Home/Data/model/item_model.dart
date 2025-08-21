@@ -1,6 +1,6 @@
 class Item {
   final int id;
-  final String Phone;
+  final String phone;
   final String name;
   final int groupId;
   final String groupName;
@@ -27,7 +27,7 @@ class Item {
   final List<AdvertisementImage> advertisementImages;
 
   Item({
-    required this.Phone,
+    required this.phone,
     required this.id,
     required this.name,
     required this.groupId,
@@ -57,7 +57,7 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      Phone: json['phone'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
       id: json['id'] as int? ?? 0,
       name: json['name'] as String? ?? '',
       groupId: json['groupId'] as int? ?? 0,

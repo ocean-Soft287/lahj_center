@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -141,7 +140,7 @@ class ImageCardEdit extends StatelessWidget {
                                 child: GestureDetector(
                                   onTap: () {
                                     cubit.oldImage.remove(name);
-                                    cubit.emit(AddadvertisminteSuccess([]));
+                                    //cubit.emit(AddadvertisminteSuccess([]));
                                   },
                                   child: const CircleAvatar(
                                     radius: 10,
@@ -186,7 +185,7 @@ class ImageCardEdit extends StatelessWidget {
                                 child: GestureDetector(
                                   onTap: () {
                                     cubit.galleryImage.remove(xfile);
-                                    cubit.emit(AddadvertisminteSuccess([]));
+                                   // cubit.emit(AddadvertisminteSuccess([]));
                                   },
                                   child: const CircleAvatar(
                                     radius: 10,

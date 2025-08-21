@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,13 +8,14 @@ import 'package:lahijcenter/Feature/Home/presentaion/screen/comment_list.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 
 import '../../../../core/constans/app_colors.dart';
+import '../../../../core/constans/fonts.dart';
 import '../../Data/model/post_model_comment.dart';
 
 class CommentSection extends StatelessWidget {
   final TextEditingController controller;
   final int advertisementId;
 
-  // مفتاح الـ Form
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   CommentSection({
@@ -52,31 +54,62 @@ class CommentSection extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.all(16.0.w),
+          return Container(
+            padding: EdgeInsets.all(10.h),
+            margin: EdgeInsets.all(12.sp),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.sp),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .3),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'اكتب تعليقاً',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: AppColors.mainAppColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Icon(Icons.comment, color: AppColors.mainAppColor),
+                    SizedBox(width: 10.w),
+                    Text(
+                      'اكتب تعليقاً',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
+                        fontFamily: Fonts.font,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 8.h),
 
-                // ✅ هنا عملنا Form + TextFormField
-                Form(
+                   Form(
                   key: _formKey,
                   child: TextFormField(
                     controller: controller,
+
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: '.....اكتب تعليقك هنا',
+                      hintStyle: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12.sp,
+                        fontFamily: Fonts.font,
+                      ),
+                      hintText:"شاركنا رأيك في هذا الاعلان.....",
+
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
+
+
+
+
                       ),
                     ),
                     validator: (value) {
@@ -88,6 +121,7 @@ class CommentSection extends StatelessWidget {
                       }
                       return null;
                     },
+
                   ),
                 ),
                 SizedBox(height: 10.h),
@@ -116,7 +150,7 @@ class CommentSection extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.arrow_back, color: Colors.white),
+                            Icon(Icons.send, color: Colors.white),
                             SizedBox(width: 5.w),
                             Text(
                               'إضافة تعليق',
@@ -134,13 +168,13 @@ class CommentSection extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
+                          CupertinoPageRoute(
                             builder: (context) =>
                                 CommentList(postId: advertisementId),
                           ),
                         );
                       },
-                      icon: Icon(Icons.comment, color: AppColors.mainAppColor),
+                      icon: Icon(Icons.insert_comment_rounded, color: AppColors.mainAppColor),
                       label: Text(
                         'مشاهدة التعليقات',
                         style: TextStyle(

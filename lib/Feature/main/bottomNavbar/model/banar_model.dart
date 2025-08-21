@@ -1,21 +1,16 @@
-class BannerModel {
+class BannerSliderModel {
   final String imagePath;
-  final String id;
+  final num id;
 
-
-  BannerModel({
+  BannerSliderModel({
     required this.imagePath,
     required this.id,
   });
 
-
-  factory BannerModel.fromJson(Map<String, dynamic> json) {
-    return BannerModel(
-      imagePath: json['ImagePath'] as String,
-      id: json['ID'] as String,
+  factory BannerSliderModel.fromJson(Map<String, dynamic> json) {
+    return BannerSliderModel(
+      imagePath: json['imageUrl'] ?? "",
+      id: json['id'] ?? 0,
     );
   }
-
-
-
 }

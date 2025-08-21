@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/sharde/widget/default_button.dart';
-import '../../../AddAdvertisement/presentaion/screen/edit_add.dart';
 import '../../../Home/Data/model/item_model.dart';
 
 class Myadscontainer extends StatelessWidget {
@@ -26,7 +25,7 @@ class Myadscontainer extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha:0.3),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),  
@@ -123,23 +122,8 @@ class Myadscontainer extends StatelessWidget {
                 text: "حذف",
               ),
             ),
-            SizedBox(width: 5.w),
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width * .25,
-              height: 35.h,
-              child: DefaultButton(
-                function: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditAdvertisementScreen(item: item),
-                    ),
-                  );
-                },
-                text: "تعديل",
-              ),
-            ),
-            SizedBox(width: 5.w),
+
+
           ],
         )
       ],

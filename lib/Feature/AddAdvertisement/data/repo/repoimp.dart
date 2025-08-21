@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -12,7 +11,6 @@ import 'package:path_provider/path_provider.dart';
 import '../../../../core/network/remote/encrupt.dart';
 import '../../../../core/utils/api/endpoint.dart';
 import '../../../../../core/utils/api/dio_consumer.dart';
-import '../../../Home/Data/model/currency_model.dart';
 import '../model/currency.dart';
 import '../model/government_model.dart';
 import '../model/group.dart';
@@ -101,7 +99,7 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         return Left(ServerFailure('البيانات غير متوقعة'));
       }
 
-      final List<Services> services = (response as List)
+      final List<Services> services = (response)
           .map((item) => Services.fromJson(
           Map<String, dynamic>.from(jsonDecode(jsonEncode(item)))))
           .toList();

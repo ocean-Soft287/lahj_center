@@ -9,13 +9,13 @@ class LoginViewCubit extends Cubit<LoginViewState> {
   LoginViewCubit(this.loginrepo) : super(InitializeLoginViewState());
 
   void userLogin({
-    required String email,
-    required String password,
+    required String phonenumber,
+  //  required String password,
   }) async {
     emit(LoginViewStateLoading());
     final response = await loginrepo.login(
-      email: email,
-      password: password,
+      phonenumber: phonenumber,
+      //password: password,
     );
 
     response.fold(

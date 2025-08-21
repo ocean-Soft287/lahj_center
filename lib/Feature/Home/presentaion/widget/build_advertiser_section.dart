@@ -19,76 +19,152 @@ class BuildAdvertiserSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => Bottomcubit(),
-      child: Container(
-        margin: EdgeInsets.all(12.sp),
-        color: Colors.white,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "المعلن",
-              style: TextStyle(
-                fontFamily: Fonts.font,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-                fontSize: 16.sp,
-              ),
+      child:
+      Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(10.h),
+            margin: EdgeInsets.all(12.sp),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.sp),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .3),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: Offset(0, 5),
+                ),
+              ],
             ),
-            SizedBox(height: 20.h),
-            BlocBuilder<Bottomcubit, Bottomstate>(
-              builder: (context, state) {
-                Bottomcubit bottomcubit = BlocProvider.of<Bottomcubit>(context);
-                return Row(
-                  children: [
-                    SvgPicture.asset(AppAssets.infoUserIcon),
-                    SizedBox(width: 10.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.memberName,
-                          style: TextStyle(
-                            fontFamily: Fonts.font,
-                            color: AppColors.mainAppColor,
-                            fontWeight: FontWeight.w300,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    buildIconButton(AppAssets.whatsAppIcon, () {
-                      bottomcubit.whatsappuser(item.Phone);
-                    }),
-                    SizedBox(width: 5.w),
-                    buildIconButton(AppAssets.phoneIcon, () {
-                      bottomcubit.callinguser(item.Phone);
-                    }),
-                    SizedBox(width: 5.w),
-                    buildIconButton(AppAssets.addAdIcon, () {
-                      bottomcubit.sendhi(item.Phone);
-                    }),
-                  ],
-                );
-              },
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              "المواصفات",
-              style: TextStyle(
-                fontFamily: Fonts.font,
-                color: Colors.black,
-                fontWeight: FontWeight.w300,
-                fontSize: 12.sp,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            buildSpecificationRow('القسم الرئيسي:', item.groupName),
 
-            SizedBox(height: 5.h),
-            buildSpecificationRow(' الخدمة :', item.serviceName),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.person,color: AppColors.mainAppColor,),
+                    SizedBox(width: 10.w,),
+                    Text(
+                      "معلومات المعلن",
+                      style: TextStyle(
+                        fontFamily: Fonts.font,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 15.h),
+                BlocBuilder<Bottomcubit, Bottomstate>(
+                  builder: (context, state) {
+                    Bottomcubit bottomcubit = BlocProvider.of<Bottomcubit>(context);
+                    return Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                            backgroundColor: AppColors.greyColor,
+                            child: Icon(Icons.person,color: AppColors.mainAppColor,)),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.memberName,
+                              style: TextStyle(
+                                fontFamily: Fonts.font,
+                                color: AppColors.mainAppColor,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 15.sp,
+                              ),
+                            ),
+
+                            Text(
+                              item.serviceName,
+                              style: TextStyle(
+                                fontFamily: Fonts.font,
+                                color: Colors.grey.shade500,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 15.sp,
+                              ),
+                            ),
+
+                          ],
+                        ),
+                        const Spacer(),
+
+
+                        buildIconButton(AppAssets.whatsAppIcon, () {
+                          bottomcubit.whatsappuser(item.phone);
+                        }),
+                        SizedBox(width: 5.w),
+                        buildIconButton(AppAssets.phoneIcon, () {
+                          bottomcubit.callinguser(item.phone);
+                        }),
+                        SizedBox(width: 5.w),
+                        buildIconButton("assets/icons/chat.svg", () {
+
+                        }),
+
+
+                      ],
+                    );
+                  },
+                ),
+
+
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10.h,
+              bottom: 10.h,
+              top: 10.h
+            ),
+            margin: EdgeInsets.all(12.sp),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.sp),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: .3),
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: Offset(0, 5),
+                ),
+              ],
+            ),
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                      Icon(Icons.info_outline,color: AppColors.mainAppColor),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "المواصفات",
+                      style: TextStyle(
+                        fontFamily: Fonts.font,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15.sp,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                buildSpecificationRow(' الفئة:', item.groupName),
+
+                SizedBox(height: 5.h),
+                buildSpecificationRow(' الخدمة :', item.serviceName),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -98,41 +174,55 @@ class BuildAdvertiserSection extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(6.sp),
-        color: AppColors.mainAppColor,
-        child: SvgPicture.asset(asset, color: Colors.white),
+        decoration: BoxDecoration(
+          color: AppColors.mainAppColor,
+          borderRadius: BorderRadius.circular(5.sp),
+        ),
+
+        child: SvgPicture.asset(asset, colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        width: 20,
+        height: 20,),
       ),
     );
   }
 
   Widget buildSpecificationRow(String label, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontFamily: Fonts.font,
-              color: Colors.black,
-              fontWeight: FontWeight.w300,
-              fontSize: 12.sp,
+    return Container(
+      padding: EdgeInsets.all(5.sp),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.grey.shade300
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontFamily: Fonts.font,
+                color: Colors.grey,
+                fontWeight: FontWeight.w300,
+                fontSize: 12.sp,
+
+              ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Text(
-            value,
-            style: TextStyle(
-              fontFamily: Fonts.font,
-              color: Colors.black,
-              fontWeight: FontWeight.w300,
-              fontSize: 12.sp,
+          Expanded(
+            flex: 1,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontFamily: Fonts.font,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 15.sp,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

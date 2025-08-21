@@ -6,7 +6,7 @@ import 'package:lahijcenter/Feature/profile/manager/new_password_state.dart';
 import 'package:lahijcenter/Feature/profile/screen/password_changed_success.dart';
 
 class PasswordUpdateScreen extends StatefulWidget {
-  const PasswordUpdateScreen({Key? key}) : super(key: key);
+  const PasswordUpdateScreen({super.key});
 
   @override
   State<PasswordUpdateScreen> createState() => _PasswordUpdateScreenState();
@@ -229,7 +229,7 @@ class _PasswordUpdateScreenState extends State<PasswordUpdateScreen> {
                         SizedBox(height: screenHeight * 0.04),
 
                         // Old Password Field
-                        Container(
+                        SizedBox(
                           height: fieldHeight,
                           child: TextFormField(
                             controller: oldPasswordController,
@@ -294,7 +294,7 @@ class _PasswordUpdateScreenState extends State<PasswordUpdateScreen> {
                         SizedBox(height: inputSpacing),
 
                         // New Password Field
-                        Container(
+                        SizedBox(
                           height: fieldHeight,
                           child: TextFormField(
                             controller: newPasswordController,
@@ -377,7 +377,7 @@ class _PasswordUpdateScreenState extends State<PasswordUpdateScreen> {
                         SizedBox(height: inputSpacing),
 
                         // Confirm Password Field
-                        Container(
+                        SizedBox(
                           height: fieldHeight,
                           child: TextFormField(
                             controller: confirmPasswordController,
@@ -445,7 +445,7 @@ class _PasswordUpdateScreenState extends State<PasswordUpdateScreen> {
                         SizedBox(height: screenHeight * 0.05),
 
                         // Update Button
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           height: isTablet ? 60 : 55,
                           child: ElevatedButton(

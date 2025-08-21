@@ -21,14 +21,13 @@ class ItemDetailsScreen extends StatelessWidget {
     final pageController = PageController();
     final TextEditingController comment = TextEditingController();
     return BlocProvider(
-      create: (context) =>
-          ItemDetailsCubit(GetIt.instance<Homerepo>())..getData(x),
+      create: (context) => ItemDetailsCubit(GetIt.instance<Homerepo>())..getData(x),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           toolbarHeight: 40,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -48,25 +47,22 @@ class ItemDetailsScreen extends StatelessWidget {
                     BuildImageSection(
                       govrnment: state.item.governorateName,
                       pageController: pageController,
-                      imagecache: state.item.advertisementImages.map((e)=>e.imageName).toList(),
+                      imagecache: state.item.advertisementImages
+                          .map((e) => e.imageName)
+                          .toList(),
                       name: state.item.name,
                       price: state.item.price.toString(),
                       currency: state.item.currencyName,
                       area: state.item.area,
                       item: state.item,
-                      
                     ),
-                    Divider(thickness: 5, color: Color(0xffD9D9D9)),
+
                     BuildAdvertiserSection(item: state.item),
-                    Divider(thickness: 5, color: Color(0xffD9D9D9)),
+
                     buildDescriptionSection(name: state.item.description),
-                    Divider(thickness: 5, color: Color(0xffD9D9D9)),
-                    SizedBox(height: 15.h),
+
                     state.item.isCloseReplies == false
-                        ? CommentSection(
-                            controller: comment,
-                            advertisementId: x,
-                          )
+                        ? CommentSection(controller: comment, advertisementId: x)
                         : const SizedBox(),
                   ],
                 ),
@@ -80,25 +76,13 @@ class ItemDetailsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 200,
-                        width: double.infinity,
-                        color: Colors.white,
-                      ),
+                      Container(height: 200, width: double.infinity, color: Colors.white),
                       const SizedBox(height: 16),
                       Container(height: 20, width: 150, color: Colors.white),
                       const SizedBox(height: 10),
-                      Container(
-                        height: 14,
-                        width: double.infinity,
-                        color: Colors.white,
-                      ),
+                      Container(height: 14, width: double.infinity, color: Colors.white),
                       const SizedBox(height: 10),
-                      Container(
-                        height: 14,
-                        width: double.infinity,
-                        color: Colors.white,
-                      ),
+                      Container(height: 14, width: double.infinity, color: Colors.white),
                       const SizedBox(height: 10),
                       Container(height: 14, width: 200, color: Colors.white),
                     ],
@@ -114,21 +98,41 @@ class ItemDetailsScreen extends StatelessWidget {
 
   Widget buildDescriptionSection({required String name}) {
     return Container(
+      padding: EdgeInsets.all(10.h),
       margin: EdgeInsets.all(12.sp),
-      color: Colors.white,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10.sp),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .3),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'الوصف',
-            style: TextStyle(
-              fontFamily: Fonts.font,
-              color: Colors.black,
-              fontWeight: FontWeight.w300,
-              fontSize: 12.sp,
-            ),
+          Row(
+            children: [
+              Icon(Icons.description, color: AppColors.mainAppColor),
+              SizedBox(width: 10.w),
+              Text(
+                'الوصف',
+                style: TextStyle(
+                  fontFamily: Fonts.font,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 15.sp,
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 10.h),
           Text(
             name,
             style: TextStyle(

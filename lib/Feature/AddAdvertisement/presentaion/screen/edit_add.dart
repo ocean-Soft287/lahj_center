@@ -92,7 +92,7 @@ class _EditAdvertisementScreenState extends State<EditAdvertisementScreen> {
     return BlocProvider(
       create: (context) {
         final cubit = GetIt.instance<AddadvertisminteCubit>();
-        cubit.oldImage = (widget.item.advertisementImages ?? []).map((e) => e.imageName).toList();
+        cubit.oldImage = (widget.item.advertisementImages ).map((e) => e.imageName).toList();
         return cubit;
       },
       child: Scaffold(

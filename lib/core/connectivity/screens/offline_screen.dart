@@ -43,7 +43,7 @@ class _OfflineScreenState extends State<OfflineScreen>
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
-        color: Colors.white.withOpacity(0.95),
+        color: Colors.white.withValues(alpha:0.95),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Center(
@@ -62,7 +62,7 @@ class _OfflineScreenState extends State<OfflineScreen>
                         child: Icon(
                           Icons.wifi_off_rounded,
                           size: 120.sp,
-                          color: AppColors.mainAppColor.withOpacity(0.7),
+                          color: AppColors.mainAppColor.withValues(alpha:0.7),
                         ),
                       );
                     },
@@ -99,10 +99,10 @@ class _OfflineScreenState extends State<OfflineScreen>
                         width: double.infinity,
                         height: 50.h,
                         decoration: BoxDecoration(
-                          color: AppColors.mainAppColor.withOpacity(0.1 * value),
+                          color: AppColors.mainAppColor.withValues(alpha:0.1 * value),
                           borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(
-                            color: AppColors.mainAppColor.withOpacity(0.3 * value),
+                            color: AppColors.mainAppColor.withValues(alpha:0.3 * value),
                             width: 1,
                           ),
                         ),

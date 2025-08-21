@@ -1,6 +1,5 @@
 import 'item_model.dart';
 
-import 'item_model.dart';
 
 class AdvertisementResponse {
   late final List<Item> items;

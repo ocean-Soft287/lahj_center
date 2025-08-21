@@ -7,7 +7,7 @@ class EndPoint {
       "${baseUrl}Advertisement/search?keyword=$x&page=$page&pageSize=50";
 
   ///auth
-  static String login = "${baseUrl}Member/login";
+  static String login = "${baseUrl}Member/send-otp";
   static String signup = "${baseUrl}Member/register";
   static String otpverifyaccount = "${baseUrl}Member/verify-otp";
   static String phone = "${baseUrl}Customer/AddCustomer";
@@ -65,4 +65,5 @@ class EndPoint {
   static String deleateAccount(id) => "${baseUrl}Member/delete?userId=$id";
   static String getNotifications =
       "${baseUrl}Member/myNotifications";
+  static String getallSlider="${baseUrl}slider/getAll";
 }

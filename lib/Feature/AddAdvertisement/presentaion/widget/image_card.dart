@@ -143,7 +143,7 @@ class ImageCard extends StatelessWidget {
                                 child: GestureDetector(
                                   onTap: () {
                                     cubit.galleryImage.remove(xfile);
-                                    cubit.emit(AddadvertisminteSuccess([]));
+                                //    cubit.emit(AddadvertisminteSuccess([]));
                                   },
                                   child: const CircleAvatar(
                                     radius: 10,

@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:lahijcenter/core/Failure/failure.dart';
 
 import '../model/advertismint_response.dart';
-import '../model/comment_model.dart';
 import '../model/item_model.dart';
 
 

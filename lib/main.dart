@@ -1,6 +1,4 @@
 import 'dart:async';
-
-
 import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +13,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:lahijcenter/Feature/profile/manager/deleate_account_cubit.dart';
 import 'package:lahijcenter/core/connectivity/cubit/connectivity_cubit.dart';
 import 'package:lahijcenter/core/connectivity/cubit/widget/connectivity_wraper.dart';
+import 'package:lahijcenter/core/constans/fonts.dart';
 import 'Feature/Home/presentaion/screen/item_details_screen.dart';
 import 'Feature/intial/welcome_screen.dart';
 import 'Feature/main/bottomNavbar/Bottomnav.dart';
@@ -69,7 +68,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DevicePreview(
-      enabled: true,
+      enabled: false,
       builder: (context) => ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
@@ -86,9 +85,12 @@ class MyApp extends StatelessWidget {
               return ConnectivityWrapper(child: child!);
             },
             theme: ThemeData(
+              fontFamily: Fonts.font,
               appBarTheme: AppBarTheme(
                 iconTheme: IconThemeData(color: Colors.white),
+
               ),
+
             ),
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
@@ -121,7 +123,7 @@ class _StartAppState extends State<StartApp> {
     });
   }
 
-  void _handleLink(Uri uri) {
+  void handleLink(Uri uri) {
     if (uri.pathSegments.contains('Advertisements')) {
       final id = uri.pathSegments.last;
       WidgetsBinding.instance.addPostFrameCallback((_) {
