@@ -280,7 +280,7 @@ class BuildImageSection extends StatelessWidget {
                               ),
                               SizedBox(width: 8.w),
                               Text(
-                                " $area$govrnment",
+                                " $area",
                                 style: TextStyle(
                                   fontFamily: Fonts.font,
                                   color: Colors.grey.shade500,

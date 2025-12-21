@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_state.dart';
+import '../../../../core/network/local/flutter_secure_storage.dart';
 import '../../Data/repo/repo.dart';
 
 class RegisterViewCubit extends Cubit<RegisterViewState> {
@@ -31,7 +32,6 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
     required String phoneNumber,
     required String otp,
   }) async {
-
     emit(otpLoading());
 
     final result = await loginrepo.verifyOtp(phoneNumber: phoneNumber, otp: otp
@@ -44,11 +44,19 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
         emit(otpError(failure.message));
       },
           (data) {
-        debugPrint("✅ Registration Successful: ${jsonEncode(data)}");
-        emit(otpSuccess());
+        debugPrint("✅ OTP Success: ${jsonEncode(data)}");
+
+        if (data.token != null && data.token!.isNotEmpty) {
+          emit(otpSuccessGoHome());
+        } else if (data.canRegister) {
+          emit(otpSuccessGoRegister());
+        } else {
+          emit(otpError("Unexpected OTP response"));
+        }
       },
     );
   }
+
   Future<void> registerUser({
     required String firstName,
     required String lastName,
@@ -56,11 +64,11 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
     required String password,
     required String phone,
     required String gender,
-
     File? image,
     required String activity,
   }) async {
     emit(RegisterViewStateLoading());
+
     final result = await loginrepo.register(
       firstName: firstName,
       lastName: lastName,
@@ -75,10 +83,19 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
     result.fold(
           (failure) {
         debugPrint("❌ Registration Error: ${failure.message}");
-        emit(RegisterViewStateError(failure.message));
+        emit(RegisterViewStateError(failure.message ?? 'حدث خطأ'));
       },
-          (data) {
+          (data) async {
         debugPrint("✅ Registration Successful: ${jsonEncode(data)}");
+
+
+        if (data.token != null && data.token!.isNotEmpty) {
+          await SecureStorageService.write(
+            SecureStorageService.token,
+            data.token!,
+          );
+        }
+
         emit(RegisterViewStateSuccess());
       },
     );

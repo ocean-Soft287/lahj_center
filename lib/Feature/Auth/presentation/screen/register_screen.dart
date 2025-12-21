@@ -131,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Icons.person,
                                       color: AppColors.mainAppColor,
                                     ),
-                                    hintText: 'عماد',
+                                    hintText: 'الاسم الاول',
                                     validator: (value) =>
                                         value == null || value.isEmpty
                                         ? 'الرجاء إدخال الاسم الأول'
@@ -147,7 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Icons.person,
                                       color: AppColors.mainAppColor,
                                     ),
-                                    hintText: 'صالح',
+                                    hintText: 'الاسم الاخير',
                                     validator: (value) =>
                                         value == null || value.isEmpty
                                         ? 'الرجاء إدخال اسم العائلة'

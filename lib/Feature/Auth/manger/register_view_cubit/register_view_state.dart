@@ -30,3 +30,6 @@ class otpError extends RegisterViewState {
   final String message;
   otpError(this.message);
 }
+class otpSuccessGoHome extends RegisterViewState {}
+
+class otpSuccessGoRegister extends RegisterViewState {}

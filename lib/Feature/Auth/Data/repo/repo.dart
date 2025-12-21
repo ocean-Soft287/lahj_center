@@ -5,14 +5,15 @@ import 'package:dartz/dartz.dart';
 import 'package:lahijcenter/core/Failure/failure.dart';
 
 import '../model/register_model.dart';
+import '../model/responce_otp_model.dart';
 import '../model/user_model.dart';
 
 abstract class Loginrepo {
-  Future<Either<Failure, String>> verifyOtp({
+  Future<Either<Failure, ResponceOtpModel>> verifyOtp({
     required String phoneNumber,
     required String otp,
   });
-  Future<Either<Failure ,RegisterResponseModel>> register({
+  Future<Either<Failure ,RegisterResponceModel>> register({
     required String firstName,
     required String lastName,
     required String email,

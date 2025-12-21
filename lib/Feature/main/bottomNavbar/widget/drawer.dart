@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import '../../../../core/constans/fonts.dart';
 import '../../../../core/constans/responsve_font.dart';
 import '../../../../core/network/local/flutter_secure_storage.dart';
 import '../../../../core/sharde/widget/navigation.dart';
+import '../../../../core/utils/services/services_locator.dart';
 import '../../../AddAdvertisement/presentaion/screen/ad_guidelines_screen.dart';
 import '../../../MyFavoriteAds/screen/my_favorite_ad_sscreen.dart';
 import '../../../licences/screen/privacy_policy.dart';
@@ -248,7 +250,6 @@ class _CustomdrawerState extends State<Customdrawer>
             ),
           ),
 
-          // الجزء المتحرك ListView مع الأنيميشن
           Expanded(
             child: FadeTransition(
               opacity: _fadeAnimation,
@@ -305,7 +306,7 @@ class _CustomdrawerState extends State<Customdrawer>
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const TermsOfUse()),
+                          CupertinoPageRoute(builder: (context) => const TermsOfUse()),
                         );
                       },
                     ),
@@ -316,7 +317,7 @@ class _CustomdrawerState extends State<Customdrawer>
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const PrivacyPolicyScreen()),
+                          CupertinoPageRoute(builder: (context) => const PrivacyPolicyScreen()),
                         );
                       },
                     ),
@@ -333,18 +334,25 @@ class _CustomdrawerState extends State<Customdrawer>
                       iconPath: AppAssets.logoutIcon,
                       title: "تسجيل الخروج",
                       onTap: () async {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
-                              (route) => false,
-                        );
+
                         await SecureStorageService.delete(SecureStorageService.email);
                         await SecureStorageService.delete(SecureStorageService.mobile);
                         await SecureStorageService.delete(SecureStorageService.name);
                         await SecureStorageService.delete(SecureStorageService.customerid);
                         await SecureStorageService.delete(SecureStorageService.token);
+
+
+                        sl<Dio>().options.headers.remove('Authorization');
+
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              (route) => false,
+                        );
                       },
                     ),
+
 
                     SizedBox(height: 40.h),
                   ],

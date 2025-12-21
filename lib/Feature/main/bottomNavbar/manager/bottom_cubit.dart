@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../Home/presentaion/screen/chat/presentation/chat_screen.dart';
 import '../../../Home/presentaion/screen/home_screen_wi.dart';
 import '../widget/drawer.dart';
 import '../widget/screen/inbox_screen.dart';
@@ -20,7 +21,7 @@ class Bottomcubit extends Cubit<Bottomstate> {
 
   List<Widget> get screen => [
     const HomeScreenWi(),
-    const InboxScreen(),
+     ChatListScreen(),
     const NotificationScreen(),
     Customdrawer(),
   ];

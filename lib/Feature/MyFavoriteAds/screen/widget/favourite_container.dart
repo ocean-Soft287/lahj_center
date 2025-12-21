@@ -241,7 +241,7 @@ class FavouriteContainer extends StatelessWidget {
                               ),
                               SizedBox(width: 6.w),
                               MainTitle(
-                                text: "${item.area ?? ''}، ${item.governorateName}",
+                                text: "${item.area }",
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF6B7280),

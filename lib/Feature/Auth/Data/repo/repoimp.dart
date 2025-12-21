@@ -12,6 +12,7 @@ import '../../../../core/utils/api/dio_consumer.dart';
 import '../../../../core/utils/api/endpoint.dart';
 import '../../../../core/utils/services/services_locator.dart';
 import '../model/register_model.dart';
+import '../model/responce_otp_model.dart';
 import '../model/user_model.dart';
 
 class Loginrepoimp implements Loginrepo {
@@ -20,7 +21,7 @@ class Loginrepoimp implements Loginrepo {
   Loginrepoimp({required this.dioConsumer});
 
   @override
-  Future<Either<Failure, RegisterResponseModel>> register({
+  Future<Either<Failure, RegisterResponceModel>> register({
     required String firstName,
     required String lastName,
     required String email,
@@ -56,7 +57,7 @@ class Loginrepoimp implements Loginrepo {
         isFromData: true,
       );
 
-      return Right(RegisterResponseModel.fromJson(response));
+      return Right(RegisterResponceModel.fromJson(response));
 
     } catch (e) {
       return Left(ServerFailure(e.toString()));
@@ -65,12 +66,12 @@ class Loginrepoimp implements Loginrepo {
 
 
   @override
-  Future<Either<Failure, String>> verifyOtp({
+  Future<Either<Failure, ResponceOtpModel>> verifyOtp({
     required String phoneNumber,
     required String otp,
   }) async {
     try {
-       await dioConsumer.post(
+    final response=   await dioConsumer.post(
         EndPoint.otpverifyaccount,
         data: {
           'phoneNumber': phoneNumber,
@@ -79,7 +80,17 @@ class Loginrepoimp implements Loginrepo {
       );
 
 
-          return Right("Email verified. Account activated successfully.");
+
+       final model = ResponceOtpModel.fromJson(response);
+       if (model.token != null && model.token!.isNotEmpty){
+     await SecureStorageService.write(SecureStorageService.token, model.token!);
+     sl<Dio>().options.headers['Authorization'] =
+     'Bearer ${model.token}';
+       }
+
+
+       return Right(model);
+
 
 
     } on DioException catch (e) {

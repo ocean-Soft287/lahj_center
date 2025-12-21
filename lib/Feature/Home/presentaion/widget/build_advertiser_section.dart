@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:lahijcenter/core/constans/fonts.dart';
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../main/bottomNavbar/manager/Bottom_state.dart';
+import '../screen/chat/presentation/chat_screen.dart';
 
 class BuildAdvertiserSection extends StatelessWidget {
   const BuildAdvertiserSection({super.key, required this.item});
@@ -104,6 +106,7 @@ class BuildAdvertiserSection extends StatelessWidget {
                         }),
                         SizedBox(width: 5.w),
                         buildIconButton("assets/icons/chat.svg", () {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => ChatListScreen(),));
 
                         }),
 

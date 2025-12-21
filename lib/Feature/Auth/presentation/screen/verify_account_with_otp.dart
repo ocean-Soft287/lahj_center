@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_cubit.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_state.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/register_screen.dart';
+import 'package:lahijcenter/Feature/main/bottomNavbar/Bottomnav.dart';
 import 'package:lahijcenter/core/constans/app_assets.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/constans/constants.dart';
@@ -57,14 +58,18 @@ class _OTPScreenState extends State<OTPScreen> {
                 backgroundColor: Colors.red,
               ),
             );
-          }
-          if (state is otpSuccess) {
-            navigatofinsh(context,  RegisterScreen(
-              phoneNumber: widget.phonenumber,
-
-            ),true);
+          } else if (state is otpSuccessGoHome) {
+            navigatofinsh(context, const Bottomnav(), true);
+          } else if (state is otpSuccessGoRegister) {
+            navigatofinsh(
+              context,
+              RegisterScreen(phoneNumber: widget.phonenumber),
+              true,
+            );
           }
         },
+
+
         builder: (context, state) {
           final cubit = BlocProvider.of<RegisterViewCubit>(context);
 

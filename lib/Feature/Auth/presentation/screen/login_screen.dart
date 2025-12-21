@@ -9,6 +9,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/register_screen.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/verify_account_with_otp.dart';
+import 'package:lahijcenter/Feature/licences/screen/privacy_policy.dart';
 import 'package:lahijcenter/core/Failure/failure.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
@@ -151,15 +152,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       Directionality(
                         textDirection: TextDirection.ltr,
                         child: IntlPhoneField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           textAlign: TextAlign.center,
 
-                          // حجم الرقم الذي يكتبه المستخدم
+
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp, // <--- تصغير حجم الرقم
                           ),
 
-                          // حجم كود الدولة في Dropdown
                           dropdownTextStyle: TextStyle(
                             color: Colors.black,
                             fontSize: 14.sp, // <--- تصغير حجم كود الدولة في القائمة
@@ -168,8 +171,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
                           pickerDialogStyle: PickerDialogStyle(
+
                             countryCodeStyle: TextStyle(fontSize: 14.sp, color: Colors.black),
                             searchFieldInputDecoration: InputDecoration(
+
                               hintText: "ابحث عن الدوله ",
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                               border: OutlineInputBorder(
@@ -192,6 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             phoneController.text = phone.completeNumber;
                           },
 
+
                           validator: (value) {
                             if (value == null || value.number.isEmpty) {
                               return "LocaleKeys.phone_number_required.tr()";
@@ -210,7 +216,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
 
-                      20.verticalSpace,
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>PrivacyPolicyScreen()));
+
+                        },
+                        child:
+        Center(child:
+                        Text("الشروط والاحكام وسياسه الخصوصيه",
+                        style: TextStyle(
+                          color: AppColors.mainAppColor,
+                          fontFamily: Fonts.font,
+                          fontWeight: FontWeight.w700,
+                          fontSize: getFontSize(context, 15),
+                          decoration: TextDecoration.underline, // هنا الخط تحت النص
+
+
+                        ),),
+                      )),
+                      SizedBox(height: 20.h,),
 
 
 
