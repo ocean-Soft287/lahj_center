@@ -46,7 +46,7 @@ class Loginrepoimp implements Loginrepo {
         "Password": password,
         "PhoneNumber": phone,
         "Activity": activity,
-        "Gender":gender,
+        "Gender": gender,
         "DeviceToken": fcmtoken,
         if (image != null) "Image": imageFile,
       });
@@ -58,49 +58,50 @@ class Loginrepoimp implements Loginrepo {
       );
 
       return Right(RegisterResponceModel.fromJson(response));
-
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
   }
 
-
   @override
-  Future<Either<Failure, ResponceOtpModel>> verifyOtp({
+  Future<Either<Failure, ResponseOtpModel>> verifyOtp({
     required String phoneNumber,
     required String otp,
   }) async {
     try {
-    final response=   await dioConsumer.post(
+      final response = await dioConsumer.post(
         EndPoint.otpverifyaccount,
-        data: {
-          'phoneNumber': phoneNumber,
-          'otp': otp,
-        },
+        data: {'phoneNumber': phoneNumber, 'otp': otp},
       );
 
+      final model = ResponseOtpModel.fromJson(response);
+      if (model.member?.token != null && model.member!.token.isNotEmpty) {
+        await SecureStorageService.write(
+          SecureStorageService.token,
+          model.member!.token,
+        );
+        await SecureStorageService.write(
+          SecureStorageService.name,
+          "${model.member?.firstName} ${model.member?..lastName}",
+        );
+        await SecureStorageService.write(SecureStorageService.email, model.member?.email??"");
+        await SecureStorageService.write(
+          SecureStorageService.customerid,
+          model.
+          member?.id??"",
+        );
+        sl<Dio>().options.headers['Authorization'] =
+            'Bearer ${model.member!.token}';
+      }
 
 
-       final model = ResponceOtpModel.fromJson(response);
-       if (model.token != null && model.token!.isNotEmpty){
-     await SecureStorageService.write(SecureStorageService.token, model.token!);
-     sl<Dio>().options.headers['Authorization'] =
-     'Bearer ${model.token}';
-       }
-
-
-       return Right(model);
-
-
-
+      return Right(model);
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Dio error'));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
   }
-
-
 
   @override
   Future<Either<Failure, String>> forgetpassword({
@@ -112,20 +113,16 @@ class Loginrepoimp implements Loginrepo {
         data: {'email': email},
       );
 
-
       final responseMessage = response.toString();
 
       if (responseMessage.trim() == "Email is Not Exist") {
         return left(ServerFailure("This email is not registered."));
       }
-if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
-  {
-
-    return right(responseMessage);
-
-  }
+      if (responseMessage.toString() ==
+          "Check your inbox you have recieved Reset Link") {
+        return right(responseMessage);
+      }
       return left(ServerFailure(responseMessage));
-
     } on DioException catch (e) {
       return left(_handleDioError(e));
     } catch (e) {
@@ -136,9 +133,8 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
   @override
   Future<Either<Failure, UserModel>> login({
     required String phonenumber,
-   // required String password,
+    // required String password,
   }) async {
-
     final fcmtoken = await FirebaseMessaging.instance.getToken();
 
     try {
@@ -146,46 +142,47 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
         EndPoint.login,
         data: {
           'phoneNumber': phonenumber,
-         // 'password': password,
-       //   'rememberMe': true,
+          // 'password': password,
+          //   'rememberMe': true,
           "deviceToken": fcmtoken,
         },
-
       );
 
       final json = response as Map<String, dynamic>;
       final model = UserModel.fromJson(json);
-      log(model.token,name: "TOKEN");
+      log(model.token, name: "TOKEN");
       await SecureStorageService.write(SecureStorageService.token, model.token);
-      await SecureStorageService.write(SecureStorageService.name, "${model.firstName} ${model.lastName}");
+      await SecureStorageService.write(
+        SecureStorageService.name,
+        "${model.firstName} ${model.lastName}",
+      );
       await SecureStorageService.write(SecureStorageService.email, model.email);
-      await SecureStorageService.write(SecureStorageService.customerid, model.id);
+      await SecureStorageService.write(
+        SecureStorageService.customerid,
+        model.id,
+      );
 
-
-      Future.delayed(Duration(seconds: 1),(){
+      Future.delayed(Duration(seconds: 1), () {
         sl<Dio>().options.headers['Authorization'] = 'Bearer ${model.token}';
-
       });
-     // final token= SecureStorageService.read(SecureStorageService.token);
+      // final token= SecureStorageService.read(SecureStorageService.token);
       // final role=SecureStorageService.read(SecureStorageService.role);
-     // print(token);
+      // print(token);
 
       // if (model.token.isEmpty) {
       //   return left(ServerFailure("Missing token in response."));
       // }
       return right(model);
     } on DioException catch (e) {
-
       // print("------------------------------------------------------ VerifyOtpFailure ${e.response?.}");
-      if(e.message!.contains("Email is not confirmed.")){
-        return left(VerifyOtpFailure(e.response?.statusMessage??""));
+      if (e.message!.contains("Email is not confirmed.")) {
+        return left(VerifyOtpFailure(e.response?.statusMessage ?? ""));
       }
       return left(_handleDioError(e));
     } catch (e) {
       return left(ServerFailure("Login failed: ${e.toString()}"));
     }
   }
-
 
   @override
   Future<Either<Failure, String>> resetpassword({
@@ -215,11 +212,7 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
     }
   }
 
-
   Failure _handleDioError(DioException error) {
     return ServerFailure(error.message ?? "Unknown error occurred");
   }
-
-
-
 }

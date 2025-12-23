@@ -46,7 +46,7 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
           (data) {
         debugPrint("✅ OTP Success: ${jsonEncode(data)}");
 
-        if (data.token != null && data.token!.isNotEmpty) {
+        if (data.member?.token != null && data.member!.token.isNotEmpty) {
           emit(otpSuccessGoHome());
         } else if (data.canRegister) {
           emit(otpSuccessGoRegister());

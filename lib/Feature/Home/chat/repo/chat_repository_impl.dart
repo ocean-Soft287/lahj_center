@@ -94,13 +94,13 @@ class ChatRepositoryImpl implements ChatRepository {
         );
 
         await _firebaseConsumer.setDocument(
-          path: 'userConversations/$senderId/$conversationId',
+          path: 'userConversations/$senderId/contacts/$conversationId',
           data: senderConversation,
           merge: true,
         );
 
         await _firebaseConsumer.setDocument(
-          path: 'userConversations/$receiverId/$conversationId',
+          path: 'userConversations/$receiverId/contacts/$conversationId',
           data: receiverConversation,
           merge: true,
         );

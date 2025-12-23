@@ -172,7 +172,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                contact.lastMessage,
+                                contact.lastMessage ?? '',
                                 style: TextStyle(
                                   color: contact.unreadCount > 0
                                       ? Colors.black87
@@ -194,7 +194,11 @@ class _ChatListScreenState extends State<ChatListScreen> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              _formatTime(contact.lastMessageTime.toDate()),
+                              contact.lastMessageTime != null
+                                  ? _formatTime(
+                                      contact.lastMessageTime!.toDate(),
+                                    )
+                                  : '',
                               style: TextStyle(
                                 color: contact.unreadCount > 0
                                     ? AppColors.mainAppColor

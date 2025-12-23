@@ -14,7 +14,7 @@ class ChatContactRepositoryImpl implements ChatContactRepository {
     required String userId,
   }) {
     return _firebaseConsumer.getCollection<ChatContactModel>(
-      path: 'userConversations/$userId',
+      path: 'userConversations/$userId/contacts',
       fromJson: ChatContactModel.fromJson,
       orderBy: 'lastMessageTime',
       descending: true,

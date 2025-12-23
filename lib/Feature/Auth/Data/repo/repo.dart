@@ -9,7 +9,7 @@ import '../model/responce_otp_model.dart';
 import '../model/user_model.dart';
 
 abstract class Loginrepo {
-  Future<Either<Failure, ResponceOtpModel>> verifyOtp({
+  Future<Either<Failure, ResponseOtpModel>> verifyOtp({
     required String phoneNumber,
     required String otp,
   });

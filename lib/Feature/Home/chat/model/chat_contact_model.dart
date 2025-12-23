@@ -6,8 +6,8 @@ class ChatContactModel extends Equatable {
   final String otherUserId;
   final String otherUserName;
   final String? otherUserProfilePic;
-  final String lastMessage;
-  final Timestamp lastMessageTime;
+  final String? lastMessage;
+  final Timestamp? lastMessageTime;
   final int unreadCount;
   final bool isTyping;
 
@@ -16,8 +16,8 @@ class ChatContactModel extends Equatable {
     required this.otherUserId,
     required this.otherUserName,
     this.otherUserProfilePic,
-    required this.lastMessage,
-    required this.lastMessageTime,
+    this.lastMessage,
+    this.lastMessageTime,
     this.unreadCount = 0,
     this.isTyping = false,
   });
@@ -29,8 +29,8 @@ class ChatContactModel extends Equatable {
       otherUserId: json['otherUserId'] as String,
       otherUserName: json['otherUserName'] as String,
       otherUserProfilePic: json['otherUserProfilePic'] as String?,
-      lastMessage: json['lastMessage'] as String,
-      lastMessageTime: json['lastMessageTime'] as Timestamp,
+      lastMessage: json['lastMessage'] as String?,
+      lastMessageTime: json['lastMessageTime'] as Timestamp?,
       unreadCount: json['unreadCount'] as int? ?? 0,
       isTyping: json['isTyping'] as bool? ?? false,
     );
@@ -44,8 +44,8 @@ class ChatContactModel extends Equatable {
       'otherUserName': otherUserName,
       if (otherUserProfilePic != null)
         'otherUserProfilePic': otherUserProfilePic,
-      'lastMessage': lastMessage,
-      'lastMessageTime': lastMessageTime,
+      if (lastMessage != null) 'lastMessage': lastMessage,
+      if (lastMessageTime != null) 'lastMessageTime': lastMessageTime,
       'unreadCount': unreadCount,
       'isTyping': isTyping,
     };
