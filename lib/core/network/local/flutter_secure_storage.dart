@@ -7,17 +7,22 @@ class SecureStorageService {
   static const String mobile = "mobile";
   static const String email = "email";
   static const String name = "name";
-  static const String customerid ="customer_id";
-  static const String image ="image";
-  static const String password ="password";
-
+  static const String customerid = "customer_id";
+  static const String image = "image";
+  static const String password = "password";
 
   static Future<void> write(dynamic key, String value) async {
     await _storage.write(key: key.toString(), value: value);
   }
 
   static Future<String?> read(dynamic key) async {
-    return await _storage.read(key: key.toString());
+    String? value = await _storage.read(key: key.toString());
+    if (key.toString() == name &&
+        value != null &&
+        value.contains(" Instance of ")) {
+      return value.split(" Instance of ").first.trim();
+    }
+    return value;
   }
 
   static Future<void> delete(dynamic key) async {

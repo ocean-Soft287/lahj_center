@@ -96,7 +96,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                 final contact = contacts[index];
                 // For UI purposes, using a simple color hash based on user ID
                 final avatarColor = _getColorFromString(contact.otherUserId);
-
+                log("User name is ${contact.otherUserName}");
                 return InkWell(
                   onTap: () {
                     Navigator.push(

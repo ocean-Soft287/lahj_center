@@ -82,18 +82,19 @@ class Loginrepoimp implements Loginrepo {
         );
         await SecureStorageService.write(
           SecureStorageService.name,
-          "${model.member?.firstName} ${model.member?..lastName}",
+          "${model.member?.firstName} ${model.member?.lastName}",
         );
-        await SecureStorageService.write(SecureStorageService.email, model.member?.email??"");
+        await SecureStorageService.write(
+          SecureStorageService.email,
+          model.member?.email ?? "",
+        );
         await SecureStorageService.write(
           SecureStorageService.customerid,
-          model.
-          member?.id??"",
+          model.member?.id ?? "",
         );
         sl<Dio>().options.headers['Authorization'] =
             'Bearer ${model.member!.token}';
       }
-
 
       return Right(model);
     } on DioException catch (e) {
