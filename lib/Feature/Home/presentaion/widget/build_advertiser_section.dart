@@ -4,13 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lahijcenter/Feature/Home/Data/model/item_model.dart';
-import 'package:lahijcenter/Feature/main/bottomNavbar/manager/Bottom_cubit.dart';
+import 'package:lahijcenter/Feature/main/bottomNavbar/manager/bottom_cubit.dart';
+import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
+import 'package:lahijcenter/Feature/profile/manager/get_profile_state.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
-import '../../../main/bottomNavbar/manager/Bottom_state.dart';
-import '../screen/chat/presentation/chat_screen.dart';
+import '../../../../core/utils/services/services_locator.dart';
+import '../../../main/bottomNavbar/manager/bottom_state.dart';
+import '../../chat/presentation/chat_screen.dart';
 
 class BuildAdvertiserSection extends StatelessWidget {
   const BuildAdvertiserSection({super.key, required this.item});
@@ -20,9 +23,8 @@ class BuildAdvertiserSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => Bottomcubit(),
-      child:
-      Column(
+      create: (context) => Bottomcubit(sl<GetProfileCubit>()),
+      child: Column(
         children: [
           Container(
             padding: EdgeInsets.all(10.h),
@@ -45,8 +47,8 @@ class BuildAdvertiserSection extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.person,color: AppColors.mainAppColor,),
-                    SizedBox(width: 10.w,),
+                    Icon(Icons.person, color: AppColors.mainAppColor),
+                    SizedBox(width: 10.w),
                     Text(
                       "معلومات المعلن",
                       style: TextStyle(
@@ -61,13 +63,19 @@ class BuildAdvertiserSection extends StatelessWidget {
                 SizedBox(height: 15.h),
                 BlocBuilder<Bottomcubit, Bottomstate>(
                   builder: (context, state) {
-                    Bottomcubit bottomcubit = BlocProvider.of<Bottomcubit>(context);
+                    Bottomcubit bottomcubit = BlocProvider.of<Bottomcubit>(
+                      context,
+                    );
                     return Row(
                       children: [
                         CircleAvatar(
                           radius: 20,
-                            backgroundColor: AppColors.greyColor,
-                            child: Icon(Icons.person,color: AppColors.mainAppColor,)),
+                          backgroundColor: AppColors.greyColor,
+                          child: Icon(
+                            Icons.person,
+                            color: AppColors.mainAppColor,
+                          ),
+                        ),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,11 +99,9 @@ class BuildAdvertiserSection extends StatelessWidget {
                                 fontSize: 15.sp,
                               ),
                             ),
-
                           ],
                         ),
                         const Spacer(),
-
 
                         buildIconButton(AppAssets.whatsAppIcon, () {
                           bottomcubit.whatsappuser(item.phone);
@@ -106,17 +112,36 @@ class BuildAdvertiserSection extends StatelessWidget {
                         }),
                         SizedBox(width: 5.w),
                         buildIconButton("assets/icons/chat.svg", () {
-                          Navigator.push(context, CupertinoPageRoute(builder: (context) => ChatListScreen(),));
+                          final profileState = sl<GetProfileCubit>().state;
+                          String currentUserId = '';
+                          if (profileState is GetProfileSuccess) {
+                            currentUserId = profileState.profile.id;
+                          }
 
+                          final otherUserId = item.memberId;
+
+                          // Generate a deterministic conversation ID
+                          final ids = [currentUserId, otherUserId]..sort();
+                          final conversationId = ids.join('_');
+
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => ChatScreen(
+                                conversationId: conversationId,
+                                currentUserId: currentUserId,
+                                receiverId: otherUserId,
+                                name: item.memberName,
+                                avatar: Colors.blue, // Default avatar color
+                                online: false,
+                              ),
+                            ),
+                          );
                         }),
-
-
                       ],
                     );
                   },
                 ),
-
-
               ],
             ),
           ),
@@ -125,7 +150,7 @@ class BuildAdvertiserSection extends StatelessWidget {
               left: 10,
               right: 10.h,
               bottom: 10.h,
-              top: 10.h
+              top: 10.h,
             ),
             margin: EdgeInsets.all(12.sp),
             decoration: BoxDecoration(
@@ -146,7 +171,7 @@ class BuildAdvertiserSection extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                      Icon(Icons.info_outline,color: AppColors.mainAppColor),
+                    Icon(Icons.info_outline, color: AppColors.mainAppColor),
                     SizedBox(width: 10.w),
                     Text(
                       "المواصفات",
@@ -166,7 +191,7 @@ class BuildAdvertiserSection extends StatelessWidget {
                 buildSpecificationRow(' الخدمة :', item.serviceName),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -182,9 +207,12 @@ class BuildAdvertiserSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(5.sp),
         ),
 
-        child: SvgPicture.asset(asset, colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-        width: 20,
-        height: 20,),
+        child: SvgPicture.asset(
+          asset,
+          colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          width: 20,
+          height: 20,
+        ),
       ),
     );
   }
@@ -194,7 +222,7 @@ class BuildAdvertiserSection extends StatelessWidget {
       padding: EdgeInsets.all(5.sp),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: Colors.grey.shade300
+        color: Colors.grey.shade300,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -208,7 +236,6 @@ class BuildAdvertiserSection extends StatelessWidget {
                 color: Colors.grey,
                 fontWeight: FontWeight.w300,
                 fontSize: 12.sp,
-
               ),
             ),
           ),

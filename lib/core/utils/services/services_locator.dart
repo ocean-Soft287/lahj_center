@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
@@ -10,6 +11,8 @@ import 'package:lahijcenter/Feature/Home/Data/repo/home_repo.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/home_repo_imp.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/post_repo_impl_comment.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/repo_post_comment.dart';
+import 'package:lahijcenter/Feature/Home/chat/repo/chat_repository.dart';
+import 'package:lahijcenter/Feature/Home/chat/repo/chat_repository_impl.dart';
 import 'package:lahijcenter/Feature/Home/manager/commentcubit/get_all_comment_cubit.dart';
 import 'package:lahijcenter/Feature/Home/manager/commentcubit/get_report_cubit.dart';
 import 'package:lahijcenter/Feature/Home/manager/commentcubit/post_comment_cubit.dart';
@@ -44,6 +47,7 @@ import 'package:lahijcenter/Feature/profile/manager/new_password_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/update_profile_cubit.dart';
 import 'package:lahijcenter/core/connectivity/cubit/connectivity_cubit.dart';
+import 'package:lahijcenter/core/firebase/firebase.dart';
 import 'package:lahijcenter/core/network/local/flutter_secure_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -53,6 +57,10 @@ import '../../../Feature/AddAdvertisement/manger/addadvertisminte_cubit.dart';
 import '../../../Feature/Auth/Data/repo/repo.dart';
 import '../../../Feature/Auth/Data/repo/repoimp.dart';
 import '../../../Feature/Auth/manger/login-cubit/login_view_cubit.dart';
+import '../../../Feature/Home/chat/repo/chat_contact_repository_impl.dart';
+import '../../../Feature/Home/chat/repo/chat_contact_repositry.dart';
+import '../../../Feature/Home/chat/presentation/bloc/chat/chat_bloc.dart';
+import '../../../Feature/Home/chat/presentation/bloc/contact/chat_contact_bloc.dart';
 import '../../../Feature/Home/manager/categorycubit/category_cubit.dart';
 import '../../../Feature/Home/manager/homecubit/home_cubit.dart';
 import '../../../Feature/Search/data/repo/search_repo_imp.dart';
@@ -75,35 +83,47 @@ import 'add_advertisment_service_locator.dart';
 final sl = GetIt.instance;
 Future<void> setup() async {
   // Dio instance registration
-  final  token = await SecureStorageService.read("token");
+  final token = await SecureStorageService.read("token");
   sl.registerLazySingleton<Dio>(
-      () => Dio(BaseOptions(baseUrl: EndPoint.baseUrl,headers: {'Authorization': 'Bearer $token'}))
-        ..interceptors.add(PrettyDioLogger(
-          request: true,
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: false,
-          enabled: kDebugMode,
-          responseBody: true,
-          error: true,
-          compact: true,
-          maxWidth: 90,
-
-        )));
+    () =>
+        Dio(
+            BaseOptions(
+              baseUrl: EndPoint.baseUrl,
+              headers: {'Authorization': 'Bearer $token'},
+            ),
+          )
+          ..interceptors.add(
+            PrettyDioLogger(
+              request: true,
+              requestHeader: true,
+              requestBody: true,
+              responseHeader: false,
+              enabled: kDebugMode,
+              responseBody: true,
+              error: true,
+              compact: true,
+              maxWidth: 90,
+            ),
+          ),
+  );
 
   /// Register DioConsumer
   sl.registerLazySingleton<DioConsumer>(() => DioConsumer(dio: sl<Dio>()));
   sl.registerLazySingleton<ApiConsumer>(() => sl<DioConsumer>());
 
   /// Registering login
-  sl.registerLazySingleton<Loginrepo>(() => Loginrepoimp(dioConsumer: sl<DioConsumer>()));
+  sl.registerLazySingleton<Loginrepo>(
+    () => Loginrepoimp(dioConsumer: sl<DioConsumer>()),
+  );
   sl.registerFactory<LoginViewCubit>(() => LoginViewCubit(sl<Loginrepo>()));
-  sl.registerFactory<RegisterViewCubit>(() => RegisterViewCubit(sl<Loginrepo>()));
-
+  sl.registerFactory<RegisterViewCubit>(
+    () => RegisterViewCubit(sl<Loginrepo>()),
+  );
 
   /// Registering home data
   sl.registerLazySingleton<Homerepo>(
-      () => Homerepoimp(dioConsumer: sl<DioConsumer>()));
+    () => Homerepoimp(dioConsumer: sl<DioConsumer>()),
+  );
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl<Homerepo>()));
   sl.registerFactory<CategoryCubit>(() => CategoryCubit(sl<Homerepo>()));
   sl.registerFactory<ItemDetailsCubit>(() => ItemDetailsCubit(sl<Homerepo>()));
@@ -112,124 +132,125 @@ Future<void> setup() async {
   ///CommentCubit
   /// Add Advertisement
   sl.registerLazySingleton<Addadvertisminterepo>(
-    () => Addadvertisminterepoimp(
-      dioConsumer: sl<DioConsumer>(),
-    ),
+    () => Addadvertisminterepoimp(dioConsumer: sl<DioConsumer>()),
   );
   sl.registerFactory<AddadvertisminteCubit>(
-      () => AddadvertisminteCubit(sl<Addadvertisminterepo>(), sl<Homerepo>()));
+    () => AddadvertisminteCubit(sl<Addadvertisminterepo>(), sl<Homerepo>()),
+  );
 
   ///favourite
   sl.registerLazySingleton<Favrepo>(
-    () => FavRepoImp(
-      dioConsumer: sl<DioConsumer>(),
-    ),
+    () => FavRepoImp(dioConsumer: sl<DioConsumer>()),
   );
   sl.registerLazySingleton<FavouriteCubit>(() => FavouriteCubit(sl<Favrepo>()));
 
   ///myadds
   sl.registerLazySingleton<Myaddrepo>(
-    () => Myaddimp(
-      dioConsumer: sl<DioConsumer>(),
-    ),
+    () => Myaddimp(dioConsumer: sl<DioConsumer>()),
   );
   sl.registerFactory<MyaddCubit>(() => MyaddCubit(sl<Myaddrepo>()));
 
   ///profile
   sl.registerLazySingleton<Profilerepo>(
-    () => Profilerepoimp(
-      dioConsumer: sl<DioConsumer>(),
-    ),
+    () => Profilerepoimp(dioConsumer: sl<DioConsumer>()),
   );
 
   sl.registerFactory<ProfileViewCubit>(
-      () => ProfileViewCubit(sl<Profilerepo>()));
+    () => ProfileViewCubit(sl<Profilerepo>()),
+  );
 
   ///search
 
-
   sl.registerLazySingleton<Searchrepo>(
-        () => SearchrepoRepoImp(
-      dioConsumer: sl<DioConsumer>(),
-    ),
+    () => SearchrepoRepoImp(dioConsumer: sl<DioConsumer>()),
   );
 
-  sl.registerFactory<SearchCubit>(
-          () => SearchCubit(sl<Searchrepo>()));
+  sl.registerFactory<SearchCubit>(() => SearchCubit(sl<Searchrepo>()));
 
   // Get profile repo and cubit
   sl.registerLazySingleton<GetProfileRepo>(
-        () => GetProfileRepoImpl(dioConsumer: sl<DioConsumer>()),
+    () => GetProfileRepoImpl(dioConsumer: sl<DioConsumer>()),
   );
 
   sl.registerFactory<GetProfileCubit>(
-        () => GetProfileCubit(sl<GetProfileRepo>()),
+    () => GetProfileCubit(sl<GetProfileRepo>()),
   );
   //update profile
-  sl.registerLazySingleton<UpdateProfileRepo>(()=> UpadateProfileRepoImpl(dioConsumer: sl<DioConsumer>()));
-sl.registerFactory<UpdateProfileCubit>((
-
-)=>UpdateProfileCubit(sl<UpdateProfileRepo>()));
-// new password
-sl.registerLazySingleton<NewPasswordRepo>(()=>NewPasswordRepoImpl(dioConsumer: sl<DioConsumer>()));
-sl.registerFactory<NewPasswordCubit>(()=>NewPasswordCubit(sl<NewPasswordRepo>()));
+  sl.registerLazySingleton<UpdateProfileRepo>(
+    () => UpadateProfileRepoImpl(dioConsumer: sl<DioConsumer>()),
+  );
+  sl.registerFactory<UpdateProfileCubit>(
+    () => UpdateProfileCubit(sl<UpdateProfileRepo>()),
+  );
+  // new password
+  sl.registerLazySingleton<NewPasswordRepo>(
+    () => NewPasswordRepoImpl(dioConsumer: sl<DioConsumer>()),
+  );
+  sl.registerFactory<NewPasswordCubit>(
+    () => NewPasswordCubit(sl<NewPasswordRepo>()),
+  );
 
   await AddAdvertismentServiceLocator.execute(getIt: sl);
   sl.registerSingleton<ConnectivityCubit>(ConnectivityCubit());
   //post comment
-  sl.registerLazySingleton<RepoPostComment>(() => PostRepoImplComment(dioConsumer: sl<DioConsumer>()));
-  sl.registerFactory<PostCommentCubit>(() => PostCommentCubit(sl<RepoPostComment>()));
-//get all comment
-  sl.registerLazySingleton<GetAllCommentRepo>(() => GetAllCommentRepoImpl(dioConsumer: sl<DioConsumer>()));
-  sl.registerFactory<GetAllCommentCubit>(() => GetAllCommentCubit(sl<GetAllCommentRepo>()));
-  
+  sl.registerLazySingleton<RepoPostComment>(
+    () => PostRepoImplComment(dioConsumer: sl<DioConsumer>()),
+  );
+  sl.registerFactory<PostCommentCubit>(
+    () => PostCommentCubit(sl<RepoPostComment>()),
+  );
+  //get all comment
+  sl.registerLazySingleton<GetAllCommentRepo>(
+    () => GetAllCommentRepoImpl(dioConsumer: sl<DioConsumer>()),
+  );
+  sl.registerFactory<GetAllCommentCubit>(
+    () => GetAllCommentCubit(sl<GetAllCommentRepo>()),
+  );
+
   //report comment
-  sl.registerLazySingleton<GetReportRepo>(() => GetReportRepoImpl(dioConsumer: sl<DioConsumer>()));
+  sl.registerLazySingleton<GetReportRepo>(
+    () => GetReportRepoImpl(dioConsumer: sl<DioConsumer>()),
+  );
   sl.registerFactory<GetReportCubit>(() => GetReportCubit(sl<GetReportRepo>()));
-  
-//get all favourite
- sl.registerLazySingleton<GetAllFavouriteRepo>(
+
+  //get all favourite
+  sl.registerLazySingleton<GetAllFavouriteRepo>(
     () => GetAllFavouriteRepoImpl(sl<ApiConsumer>()),
   );
 
- 
   sl.registerLazySingleton<GetAllFavouriteCubit>(
     () => GetAllFavouriteCubit(sl<GetAllFavouriteRepo>()),
   );
   //unlike favourite
 
-
   sl.registerFactory<UnlikeRepo>(
     () => UnlikeRepoImpl(apiConsumer: sl<ApiConsumer>()),
   );
 
-  
-  sl.registerFactory<UnlikeCubit>(
-    () => UnlikeCubit(sl<UnlikeRepo>()),
-  );
+  sl.registerFactory<UnlikeCubit>(() => UnlikeCubit(sl<UnlikeRepo>()));
   //post like
   sl.registerLazySingleton<PostLikeRepo>(
     () => PostLikeRepoImpl(apiConsumer: sl<ApiConsumer>()),
   );
 
-  sl.registerFactory<PostLikeCubit>(
-    () => PostLikeCubit(sl<PostLikeRepo>()));
-    //unlike home
-    sl.registerLazySingleton<UnlikeHomeRepo>(
+  sl.registerFactory<PostLikeCubit>(() => PostLikeCubit(sl<PostLikeRepo>()));
+  //unlike home
+  sl.registerLazySingleton<UnlikeHomeRepo>(
     () => UnlikeHomeRepoImpl(apiConsumer: sl<ApiConsumer>()),
-    );
+  );
 
   sl.registerFactory<UnlikeHomeCubit>(
-    () => UnlikeHomeCubit(sl<UnlikeHomeRepo>()));
+    () => UnlikeHomeCubit(sl<UnlikeHomeRepo>()),
+  );
   //delete account
- sl.registerLazySingleton<DeleteAccountRepo>(
-  () => DeleateAccountRepoImpl(apiConsumer: sl<ApiConsumer>()),
-);
+  sl.registerLazySingleton<DeleteAccountRepo>(
+    () => DeleateAccountRepoImpl(apiConsumer: sl<ApiConsumer>()),
+  );
 
-sl.registerFactory<DeleateAccountCubit>(
-  () => DeleateAccountCubit(deleteAccountRepo: sl<DeleteAccountRepo>()),
-);
-//get notifications
+  sl.registerFactory<DeleateAccountCubit>(
+    () => DeleateAccountCubit(deleteAccountRepo: sl<DeleteAccountRepo>()),
+  );
+  //get notifications
   sl.registerLazySingleton<NotificationRepo>(
     () => NotficationRepoImpl(apiConsumer: sl<ApiConsumer>()),
   );
@@ -239,11 +260,20 @@ sl.registerFactory<DeleateAccountCubit>(
     () => CubitNotfication(sl<NotificationRepo>()),
   );
   // slidder banner
-  sl.registerLazySingleton<SliderRepo>(() => SliderRepoImpl( sl<DioConsumer>()));
+  sl.registerLazySingleton<SliderRepo>(() => SliderRepoImpl(sl<DioConsumer>()));
 
   sl.registerFactory<SliderCubit>(() => SliderCubit(sl<SliderRepo>()));
 
-  
+  // Chat feature
+  sl.registerLazySingleton<FirebaseConsumer>(
+    () => FirebaseConsumerImpl(FirebaseFirestore.instance),
+  );
+  sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
+  sl.registerLazySingleton<ChatContactRepository>(
+    () => ChatContactRepositoryImpl(sl()),
+  );
 
-
+  // Chat BLoCs
+  sl.registerFactory<ChatBloc>(() => ChatBloc(sl()));
+  sl.registerFactory<ChatContactBloc>(() => ChatContactBloc(sl()));
 }

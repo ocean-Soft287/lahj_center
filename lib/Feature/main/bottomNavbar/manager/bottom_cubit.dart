@@ -1,17 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
+import 'package:lahijcenter/Feature/profile/manager/get_profile_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../Home/presentaion/screen/chat/presentation/chat_screen.dart';
+import '../../../Home/chat/presentation/chat_contact_screen.dart';
+import '../../../Home/chat/presentation/chat_screen.dart';
 import '../../../Home/presentaion/screen/home_screen_wi.dart';
 import '../widget/drawer.dart';
 import '../widget/screen/inbox_screen.dart';
 import '../widget/screen/notification_screen.dart';
 
-import 'Bottom_state.dart';
+import 'bottom_state.dart';
 
 class Bottomcubit extends Cubit<Bottomstate> {
-  Bottomcubit() : super(InitializeHome());
+  final GetProfileCubit getProfileCubit;
+
+  Bottomcubit(this.getProfileCubit) : super(InitializeHome());
 
   int currentIndex = 0;
   changeSelectIndexBottom({required int index}) {
@@ -19,12 +24,21 @@ class Bottomcubit extends Cubit<Bottomstate> {
     emit(ChangeIndexBottom());
   }
 
-  List<Widget> get screen => [
-    const HomeScreenWi(),
-     ChatListScreen(),
-    const NotificationScreen(),
-    Customdrawer(),
-  ];
+  List<Widget> get screen {
+    // Get user ID from profile cubit state
+    String userId = '';
+    final profileState = getProfileCubit.state;
+    if (profileState is GetProfileSuccess) {
+      userId = profileState.profile.id;
+    }
+
+    return [
+      const HomeScreenWi(),
+      ChatListScreen(currentUserId: userId),
+      const NotificationScreen(),
+      Customdrawer(),
+    ];
+  }
 
   Future<void> whatsapp() async {
     final Uri url = Uri.parse("https://wa.me/+966783616108");

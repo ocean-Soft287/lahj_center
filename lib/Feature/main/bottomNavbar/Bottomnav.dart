@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import 'package:lahijcenter/core/sharde/widget/share_app.dart';
 import '../../../core/constans/app_assets.dart';
 import '../../../core/constans/app_colors.dart';
 import '../../../core/constans/responsve_font.dart';
+import '../../../core/utils/services/services_locator.dart';
 import '../../AddAdvertisement/presentaion/screen/ad_guidelines_screen.dart';
-import 'manager/Bottom_cubit.dart';
-import 'manager/Bottom_state.dart';
+import 'manager/bottom_cubit.dart';
+import 'manager/bottom_state.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Bottomnav extends StatelessWidget {
@@ -21,7 +23,7 @@ class Bottomnav extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return BlocProvider(
-      create: (context) => Bottomcubit(),
+      create: (context) => Bottomcubit(sl<GetProfileCubit>()),
       child: BlocBuilder<Bottomcubit, Bottomstate>(
         builder: (context, state) {
           Bottomcubit homeCubit = BlocProvider.of(context);
@@ -29,21 +31,22 @@ class Bottomnav extends StatelessWidget {
             resizeToAvoidBottomInset: true,
             appBar: (homeCubit.currentIndex == 1 || homeCubit.currentIndex == 2)
                 ? AppBar(
-              backgroundColor: AppColors.mainAppColor,
-              title: Text(
-                homeCubit.currentIndex == 1 ? "البريد الالكتروني" : "الاشعارات",
-                style: TextStyle(
-                  fontFamily: Fonts.font,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: getFontSize(context, 15),
-                ),
-              ),
-              leading: const SizedBox(),
-              centerTitle: true,
-            )
+                    backgroundColor: AppColors.mainAppColor,
+                    title: Text(
+                      homeCubit.currentIndex == 1
+                          ? "البريد الالكتروني"
+                          : "الاشعارات",
+                      style: TextStyle(
+                        fontFamily: Fonts.font,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: getFontSize(context, 15),
+                      ),
+                    ),
+                    leading: const SizedBox(),
+                    centerTitle: true,
+                  )
                 : null,
-
 
             key: scaffoldKey,
             backgroundColor: Colors.white,
@@ -82,8 +85,8 @@ class Bottomnav extends StatelessWidget {
                       icon: AppAssets.personIcon,
                       label: "حسابي",
                       index: 3,
-                     // isMenu: true,
-                     // scaffoldKey: scaffoldKey,
+                      // isMenu: true,
+                      // scaffoldKey: scaffoldKey,
                     ),
                   ],
                 ),
@@ -97,7 +100,7 @@ class Bottomnav extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha:0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -114,15 +117,14 @@ class Bottomnav extends StatelessWidget {
                 child: Icon(Icons.add, size: 30.sp, color: Colors.white),
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
           );
         },
       ),
     );
   }
 }
-
-
 
 class CustomDrawerTile extends StatelessWidget {
   final String iconPath;
@@ -168,7 +170,6 @@ class NavItem extends StatelessWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final bool wight;
 
-
   const NavItem({
     super.key,
     required this.currentIndex,
@@ -177,7 +178,7 @@ class NavItem extends StatelessWidget {
     required this.index,
     this.isMenu = false,
     this.scaffoldKey,
-     this.wight=false,
+    this.wight = false,
   });
 
   @override
@@ -198,8 +199,9 @@ class NavItem extends StatelessWidget {
         children: [
           SvgPicture.asset(
             icon,
-            colorFilter:
-            isActive?ColorFilter.mode(Colors.white, BlendMode.srcIn):ColorFilter.mode(Colors.black, BlendMode.srcIn),
+            colorFilter: isActive
+                ? ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                : ColorFilter.mode(Colors.black, BlendMode.srcIn),
             width: 24,
             height: 19,
           ),
@@ -209,7 +211,7 @@ class NavItem extends StatelessWidget {
               fontFamily: Fonts.font,
               color: isActive ? Colors.white : Colors.black,
               fontSize: getFontSize(context, 10),
-              fontWeight: wight?FontWeight.bold:FontWeight.w500,
+              fontWeight: wight ? FontWeight.bold : FontWeight.w500,
             ),
           ),
         ],
@@ -250,7 +252,7 @@ void showPlatformDialog(BuildContext context) {
                   borderRadius: BorderRadius.circular(14.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha:0.15),
+                      color: Colors.black.withValues(alpha: 0.15),
                       blurRadius: 10,
                       offset: Offset(0, 6),
                     ),
@@ -300,7 +302,7 @@ void showPlatformDialog(BuildContext context) {
                   borderRadius: BorderRadius.circular(14.r),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha:0.15),
+                      color: Colors.black.withValues(alpha: 0.15),
                       blurRadius: 10,
                       offset: Offset(0, 6),
                     ),
