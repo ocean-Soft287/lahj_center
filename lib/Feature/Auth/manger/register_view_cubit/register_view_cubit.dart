@@ -94,6 +94,11 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
             SecureStorageService.token,
             data.token!,
           );
+          await SecureStorageService.write(SecureStorageService.name, "${data.firstName} ${data.lastName}");
+          await SecureStorageService.write(SecureStorageService.email, data.email);
+          await SecureStorageService.write(SecureStorageService.customerid, data.id);
+print("-----------data saved in secure storage");
+print("------data ${data.id}     ${SecureStorageService.read(SecureStorageService.customerid)}");
         }
 
         emit(RegisterViewStateSuccess());

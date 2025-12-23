@@ -157,6 +157,11 @@ if(responseMessage.toString()=="Check your inbox you have recieved Reset Link")
       final model = UserModel.fromJson(json);
       log(model.token,name: "TOKEN");
       await SecureStorageService.write(SecureStorageService.token, model.token);
+      await SecureStorageService.write(SecureStorageService.name, "${model.firstName} ${model.lastName}");
+      await SecureStorageService.write(SecureStorageService.email, model.email);
+      await SecureStorageService.write(SecureStorageService.customerid, model.id);
+
+
       Future.delayed(Duration(seconds: 1),(){
         sl<Dio>().options.headers['Authorization'] = 'Bearer ${model.token}';
 

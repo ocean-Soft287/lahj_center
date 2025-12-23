@@ -10,6 +10,8 @@ import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/utils/services/services_locator.dart';
 
+import '../../../../core/network/local/flutter_secure_storage.dart';
+
 class ChatScreen extends StatefulWidget {
   final String conversationId;
   final String currentUserId;
@@ -52,15 +54,11 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     if (_controller.text.trim().isNotEmpty) {
       final text = _controller.text.trim();
 
-      final profileState = sl<GetProfileCubit>().state;
-      String senderName = 'User';
-      if (profileState is GetProfileSuccess) {
-        senderName = profileState.profile.fullName;
-      }
+
 
       _chatBloc.add(
         SendMessageEvent(
@@ -68,7 +66,7 @@ class _ChatScreenState extends State<ChatScreen> {
           senderId: widget.currentUserId,
           receiverId: widget.receiverId,
           text: text,
-          senderName: senderName,
+          senderName:await SecureStorageService.read(SecureStorageService.name)??"",
           receiverName: widget.name,
         ),
       );

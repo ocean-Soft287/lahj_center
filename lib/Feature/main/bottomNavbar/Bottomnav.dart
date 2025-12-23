@@ -23,7 +23,7 @@ class Bottomnav extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return BlocProvider(
-      create: (context) => Bottomcubit(sl<GetProfileCubit>()),
+      create: (context) => Bottomcubit(),
       child: BlocBuilder<Bottomcubit, Bottomstate>(
         builder: (context, state) {
           Bottomcubit homeCubit = BlocProvider.of(context);

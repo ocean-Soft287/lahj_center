@@ -11,6 +11,7 @@ import 'package:lahijcenter/core/constans/fonts.dart';
 
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
+import '../../../../core/network/local/flutter_secure_storage.dart';
 import '../../../../core/utils/services/services_locator.dart';
 import '../../../main/bottomNavbar/manager/bottom_state.dart';
 import '../../chat/presentation/chat_screen.dart';
@@ -22,46 +23,46 @@ class BuildAdvertiserSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => Bottomcubit(sl<GetProfileCubit>()),
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(10.h),
-            margin: EdgeInsets.all(12.sp),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.sp),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: .3),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                  offset: Offset(0, 5),
-                ),
-              ],
-            ),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(10.h),
+          margin: EdgeInsets.all(12.sp),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.sp),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: .3),
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.person, color: AppColors.mainAppColor),
-                    SizedBox(width: 10.w),
-                    Text(
-                      "معلومات المعلن",
-                      style: TextStyle(
-                        fontFamily: Fonts.font,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.sp,
-                      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.person, color: AppColors.mainAppColor),
+                  SizedBox(width: 10.w),
+                  Text(
+                    "معلومات المعلن",
+                    style: TextStyle(
+                      fontFamily: Fonts.font,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
                     ),
-                  ],
-                ),
-                SizedBox(height: 15.h),
-                BlocBuilder<Bottomcubit, Bottomstate>(
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.h),
+              BlocProvider(
+                create: (context) => Bottomcubit(),
+                child: BlocBuilder<Bottomcubit, Bottomstate>(
                   builder: (context, state) {
                     Bottomcubit bottomcubit = BlocProvider.of<Bottomcubit>(
                       context,
@@ -111,15 +112,11 @@ class BuildAdvertiserSection extends StatelessWidget {
                           bottomcubit.callinguser(item.phone);
                         }),
                         SizedBox(width: 5.w),
-                        buildIconButton("assets/icons/chat.svg", () {
-                          final profileState = sl<GetProfileCubit>().state;
-                          String currentUserId = '';
-                          if (profileState is GetProfileSuccess) {
-                            currentUserId = profileState.profile.id;
-                          }
-
+                        buildIconButton("assets/icons/chat.svg", () async {
                           final otherUserId = item.memberId;
-
+                          final currentUserId = await SecureStorageService.read(
+                              SecureStorageService.customerid) ?? "";
+                          print("customer id is $currentUserId");
                           // Generate a deterministic conversation ID
                           final ids = [currentUserId, otherUserId]..sort();
                           final conversationId = ids.join('_');
@@ -127,14 +124,16 @@ class BuildAdvertiserSection extends StatelessWidget {
                           Navigator.push(
                             context,
                             CupertinoPageRoute(
-                              builder: (context) => ChatScreen(
-                                conversationId: conversationId,
-                                currentUserId: currentUserId,
-                                receiverId: otherUserId,
-                                name: item.memberName,
-                                avatar: Colors.blue, // Default avatar color
-                                online: false,
-                              ),
+                              builder: (context) =>
+                                  ChatScreen(
+                                    conversationId: conversationId,
+                                    currentUserId: currentUserId,
+                                    receiverId: otherUserId,
+                                    name: item.memberName,
+                                    avatar: Colors.blue,
+                                    // Default avatar color
+                                    online: false,
+                                  ),
                             ),
                           );
                         }),
@@ -142,58 +141,58 @@ class BuildAdvertiserSection extends StatelessWidget {
                     );
                   },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Container(
-            padding: EdgeInsets.only(
-              left: 10,
-              right: 10.h,
-              bottom: 10.h,
-              top: 10.h,
-            ),
-            margin: EdgeInsets.all(12.sp),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.sp),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: .3),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                  offset: Offset(0, 5),
-                ),
-              ],
-            ),
+        ),
+        Container(
+          padding: EdgeInsets.only(
+            left: 10,
+            right: 10.h,
+            bottom: 10.h,
+            top: 10.h,
+          ),
+          margin: EdgeInsets.all(12.sp),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.sp),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: .3),
+                blurRadius: 10,
+                spreadRadius: 2,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.info_outline, color: AppColors.mainAppColor),
-                    SizedBox(width: 10.w),
-                    Text(
-                      "المواصفات",
-                      style: TextStyle(
-                        fontFamily: Fonts.font,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 15.sp,
-                      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.info_outline, color: AppColors.mainAppColor),
+                  SizedBox(width: 10.w),
+                  Text(
+                    "المواصفات",
+                    style: TextStyle(
+                      fontFamily: Fonts.font,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15.sp,
                     ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                buildSpecificationRow(' الفئة:', item.groupName),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              buildSpecificationRow(' الفئة:', item.groupName),
 
-                SizedBox(height: 5.h),
-                buildSpecificationRow(' الخدمة :', item.serviceName),
-              ],
-            ),
+              SizedBox(height: 5.h),
+              buildSpecificationRow(' الخدمة :', item.serviceName),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
 import 'package:lahijcenter/Feature/profile/manager/get_profile_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/network/local/flutter_secure_storage.dart';
 import '../../../Home/chat/presentation/chat_contact_screen.dart';
 import '../../../Home/chat/presentation/chat_screen.dart';
 import '../../../Home/presentaion/screen/home_screen_wi.dart';
@@ -14,9 +15,17 @@ import '../widget/screen/notification_screen.dart';
 import 'bottom_state.dart';
 
 class Bottomcubit extends Cubit<Bottomstate> {
-  final GetProfileCubit getProfileCubit;
+  String userId = '';
 
-  Bottomcubit(this.getProfileCubit) : super(InitializeHome());
+  Bottomcubit() : super(InitializeHome()) {
+    _loadCachedUserId();
+  }
+
+  Future<void> _loadCachedUserId() async {
+    userId =
+        await SecureStorageService.read(SecureStorageService.customerid) ?? '';
+    emit(ChangeIndexBottom());
+  }
 
   int currentIndex = 0;
   changeSelectIndexBottom({required int index}) {
@@ -26,11 +35,6 @@ class Bottomcubit extends Cubit<Bottomstate> {
 
   List<Widget> get screen {
     // Get user ID from profile cubit state
-    String userId = '';
-    final profileState = getProfileCubit.state;
-    if (profileState is GetProfileSuccess) {
-      userId = profileState.profile.id;
-    }
 
     return [
       const HomeScreenWi(),

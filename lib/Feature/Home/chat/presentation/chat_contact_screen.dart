@@ -37,6 +37,20 @@ class _ChatListScreenState extends State<ChatListScreen> {
   }
 
   @override
+  void didUpdateWidget(covariant ChatListScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentUserId != oldWidget.currentUserId &&
+        widget.currentUserId.isNotEmpty) {
+      log(
+        "ChatListScreen: userId updated to ${widget.currentUserId}, re-fetching conversations",
+      );
+      _chatContactBloc.add(
+        ListenToUserConversationsEvent(widget.currentUserId),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _chatContactBloc,
