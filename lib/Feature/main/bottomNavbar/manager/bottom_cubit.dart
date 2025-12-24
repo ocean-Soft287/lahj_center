@@ -34,7 +34,6 @@ class Bottomcubit extends Cubit<Bottomstate> {
   }
 
   List<Widget> get screen {
-    // Get user ID from profile cubit state
 
     return [
       const HomeScreenWi(),

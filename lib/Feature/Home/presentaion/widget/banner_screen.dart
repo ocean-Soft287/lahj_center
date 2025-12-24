@@ -20,7 +20,7 @@ class _BannerPageState extends State<BannerPage> {
   void initState() {
     super.initState();
     final cubit = context.read<SliderCubit>();
-    print('🔥 Initial State: ${cubit.state}');
+   // print('🔥 Initial State: ${cubit.state}');
     cubit.getSlider();
   }
 
@@ -28,16 +28,16 @@ class _BannerPageState extends State<BannerPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<SliderCubit, SliderState>(
       listener: (context, state) {
-        print('🔥 State Changed: $state');
+       // print('🔥 State Changed: $state');
         if (state is SliderSuccess) {
-          print('✅ Success! Banners count: ${state.bannerSliderModel.length}');
+          //print('✅ Success! Banners count: ${state.bannerSliderModel.length}');
         }
         if (state is SliderError) {
-          print('❌ Error: ${state.failure.message}');
+        // print('❌ Error: ${state.failure.message}');
         }
       },
       builder: (context, state) {
-        print('🎨 Building with state: $state');
+       // print('🎨 Building with state: $state');
 
         if (state is SliderLoading) {
           return SizedBox(
@@ -51,10 +51,10 @@ class _BannerPageState extends State<BannerPage> {
         }
 
         if (state is SliderSuccess) {
-          print('🎯 Rendering Success State');
+        //  print('🎯 Rendering Success State');
           final banners = state.bannerSliderModel;
-          print('📦 Banners: $banners');
-          print('📊 Banners Length: ${banners.length}');
+          //print('📦 Banners: $banners');
+         // print('📊 Banners Length: ${banners.length}');
 
           if (banners.isEmpty) {
             return const SizedBox.shrink();
@@ -87,8 +87,8 @@ class _BannerPageState extends State<BannerPage> {
                         );
                       },
                       errorBuilder: (context, error, stackTrace) {
-                        print('🖼️ Image Error: $error');
-                        print('🔗 Image URL: ${banners[index].imagePath}');
+                      //  print('🖼️ Image Error: $error');
+                      //  print('🔗 Image URL: ${banners[index].imagePath}');
                         return Container(
                           color: Colors.grey[200],
                           child: Center(

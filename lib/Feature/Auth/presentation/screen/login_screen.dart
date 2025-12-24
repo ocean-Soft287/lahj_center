@@ -36,7 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
 
-
   @override
   void dispose() {
     phoneController.dispose();
@@ -104,15 +103,18 @@ class _LoginScreenState extends State<LoginScreen> {
               scrolledUnderElevation: 0,
             ),
             body: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: SingleChildScrollView(
                 child: Form(
                   key: keyForm,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+
                     children: [
-                      Image.asset(AppAssets.logo, width: 100.w, height: 100.h),
+                      Image.asset(
+                        AppAssets.logo,
+                        width: 150.w,
+                        height: 150,
+                      ),
                       30.verticalSpace,
                       Text(
                         'مرحبا بعودتك ! سعداء لرؤيتك مرة اخري',
@@ -121,122 +123,143 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       30.verticalSpace,
 
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 8.h, right: 4.w),
-                          child: Row(
+
+                      Card(
+                        elevation: 4,
+                        shadowColor: AppColors.mainAppColor.withValues(alpha:0.2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.all(20.w),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.r),
+                            border: Border.all(
+                              color: AppColors.mainAppColor.withValues(alpha:0.1),
+                              width: 1,
+                            ),
+                          ),
+                          child: Column(
                             children: [
-                              Icon(Icons.phone_android_outlined,color: AppColors.mainAppColor,),
-                              SizedBox(
-                                width: 10.w,
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: EdgeInsets.only(bottom: 12.h, right: 4.w),
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.phone_android_outlined,
+                                        color: AppColors.mainAppColor,
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Text(
+                                        'رقم الجوال',
+                                        style: TextStyle(
+                                          fontFamily: Fonts.font,
+                                          fontSize: getFontSize(context, 15),
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[800],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Text(
-                                'رقم الجوال',
-                                style: TextStyle(
-                                  fontFamily: Fonts.font,
-                                  fontSize: getFontSize(context, 15),
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[800],
+
+                              Directionality(
+                                textDirection: TextDirection.ltr,
+                                child: IntlPhoneField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ),
+                                  dropdownTextStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14.sp,
+                                  ),
+                                  pickerDialogStyle: PickerDialogStyle(
+                                    countryCodeStyle: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: Colors.black,
+                                    ),
+                                    searchFieldInputDecoration: InputDecoration(
+                                      hintText: "ابحث عن الدوله ",
+                                      contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                        borderSide: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline
+                                              .withAlpha(80),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: "XXX XXX XXX",
+                                    counterStyle: TextStyle(color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide(),
+                                    ),
+                                  ),
+                                  initialCountryCode: 'EG',
+                                  onChanged: (phone) {
+                                    phoneController.text = phone.completeNumber;
+                                  },
+                                  validator: (value) {
+                                    if (value == null || value.number.isEmpty) {
+                                      return "LocaleKeys.phone_number_required.tr()";
+                                    }
+                                    try {
+                                      if (!value.isValidNumber()) {
+                                        return "LocaleKeys.phone_number_invalid.tr()";
+                                      }
+                                    } catch (e) {
+                                      return "LocaleKeys.phone_number_invalid.tr()";
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      SizedBox(
-                        width: 10.w,
-                      ),
 
-
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: IntlPhoneField(
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          textAlign: TextAlign.center,
-
-
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.sp, // <--- تصغير حجم الرقم
-                          ),
-
-                          dropdownTextStyle: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14.sp, // <--- تصغير حجم كود الدولة في القائمة
-                          ),
-
-
-
-                          pickerDialogStyle: PickerDialogStyle(
-
-                            countryCodeStyle: TextStyle(fontSize: 14.sp, color: Colors.black),
-                            searchFieldInputDecoration: InputDecoration(
-
-                              hintText: "ابحث عن الدوله ",
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).colorScheme.outline.withAlpha(80),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          decoration: InputDecoration(
-                            hintText: "XXX XXX XXX",
-                            counterStyle: TextStyle(color: Colors.grey),
-                            border: OutlineInputBorder(borderSide: BorderSide()),
-                          ),
-
-                          initialCountryCode: 'EG',
-                          onChanged: (phone) {
-                            phoneController.text = phone.completeNumber;
-                          },
-
-
-                          validator: (value) {
-                            if (value == null || value.number.isEmpty) {
-                              return "LocaleKeys.phone_number_required.tr()";
-                            }
-                            try {
-                              if (!value.isValidNumber()) {
-                                return "LocaleKeys.phone_number_invalid.tr()";
-                              }
-                            } catch (e) {
-                              return "LocaleKeys.phone_number_invalid.tr()";
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-
-
+                      SizedBox(height: 20.h),
 
                       InkWell(
-                        onTap: (){
-                          Navigator.push(context, CupertinoPageRoute(builder: (context)=>PrivacyPolicyScreen()));
-
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => PrivacyPolicyScreen(),
+                            ),
+                          );
                         },
-                        child:
-        Center(child:
-                        Text("الشروط والاحكام وسياسه الخصوصيه",
-                        style: TextStyle(
-                          color: AppColors.mainAppColor,
-                          fontFamily: Fonts.font,
-                          fontWeight: FontWeight.w700,
-                          fontSize: getFontSize(context, 15),
-                          decoration: TextDecoration.underline, // هنا الخط تحت النص
-
-
-                        ),),
-                      )),
-                      SizedBox(height: 20.h,),
-
-
+                        child: Center(
+                          child: Text(
+                            "الشروط والاحكام وسياسه الخصوصيه",
+                            style: TextStyle(
+                              color: AppColors.mainAppColor,
+                              fontFamily: Fonts.font,
+                              fontWeight: FontWeight.w700,
+                              fontSize: getFontSize(context, 15),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20.h),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,8 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: () {
                                 if (keyForm.currentState!.validate()) {
                                   cubit.userLogin(
-                                   // password: passwordController.text,
-                                    phonenumber:  phoneController.text,
+                                    phonenumber: phoneController.text,
                                   );
                                 }
                               },
@@ -270,7 +292,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-
                                       Text(
                                         "تسجيل الدخول",
                                         style: Textstylefont.logintext(
@@ -283,63 +304,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                         color: Colors.white,
                                         size: 20.sp,
                                       ),
-
                                     ],
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                      //     InkWell(
-                      //       onTap: () {
-                      //         navigato(context, const ForgotPasswordScreen());
-                      //       },
-                      //       child: Text(
-                      //         "هل نسيت كلمه السر؟",
-                      //         style: TextStyle(
-                      //           fontFamily: Fonts.font,
-                      //           color: AppColors.mainAppColor,
-                      //           fontWeight: FontWeight.w500,
-                      //           fontSize: getFontSize(context, 16),
-                      //           decoration: TextDecoration.underline,
-                      //           decorationColor: AppColors.mainAppColor,
-                      //           decorationThickness: 2,
-                      //         ),
-                      //       ),
-                      //     ),
-                         ],
-                       ),
+                        ],
+                      ),
 
-                       50.verticalSpace,
-                      //
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Text(
-                      //       "ليس لديك حساب ؟  ",
-                      //       style: TextStyle(
-                      //         fontFamily: Fonts.font,
-                      //         color: Colors.black,
-                      //         fontWeight: FontWeight.w500,
-                      //         fontSize: getFontSize(context, 14),
-                      //       ),
-                      //     ),
-                      //     InkWell(
-                      //       onTap: () {
-                      //         navigato(context, RegisterScreen());
-                      //       },
-                      //       child: Text(
-                      //         "انشاء حساب",
-                      //         style: TextStyle(
-                      //           fontFamily: Fonts.font,
-                      //           color: AppColors.mainAppColor,
-                      //           fontWeight: FontWeight.w500,
-                      //           fontSize: getFontSize(context, 14),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                      50.verticalSpace,
                     ],
                   ),
                 ),

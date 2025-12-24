@@ -189,10 +189,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             ],
                           ),
                           child: Image.asset(
-                            "assets/image/WhatsApp_Image_2025-12-10_at_5.01.35_PM-removebg-preview.png",
+                            "assets/image/WhatsApp Image 2025-12-23 at 10.57.46 AM.jpeg",
                             width: 220.w,
                             height: 150.h,
-                            fit: BoxFit.contain,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       );

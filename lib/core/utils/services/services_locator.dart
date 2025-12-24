@@ -260,7 +260,7 @@ Future<void> setup() async {
     () => CubitNotfication(sl<NotificationRepo>()),
   );
   // slidder banner
-  sl.registerLazySingleton<SliderRepo>(() => SliderRepoImpl(sl<DioConsumer>()));
+  sl.registerLazySingleton<SliderRepo>(() => SliderRepoImpl(sl<ApiConsumer>()));
 
   sl.registerFactory<SliderCubit>(() => SliderCubit(sl<SliderRepo>()));
 

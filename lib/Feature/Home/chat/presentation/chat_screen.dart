@@ -163,17 +163,17 @@ class _ChatScreenState extends State<ChatScreen> {
                         letterSpacing: 0.2,
                       ),
                     ),
-                    SizedBox(height: 2),
-                    Text(
-                      widget.online ? 'نشط الآن' : 'غير متصل',
-                      style: TextStyle(
-                        color: widget.online
-                            ? Color(0xFF4CAF50)
-                            : Colors.grey[600],
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    // SizedBox(height: 2),
+                    // Text(
+                    //   widget.online ? 'نشط الآن' : 'غير متصل',
+                    //   style: TextStyle(
+                    //     color: widget.online
+                    //         ? Color(0xFF4CAF50)
+                    //         : Colors.grey[600],
+                    //     fontSize: 12,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -390,16 +390,16 @@ class _ChatScreenState extends State<ChatScreen> {
                                 textInputAction: TextInputAction.send,
                               ),
                             ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.emoji_emotions_outlined,
-                                color: Colors.grey[600],
-                                size: 24,
-                              ),
-                              onPressed: () {},
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                            ),
+                            // IconButton(
+                            //   icon: Icon(
+                            //     Icons.emoji_emotions_outlined,
+                            //     color: Colors.grey[600],
+                            //     size: 24,
+                            //   ),
+                            //   onPressed: () {},
+                            //   padding: EdgeInsets.zero,
+                            //   constraints: BoxConstraints(),
+                            // ),
                           ],
                         ),
                       ),

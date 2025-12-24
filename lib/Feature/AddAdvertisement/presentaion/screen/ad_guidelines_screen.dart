@@ -55,7 +55,6 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header gradient section
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -136,7 +135,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                           child: Text(
                             '( ﷽ )',
                             style: GoogleFonts.amiri(
-                              fontSize: 18.sp,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.bold,
                               color: AppColors.mainAppColor,
                             ),

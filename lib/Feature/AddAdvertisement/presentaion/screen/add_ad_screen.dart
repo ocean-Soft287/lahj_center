@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,7 +9,9 @@ import 'dart:io';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/government_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/government_model.dart';
+import 'package:lahijcenter/Feature/main/bottomNavbar/Bottomnav.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
+import '../../../../core/constans/app_colors.dart';
 import '../../../../core/utils/services/services_locator.dart';
 import '../../blocs/add_advertisement_bloc/add_advertisement_event.dart';
 import '../../blocs/category_bloc/category_bloc.dart';
@@ -131,8 +135,14 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
               ),
 
               buildRowLabelField(
+
+
                 "رقم الجوال",
                 textField(
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+
+                  ],
                   hint: 'رقم الجوال',
                   inputType: TextInputType.phone,
                   green: green,
@@ -171,19 +181,19 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
 
                     Expanded(
                       child:
-                          BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
-                            builder: (context, state) {
-                              return buildDropdown<ModelCurrency>(
-                                value: selectedCurrency,
-                                items: state.items,
-                                displayText: (item) => item.arName,
-                                onChanged: (val) =>
-                                    setState(() => selectedCurrency = val),
-                                hint: 'اختر العملة',
-                                green: green,
-                              );
-                            },
-                          ),
+                      BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
+                        builder: (context, state) {
+                          return buildDropdown<ModelCurrency>(
+                            value: selectedCurrency,
+                            items: state.items,
+                            displayText: (item) => item.arName,
+                            onChanged: (val) =>
+                                setState(() => selectedCurrency = val),
+                            hint: 'اختر العملة',
+                            green: green,
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
@@ -197,6 +207,9 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   SizedBox(width: 100.w, child: label('السعر', green)),
                   Expanded(
                     child: textField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       hint: 'اضف السعر',
                       green: green,
                       controller: _priceController,
@@ -447,7 +460,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 child: TextFormField(
                   maxLines: 4,
                   validator: (value) =>
-                      value!.isEmpty ? 'برجاء ادخال التفاصيل' : null,
+                  value!.isEmpty ? 'برجاء ادخال التفاصيل' : null,
                   controller: _descController,
                   decoration: InputDecoration(
                     hintText: "اكتب التفاصيل هنا ...",
@@ -465,32 +478,31 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   child: BlocConsumer<AddAdvertisementBloc, BaseState<void>>(
                     listener: (context, state) {
                       if (state.isSuccess) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text(
-                                "شكراً لك",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              content: const Text("تم إضافة الإعلان بنجاح."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(
-                                      context,
-                                    ).pop();
-
-                                  },
-                                  child: const Text("حسناً"),
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle, color: Colors.white),
+                                SizedBox(width: 12.w),
+                                Text("تم اضافه الاعلان بنجاح ",
                                 ),
                               ],
-                            );
-                          },
+                            ),
+                            backgroundColor: AppColors.mainAppColor,
+                            duration: Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.all(16),
+                          ),
                         );
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          CupertinoPageRoute(builder: (context) => Bottomnav()),
+                              (route) => false,
+                        );
+
                       }
 
                       if (state.isFailure) {
@@ -505,53 +517,53 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                       return state.isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  if (_selectedImages.length < 5) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          "يجب اختيار على الاقل 5 صور",
-                                        ),
-                                      ),
-                                    );
-                                    return;
-                                  }
-                                  context.read<AddAdvertisementBloc>().add(
-                                    SubmitAdvertisement(
-                                      name: _titleController.text.trim(),
-                                      phone: _phoneController.text.trim(),
-                                      groupId: selectedCategory?.id ?? 0,
-                                      serviceId: selectedService?.id ?? 0,
-                                      area: _areaController.text.trim(),
-
-                                      price:
-                                          num.tryParse(
-                                            _priceController.text.trim(),
-                                          )?.toDouble() ??
-                                          0,
-                                      isCloseReplies: isReplyClosed ?? false,
-                                      currencyId: selectedCurrency?.id ?? 0,
-                                      governorateId:
-                                          selectedGovernorate?.id ?? 0,
-
-                                      description: _descController.text.trim(),
-                                      images: _selectedImages,
-                                    ),
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: green,
-                              ),
-                              child: Text(
-                                "اضف الاعلان",
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  color: Colors.white,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            if (_selectedImages.length < 5) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "يجب اختيار على الاقل 5 صور",
+                                  ),
                                 ),
+                              );
+                              return;
+                            }
+                            context.read<AddAdvertisementBloc>().add(
+                              SubmitAdvertisement(
+                                name: _titleController.text.trim(),
+                                phone: _phoneController.text.trim(),
+                                groupId: selectedCategory?.id ?? 0,
+                                serviceId: selectedService?.id ?? 0,
+                                area: _areaController.text.trim(),
+
+                                price:
+                                num.tryParse(
+                                  _priceController.text.trim(),
+                                )?.toDouble() ??
+                                    0,
+                                isCloseReplies: isReplyClosed ?? false,
+                                currencyId: selectedCurrency?.id ?? 0,
+                                governorateId:
+                                selectedGovernorate?.id ?? 0,
+
+                                description: _descController.text.trim(),
+                                images: _selectedImages,
                               ),
                             );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: green,
+                        ),
+                        child: Text(
+                          "اضف الاعلان",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
@@ -576,37 +588,47 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
     );
   }
 
-  Widget label(String text, Color color) => Center(
-    child: Text(
-      text,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 12.sp,
-        color: color,
-      ),
-      textAlign: TextAlign.center,
-    ),
-  );
+  Widget label(String text, Color color) =>
+      Center(
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12.sp,
+            color: color,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
 
   Widget textField({
     String? hint,
     TextInputType? inputType,
     required Color green,
     required TextEditingController controller,
-  }) => TextFormField(
-    controller: controller,
-    keyboardType: inputType,
-    validator: (value) => value!.isEmpty ? 'برجاء ادخال $hint' : null,
-    decoration: InputDecoration(
-      hintText: hint ?? '',
-      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: green),
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-    ),
-  );
+    List<TextInputFormatter>? inputFormatters,
+  }) =>
+      TextFormField(
+        controller: controller,
+        keyboardType: inputType,
+        inputFormatters: inputFormatters,
+        validator: (value) =>
+        value!.isEmpty ? 'برجاء ادخال $hint' : null,
+        decoration: InputDecoration(
+          hintText: hint ?? '',
+          contentPadding:
+          EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: green),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+        ),
+      );
+
+
 
   Widget buildDropdown<T>({
     required T? value,

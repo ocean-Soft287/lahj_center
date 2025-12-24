@@ -248,17 +248,17 @@ class _HomeScreenWiState extends State<HomeScreenWi> {
                                   },
                                   child: AnimatedContainer(
                                     duration: Duration(milliseconds: 200),
-                                    padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                                     margin: EdgeInsets.symmetric(horizontal: 5),
                                     decoration: BoxDecoration(
                                       color: isSelected ? Colors.white : Colors.white.withValues(alpha:0.2),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(15),
                                       border: isSelected
                                           ? null
-                                          : Border.all(color: Colors.white.withValues(alpha:0.3), width: 1),
+                                          : Border.all(color: Colors.white.withValues(alpha:0.3),),
                                       boxShadow: isSelected ? [
                                         BoxShadow(
-                                          color: Colors.white.withValues(alpha:0.3),
+                                          color: Colors.white.withValues(alpha:0.1),
                                           blurRadius: 8,
                                           offset: Offset(0, 2),
                                         ),
@@ -273,9 +273,9 @@ class _HomeScreenWiState extends State<HomeScreenWi> {
                                               ? AppColors.mainAppColor
                                               : Colors.white,
                                           fontWeight: isSelected
-                                              ? FontWeight.w600
+                                              ? FontWeight.w500
                                               : FontWeight.w500,
-                                          fontSize: 12.sp,
+                                          fontSize: isSelected?12.sp:12.sp,
                                         ),
                                       ),
                                     ),
@@ -344,7 +344,7 @@ class _HomeScreenWiState extends State<HomeScreenWi> {
 
               SizedBox(height: 8.h),
 
-                 //const BannerPage(),
+                 const BannerPage(),
 
 
               Expanded(

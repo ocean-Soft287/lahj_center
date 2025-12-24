@@ -1,7 +1,7 @@
 class AppAssets {
   AppAssets._();
 
-  static const String logo = 'assets/image/WhatsApp_Image_2025-12-10_at_5.01.35_PM-removebg-preview.png';
+  static const String logo =                             "assets/image/WhatsApp Image 2025-12-23 at 10.57.46 AM.jpeg";
   static const String splashLogo = 'assets/image/splash_logo.png';
   static const String logoLogin = 'assets/icons/logoLogin.svg';
   static const String forgotPassword = 'assets/image/ressertpassword.png';

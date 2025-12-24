@@ -90,8 +90,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     children: [
                       Image.asset(
                         AppAssets.logo,
-                        width: 70.w,
-                        height: 70.h,
+                        width: 150.w,
+                        height: 150.h,
                       ),
                       10.verticalSpace,
                       Text(

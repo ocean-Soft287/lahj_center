@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import 'package:lahijcenter/core/sharde/widget/share_app.dart';
 import '../../../core/constans/app_assets.dart';
 import '../../../core/constans/app_colors.dart';
 import '../../../core/constans/responsve_font.dart';
-import '../../../core/utils/services/services_locator.dart';
 import '../../AddAdvertisement/presentaion/screen/ad_guidelines_screen.dart';
 import 'manager/bottom_cubit.dart';
 import 'manager/bottom_state.dart';
@@ -34,7 +32,7 @@ class Bottomnav extends StatelessWidget {
                     backgroundColor: AppColors.mainAppColor,
                     title: Text(
                       homeCubit.currentIndex == 1
-                          ? "البريد الالكتروني"
+                          ? "الرسائل"
                           : "الاشعارات",
                       style: TextStyle(
                         fontFamily: Fonts.font,
@@ -70,7 +68,7 @@ class Bottomnav extends StatelessWidget {
                     NavItem(
                       currentIndex: homeCubit.currentIndex,
                       icon: AppAssets.emailIcon,
-                      label: "البريد الالكتروني",
+                      label: "الرسائل",
                       index: 1,
                     ),
                     SizedBox(width: 40.w),

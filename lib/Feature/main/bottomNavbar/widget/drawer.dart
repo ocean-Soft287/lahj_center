@@ -289,21 +289,21 @@ class _CustomdrawerState extends State<Customdrawer>
                             },
                           ),
 
-                          CustomDrawerTile(
-                            iconPath: AppAssets.emailIcon,
-                            title: "البريد",
-                            onTap: () {
-                              cubit.changeSelectIndexBottom(index: 1);
-                            },
-                          ),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.notificationsIcon,
-                            title: "الإشعارات",
-                            onTap: () {
-                              cubit.changeSelectIndexBottom(index: 2);
-                            },
-                          ),
+                          // CustomDrawerTile(
+                          //   iconPath: AppAssets.emailIcon,
+                          //   title: "البريد",
+                          //   onTap: () {
+                          //     cubit.changeSelectIndexBottom(index: 1);
+                          //   },
+                          // ),
+                          //
+                          // CustomDrawerTile(
+                          //   iconPath: AppAssets.notificationsIcon,
+                          //   title: "الإشعارات",
+                          //   onTap: () {
+                          //     cubit.changeSelectIndexBottom(index: 2);
+                          //   },
+                          // ),
 
                           CustomDrawerTile(
                             iconPath: AppAssets.termsIcon,
@@ -316,16 +316,16 @@ class _CustomdrawerState extends State<Customdrawer>
                             },
                           ),
 
-                          CustomDrawerTile(
-                            iconPath: AppAssets.privacyPolicyIcon,
-                            title: "سياسة الخصوصية",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(builder: (context) => const PrivacyPolicyScreen()),
-                              );
-                            },
-                          ),
+                          // CustomDrawerTile(
+                          //   iconPath: AppAssets.privacyPolicyIcon,
+                          //   title: "سياسة الخصوصية",
+                          //   onTap: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       CupertinoPageRoute(builder: (context) => const PrivacyPolicyScreen()),
+                          //     );
+                          //   },
+                          // ),
 
                           CustomDrawerTile(
                             iconPath: AppAssets.shareIcon,

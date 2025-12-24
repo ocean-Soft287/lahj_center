@@ -6,7 +6,7 @@ import '../../../Home/Data/model/item_model.dart';
 
 class Myadscontainer extends StatelessWidget {
   const Myadscontainer({super.key, required this.item, required this.function,});
-  
+
   final Item item;
   final Function function;
 
@@ -28,7 +28,7 @@ class Myadscontainer extends StatelessWidget {
                       color: Colors.black.withValues(alpha:0.3),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
-                    ),  
+                    ),
                   ]
                 ),
                 child: ClipRRect(
@@ -64,28 +64,29 @@ class Myadscontainer extends StatelessWidget {
                       Flexible(
                         child: MainTitle(
                           text: item.name,
-                          fontSize: 17.sp,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w700,
                           color: AppColors.mainAppColor,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.reply,
-                          color: Colors.green,
-                          size: 24.sp,
-                        ),
-                      )
+                      // GestureDetector(
+                      //   onTap: () {},
+                      //   child: Icon(
+                      //     Icons.reply,
+                      //     color: Colors.green,
+                      //     size: 24.sp,
+                      //   ),
+                      // )
                     ],
                   ),
                   SizedBox(height: 5.h),
 
-                  
+
                   MainTitle(
-                    text: "${item.governorateName}، ${item.area}",
+                    icon: Icons.location_on,
+                    text:item.governorateName,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.hintTextColor,
@@ -94,8 +95,9 @@ class Myadscontainer extends StatelessWidget {
                   ),
                   SizedBox(height: 5.h),
 
-               
+
                   MainTitle(
+                    icon: Icons.account_balance_wallet_sharp,
                     text: item.serviceName,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
@@ -111,21 +113,21 @@ class Myadscontainer extends StatelessWidget {
 
         SizedBox(height: 10.h),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width * .25,
-              height: 35.h,
-              child: DefaultButton(
-                function: function,
-                text: "حذف",
-              ),
-            ),
-
-
-          ],
-        )
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.end,
+        //   children: [
+        //     SizedBox(
+        //       width: MediaQuery.sizeOf(context).width * .25,
+        //       height: 35.h,
+        //       child: DefaultButton(
+        //         function: function,
+        //         text: "حذف",
+        //       ),
+        //     ),
+        //
+        //
+        //   ],
+        // )
       ],
     );
   }
@@ -140,6 +142,8 @@ class MainTitle extends StatelessWidget {
   final TextDecoration? decoration;
   final int? maxLines;
   final TextOverflow? overflow;
+  final IconData? icon;
+
 
   const MainTitle({
     super.key,
@@ -151,22 +155,32 @@ class MainTitle extends StatelessWidget {
     this.decoration = TextDecoration.none,
     this.maxLines,
     this.overflow,
+    this.icon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        decoration: decoration,
-        decorationColor: AppColors.mainAppColor,
-        color: color,
-      ),
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: AppColors.mainAppColor,
+        ),
+        SizedBox(width: 10.w,)
+        ,Text(
+          text,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            decoration: decoration,
+            decorationColor: AppColors.mainAppColor,
+            color: color,
+          ),
+          textAlign: textAlign,
+          maxLines: maxLines,
+          overflow: overflow,
+        ),
+      ],
     );
   }
 }

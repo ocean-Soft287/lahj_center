@@ -19,23 +19,29 @@ class MyaddCubit extends Cubit<MyaddState> {
         emit(AllmyadditemFailure());
       },
           (data) {
-        try {
+        if (data.items.isEmpty) {
+          emit(Allmyaddsitemsuccfulempty());
+        } else {
           emit(Allmyadditemsuccful(advertisementResponse: data));
-        } catch (e) {
-          print(e);
-          emit(AllmyadditemFailure());
         }
       },
     );
   }
 
+  Future<void> deletemyadd(int id, String reason) async {
+    emit(Allmyadditemsuccfulload()); // optional: show loading
 
-  void deletemyadd(int id,String reason)async{
-    getmyadd();
+    final response = await myaddrepo.deletemyadd(id, reason);
 
-    emit(Deletemyadditemsuccful());
-
+    response.fold(
+          (failure) {
+        emit(DeletemyadditemFailure());
+      },
+          (successMessage) {
+        // بعد الحذف، نجيب البيانات من السيرفر مرة تانية
+        getmyadd();
+        emit(Deletemyadditemsuccful());
+      },
+    );
   }
-
-
 }

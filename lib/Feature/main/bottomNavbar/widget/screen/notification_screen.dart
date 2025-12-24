@@ -58,39 +58,39 @@ class NotificationScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.notifications_active,
-                          color: Colors.blue.shade600,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          "الإشعارات",
-                          style: TextStyle(
-                            fontFamily: Fonts.font,
-                            color: Colors.grey.shade800,
-                            fontWeight: FontWeight.w700,
-                            fontSize: getFontSize(context, 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.all(20),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.grey.shade200,
+                  //         blurRadius: 10,
+                  //         offset: const Offset(0, 2),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Icon(
+                  //         Icons.notifications_active,
+                  //         color: Colors.blue.shade600,
+                  //         size: 24,
+                  //       ),
+                  //       const SizedBox(width: 8),
+                  //       Text(
+                  //         "الإشعارات",
+                  //         style: TextStyle(
+                  //           fontFamily: Fonts.font,
+                  //           color: Colors.grey.shade800,
+                  //           fontWeight: FontWeight.w700,
+                  //           fontSize: getFontSize(context, 16),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   // Loading indicator
                   Expanded(
                     child: Center(
@@ -189,68 +189,8 @@ class NotificationScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  // Enhanced Header
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200,
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Notification count badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade100,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            "${notifications.length}",
-                            style: TextStyle(
-                              fontFamily: Fonts.font,
-                              color: Colors.blue.shade700,
-                              fontSize: getFontSize(context, 11),
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        // Title with icon
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.notifications_active,
-                              color: Colors.blue.shade600,
-                              size: 24,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "الإشعارات",
-                              style: TextStyle(
-                                fontFamily: Fonts.font,
-                                color: Colors.grey.shade800,
-                                fontWeight: FontWeight.w700,
-                                fontSize: getFontSize(context, 16),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Placeholder for symmetry
-                        const SizedBox(width: 40),
-                      ],
-                    ),
-                  ),
-                  // Enhanced notification list
+
+
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(16),

@@ -94,7 +94,6 @@ class _ChatListScreenState extends State<ChatListScreen> {
               ),
               itemBuilder: (context, index) {
                 final contact = contacts[index];
-                // For UI purposes, using a simple color hash based on user ID
                 final avatarColor = _getColorFromString(contact.otherUserId);
                 log("User name is ${contact.otherUserName}");
                 return InkWell(
@@ -114,13 +113,23 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       ),
                     );
                   },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
+                  child:Card(
+                    margin: const EdgeInsets.all(10),
                     color: Colors.white,
-                    child: Row(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
                       children: [
                         Stack(
                           children: [
@@ -129,7 +138,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                                 shape: BoxShape.circle,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: avatarColor.withOpacity(0.3),
+                                    color: avatarColor.withValues(alpha:0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
@@ -247,7 +256,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                       ],
                     ),
                   ),
-                );
+                        ));
               },
             );
           },

@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(AppAssets.logo, width: 70.w, height: 70.h),
+                      Image.asset(AppAssets.logo, width: 120.w, height: 120.h),
                       10.verticalSpace,
                       Text(
                         "اكمال بيانات الحساب",
