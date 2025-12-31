@@ -7,16 +7,24 @@ import 'package:lahijcenter/core/bloc/base_state.dart';
 
 import '../../data/repo/repo.dart';
 
-class ServicesBloc extends Bloc<ServicesEvent,BaseState<Services>>{
+class ServicesBloc extends Bloc<ServicesEvent, BaseState<Services>> {
   final Addadvertisminterepo _addadvertisminterepo;
-   ServicesBloc(this._addadvertisminterepo):super(BaseState()){
-     on<GetServices>(_onGetServices);
-   }
+  ServicesBloc(this._addadvertisminterepo) : super(BaseState()) {
+    on<GetServices>(_onGetServices);
+  }
 
-
-  FutureOr<void> _onGetServices(GetServices event, Emitter<BaseState<Services>> emit) async{
-     emit(state.copyWith(status: Status.loading));
-     final result = await _addadvertisminterepo.getServices();
-     result.fold((left) => emit(state.copyWith(status: Status.failure,errorMessage: left.message)), (right)=>emit(state.copyWith(status: Status.success,items: right)));
+  FutureOr<void> _onGetServices(
+    GetServices event,
+    Emitter<BaseState<Services>> emit,
+  ) async {
+    if (state.items.isNotEmpty) return;
+    emit(state.copyWith(status: Status.loading));
+    final result = await _addadvertisminterepo.getServices();
+    result.fold(
+      (left) => emit(
+        state.copyWith(status: Status.failure, errorMessage: left.message),
+      ),
+      (right) => emit(state.copyWith(status: Status.success, items: right)),
+    );
   }
 }

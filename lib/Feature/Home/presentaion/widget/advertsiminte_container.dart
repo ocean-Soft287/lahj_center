@@ -172,15 +172,18 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
         },
         child: BlocBuilder<GetAllFavouriteCubit, BaseState<GetAllFavourite>>(
           builder: (context, fav) {
-            final isFavourite = fav.data?.items.any((item) => item.id == widget.item.id) ?? false;
+            final isFavourite =
+                fav.data?.items.any((item) => item.id == widget.item.id) ??
+                false;
             return Card(
-              margin: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
-              elevation: 4,
+              margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
+              elevation: 3,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.r),
+                borderRadius: BorderRadius.circular(15.r),
               ),
               child: Padding(
-                padding: EdgeInsets.all(14.sp),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -189,48 +192,51 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(16.r),
                           child: Container(
-                            width: 100.w,
-                            height: 100.h,
+                            width: 70.w,
+                            height: 70.h,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.grey[200]!,
-                                  Colors.grey[300]!,
-                                ],
+                                colors: [Colors.grey[200]!, Colors.grey[300]!],
                               ),
                             ),
                             child: (widget.item.advertisementImages.isNotEmpty)
                                 ? CachedNetworkImage(
-                              imageUrl: widget.item.advertisementImages[0].imageName,
-                              fit: BoxFit.cover,
-                              width: 100.w,
-                              height: 100.h,
-                              progressIndicatorBuilder: (context, url, progress) => Center(
-                                child: CircularProgressIndicator(
-                                  value: progress.progress,
-                                  strokeWidth: 2.5,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.mainAppColor,
-                                  ),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) => Center(
-                                child: Icon(
-                                  Icons.image_not_supported_outlined,
-                                  color: Colors.grey[400],
-                                  size: 36.sp,
-                                ),
-                              ),
-                            )
+                                    imageUrl: widget
+                                        .item
+                                        .advertisementImages[0]
+                                        .imageName,
+                                    fit: BoxFit.cover,
+                                    width: 50.w,
+                                    height: 50.h,
+                                    progressIndicatorBuilder:
+                                        (context, url, progress) => Center(
+                                          child: CircularProgressIndicator(
+                                            value: progress.progress,
+                                            strokeWidth: 2.5,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  AppColors.mainAppColor,
+                                                ),
+                                          ),
+                                        ),
+                                    errorWidget: (context, url, error) =>
+                                        Center(
+                                          child: Icon(
+                                            Icons.image_not_supported_outlined,
+                                            color: Colors.grey[400],
+                                            size: 36.sp,
+                                          ),
+                                        ),
+                                  )
                                 : Center(
-                              child: Icon(
-                                Icons.image_not_supported_outlined,
-                                color: Colors.grey[400],
-                                size: 36.sp,
-                              ),
-                            ),
+                                    child: Icon(
+                                      Icons.image_not_supported_outlined,
+                                      color: Colors.grey[400],
+                                      size: 36.sp,
+                                    ),
+                                  ),
                           ),
                         ),
                         // New Badge (if needed)
@@ -246,21 +252,22 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                               gradient: LinearGradient(
                                 colors: [
                                   AppColors.mainAppColor,
-                                  AppColors.mainAppColor.withValues(alpha:0.8),
+                                  AppColors.mainAppColor.withValues(alpha: 0.8),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(8.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.mainAppColor.withValues(alpha:0.3),
+                                  color: AppColors.mainAppColor.withValues(
+                                    alpha: 0.3,
+                                  ),
                                   blurRadius: 8,
                                   offset: Offset(0, 2),
                                 ),
                               ],
                             ),
                             child: Text(
-                              _getArabicStatus(widget.item.status)
-                              ,
+                              _getArabicStatus(widget.item.status),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10.sp,
@@ -282,7 +289,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                               Expanded(
                                 child: MainTitle(
                                   text: widget.item.name,
-                                  fontSize: 16.sp,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w700,
                                   color: Color(0xFF1F2937),
                                   maxLines: 2,
@@ -291,16 +298,20 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                               ),
 
                               Container(
-                                width: 40.w,
-                                height: 40.h,
+                                width: 32.w,
+                                height: 32.h,
                                 decoration: BoxDecoration(
                                   color: isFavourite
-                                      ? AppColors.mainAppColor.withValues(alpha:0.1)
+                                      ? AppColors.mainAppColor.withValues(
+                                          alpha: 0.1,
+                                        )
                                       : Colors.grey[100],
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color: isFavourite
-                                        ? AppColors.mainAppColor.withValues(alpha:0.3)
+                                        ? AppColors.mainAppColor.withValues(
+                                            alpha: 0.3,
+                                          )
                                         : Colors.grey[300]!,
                                     width: 1.5,
                                   ),
@@ -308,19 +319,27 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
-                                    borderRadius: BorderRadius.circular(20.r),
+                                    borderRadius: BorderRadius.circular(15.r),
                                     onTap: () {
                                       if (isFavourite) {
-                                        context.read<UnlikeHomeCubit>().unlikeHome(widget.item.id);
+                                        context
+                                            .read<UnlikeHomeCubit>()
+                                            .unlikeHome(widget.item.id);
                                       } else {
-                                        context.read<PostLikeCubit>().postLike(widget.item.id);
+                                        context.read<PostLikeCubit>().postLike(
+                                          widget.item.id,
+                                        );
                                       }
                                     },
                                     child: Center(
                                       child: Icon(
-                                        isFavourite ? Icons.favorite : Icons.favorite_border,
-                                        color: isFavourite ? AppColors.mainAppColor : Colors.grey[600],
-                                        size: 22.sp,
+                                        isFavourite
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isFavourite
+                                            ? AppColors.mainAppColor
+                                            : Colors.grey[600],
+                                        size: 18.sp,
                                       ),
                                     ),
                                   ),
@@ -330,18 +349,18 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                           ),
                           SizedBox(height: 10.h),
 
-                          // Service Category with Icon
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-
                               Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 10.w,
                                   vertical: 6.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.mainAppColor.withValues(alpha:0.08),
+                                  color: AppColors.mainAppColor.withValues(
+                                    alpha: 0.08,
+                                  ),
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
                                 child: Row(
@@ -356,7 +375,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                                     Flexible(
                                       child: MainTitle(
                                         text: widget.item.serviceName,
-                                        fontSize: 12.sp,
+                                        fontSize: 11.sp,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.mainAppColor,
                                         maxLines: 1,
@@ -381,22 +400,18 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                                     ),
                                   ),
                                   SizedBox(width: 6.w),
-                                   MainTitle(
-                                      text: widget.item.area,
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF6B7280),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-
+                                  MainTitle(
+                                    text: widget.item.governorateName,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF6B7280),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ],
                               ),
-
                             ],
                           ),
-
-
 
                           SizedBox(height: 8.h),
 
@@ -413,7 +428,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                                   SizedBox(width: 4.w),
                                   MainTitle(
                                     text: displayDate,
-                                    fontSize: 12.sp,
+                                    fontSize: 11.sp,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xFF9CA3AF),
                                     maxLines: 1,
@@ -434,23 +449,24 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Container(
-                                      width: 20.w,
-                                      height: 20.h,
+                                      width: 18.w,
+                                      height: 18.h,
                                       decoration: BoxDecoration(
-                                        color: AppColors.mainAppColor.withValues(alpha:0.2),
+                                        color: AppColors.mainAppColor
+                                            .withValues(alpha: 0.2),
                                         shape: BoxShape.circle,
                                       ),
                                       child: Icon(
                                         Icons.person,
-                                        size: 12.sp,
+                                        size: 10.sp,
                                         color: AppColors.mainAppColor,
                                       ),
                                     ),
-                                    SizedBox(width: 6.w),
+                                    SizedBox(width: 4.w),
                                     Flexible(
                                       child: MainTitle(
                                         text: widget.item.memberName,
-                                        fontSize: 12.sp,
+                                        fontSize: 11.sp,
                                         fontWeight: FontWeight.w600,
                                         color: Color(0xFF4B5563),
                                         maxLines: 1,
@@ -474,6 +490,7 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
       ),
     );
   }
+
   String _getArabicStatus(String status) {
     switch (status) {
       case 'New':
@@ -486,7 +503,6 @@ class _AdvertsiminteContainerState extends State<AdvertsiminteContainer> {
         return status; // لو حصلت حالة مش موجودة
     }
   }
-
 }
 
 class MainTitle extends StatelessWidget {

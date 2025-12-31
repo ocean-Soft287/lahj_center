@@ -6,6 +6,8 @@ import 'package:lahijcenter/Feature/AddAdvertisement/blocs/category_bloc/categor
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/government_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/services_bloc/services_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_area_bloc/sub_area_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_catagory_bloc/sub_catagory_cubit.dart';
 import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import '../../../../../../../core/constans/app_colors.dart';
 import '../../../../../../../core/sharde/widget/default_button.dart';
@@ -243,6 +245,8 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                             BlocProvider(create: (context) => sl<ServicesBloc>()),
                             BlocProvider(create: (context) => sl<CurrencyBloc>()),
                             BlocProvider(create: (context) => sl<CategoryBloc>()),
+                            BlocProvider(create: (context) => sl<SubCatagoryCubit>()),
+                            BlocProvider(create: (context) => sl<SubAreaBloc>()),
                           ],
                           child: AddAdvertisementScreen(),
                         ),

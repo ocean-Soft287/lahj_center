@@ -128,8 +128,8 @@ class BuildImageSection extends StatelessWidget {
                                         child: Center(
                                           child: Image.asset(
                                             "assets/image/WhatsApp_Image_2025-12-10_at_5.01.35_PM-removebg-preview.png",
-                                            width: 50,
-                                            height: 50,
+                                             width: 100,
+                                            height: 100,
                                           ),
                                         ),
                                       ),

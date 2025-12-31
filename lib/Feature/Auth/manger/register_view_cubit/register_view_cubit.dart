@@ -82,14 +82,14 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
 
     result.fold(
           (failure) {
-        debugPrint("❌ Registration Error: ${failure.message}");
-        emit(RegisterViewStateError(failure.message ?? 'حدث خطأ'));
+       // debugPrint("❌ Registration Error: ${failure.message}");
+        emit(RegisterViewStateError(failure.message ));
       },
           (data) async {
         debugPrint("✅ Registration Successful: ${jsonEncode(data)}");
 
 
-        if (data.token != null && data.token!.isNotEmpty) {
+        if (data.token != null && data.token.isNotEmpty) {
           await SecureStorageService.write(
             SecureStorageService.token,
             data.token!,

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lahijcenter/Feature/Auth/presentation/screen/verify_account_with_otp.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
-
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/constans/constants.dart';
@@ -15,7 +13,6 @@ import '../../../../core/sharde/widget/text_forn_field.dart';
 import '../../../main/bottomNavbar/Bottomnav.dart';
 import '../../manger/register_view_cubit/register_view_cubit.dart';
 import '../../manger/register_view_cubit/register_view_state.dart';
-import 'login_screen.dart';
 import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -87,7 +84,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(AppAssets.logo, width: 120.w, height: 120.h),
+                      Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.r),
+                    color: Colors.white,
+                    border: Border.all(
+                      color: AppColors.mainAppColor.withValues(alpha:0.1),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+
+
+
+                ),
+
+                          child: Image.asset(AppAssets.logo, width:100.w, height: 100.h)),
                       10.verticalSpace,
                       Text(
                         "اكمال بيانات الحساب",

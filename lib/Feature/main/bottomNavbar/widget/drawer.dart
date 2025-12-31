@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/login_screen.dart';
 import '../../../../core/constans/app_assets.dart';
@@ -15,7 +16,6 @@ import '../../../../core/sharde/widget/navigation.dart';
 import '../../../../core/utils/services/services_locator.dart';
 import '../../../AddAdvertisement/presentaion/screen/ad_guidelines_screen.dart';
 import '../../../MyFavoriteAds/screen/my_favorite_ad_sscreen.dart';
-import '../../../licences/screen/privacy_policy.dart';
 import '../../../licences/screen/terms_of_use.dart';
 import '../../../my_ads/presentaion/screen/my_ads.dart';
 import '../../../profile/manager/get_profile_cubit.dart';
@@ -76,299 +76,385 @@ class _CustomdrawerState extends State<Customdrawer>
     return BlocProvider(
       create: (context)=>Bottomcubit(),
       child: Builder(
-        builder: (context) {
-          final cubit = context.read<Bottomcubit>();
+          builder: (context) {
+            final cubit = context.read<Bottomcubit>();
 
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Column(
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.only(top: 10.h, bottom: 20.h, left: 16.w, right: 16.w),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha:0.05),
-                        blurRadius: 10,
-                        offset: Offset(0, 2),
+            return Scaffold(
+              backgroundColor: Colors.white,
+              body: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.only(top: 10.h, bottom: 20.h, left: 16.w, right: 16.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.mainAppColor.withValues(alpha:0.3),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20.r),
+                        bottomRight: Radius.circular(20.r),
                       ),
-                    ],
-                  ),
-                  child: BlocProvider(
-                    create: (context) => GetIt.instance<GetProfileCubit>()..fetchProfile(),
-                    child: BlocBuilder<GetProfileCubit, GetProfileState>(
-                      builder: (context, state) {
-                        if (state is GetProfileLoading) {
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.h),
-                              child: CircularProgressIndicator(
-                                color: AppColors.mainAppColor,
-                                strokeWidth: 2,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha:0.05),
+                          blurRadius: 10,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: BlocProvider(
+                      create: (context) => GetIt.instance<GetProfileCubit>()..fetchProfile(),
+                      child: BlocBuilder<GetProfileCubit, GetProfileState>(
+                        builder: (context, state) {
+                          if (state is GetProfileLoading) {
+                            return Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.h),
+                                child: CircularProgressIndicator(
+                                  color: AppColors.mainAppColor,
+                                  strokeWidth: 2,
+                                ),
                               ),
-                            ),
-                          );
-                        } else if (state is GetProfileSuccess) {
-                          final profile = state.profile;
-                          return Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.keyboard_backspace_outlined),
-                                  SizedBox(width: 30.w),
-                                  Text(
-                                    'حسابي',
-                                    style: TextStyle(
-                                      fontFamily: Fonts.font,
-                                      fontSize: getFontSize(context, 16),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey[800],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10.h),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 80.w,
-                                    height: 80.h,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.mainAppColor.withValues(alpha:0.3),
-                                        width: 2,
+                            );
+                          } else if (state is GetProfileSuccess) {
+                            final profile = state.profile;
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.keyboard_backspace_outlined),
+                                    SizedBox(width: 30.w),
+                                    Text(
+                                      'حسابي',
+                                      style: TextStyle(
+                                        fontFamily: Fonts.font,
+                                        fontSize: getFontSize(context, 16),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey[800],
                                       ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(alpha:0.1),
-                                          blurRadius: 10,
-                                          offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10.h),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 80.w,
+                                      height: 80.h,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColors.mainAppColor.withValues(alpha:0.3),
+                                          width: 2,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(alpha:0.1),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 4),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipOval(
+                                        child: profile.imageUrl != null && profile.imageUrl!.isNotEmpty
+                                            ? FadeInImage.assetNetwork(
+                                          placeholder: 'assets/image/background.png',
+                                          image: profile.imageUrl!,
+                                          fit: BoxFit.cover,
+                                          imageErrorBuilder: (context, error, stackTrace) =>
+                                              Container(
+                                                color: AppColors.mainAppColor.withValues(alpha:0.1),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: AppColors.mainAppColor,
+                                                  size: 40.sp,
+                                                ),
+                                              ),
+                                        )
+                                            : Container(
+                                          color: AppColors.mainAppColor.withValues(alpha:0.1),
+                                          child: Icon(
+                                            Icons.person,
+                                            size: 40.sp,
+                                            color: AppColors.mainAppColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 12.h),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          profile.firstName,
+                                          style: TextStyle(
+                                            fontFamily: Fonts.font,
+                                            color: Colors.grey[800],
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: getFontSize(context, 18),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(height: 5.h),
+                                        Text(
+                                          profile.phoneNumber.toString(),
+                                          style: TextStyle(
+                                            fontFamily: Fonts.font,
+                                            color: Colors.grey[600],
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: getFontSize(context, 12),
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),
-                                    child: ClipOval(
-                                      child: profile.imageUrl != null && profile.imageUrl!.isNotEmpty
-                                          ? FadeInImage.assetNetwork(
-                                        placeholder: 'assets/image/background.png',
-                                        image: profile.imageUrl!,
-                                        fit: BoxFit.cover,
-                                        imageErrorBuilder: (context, error, stackTrace) =>
-                                            Container(
-                                              color: AppColors.mainAppColor.withValues(alpha:0.1),
-                                              child: Icon(
-                                                Icons.person,
-                                                color: AppColors.mainAppColor,
-                                                size: 40.sp,
-                                              ),
-                                            ),
-                                      )
-                                          : Container(
-                                        color: AppColors.mainAppColor.withValues(alpha:0.1),
+                                    Spacer(),
+                                    InkWell(
+                                      onTap: () async {
+                                        Navigator.pop(context);
+                                        final result = await Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (_) => const ProfileScreen(),
+                                          ),
+                                        );
+                                        if (result == true) {
+                                          context.read<GetProfileCubit>().fetchProfile();
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(8.w),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.mainAppColor.withValues(alpha: .3),
+                                          borderRadius: BorderRadius.circular(8.r),
+                                        ),
                                         child: Icon(
-                                          Icons.person,
-                                          size: 40.sp,
-                                          color: AppColors.mainAppColor,
+                                          Icons.edit_outlined,
+                                          size: 20.sp,
+                                          color: Colors.grey[700],
                                         ),
                                       ),
                                     ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.h),
+                                child: Text(
+                                  "فشل تحميل الملف",
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: getFontSize(context, 12),
                                   ),
-                                  SizedBox(width: 12.h),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        profile.firstName,
-                                        style: TextStyle(
-                                          fontFamily: Fonts.font,
-                                          color: Colors.grey[800],
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: getFontSize(context, 18),
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      SizedBox(height: 5.h),
-                                      Text(
-                                        profile.phoneNumber.toString(),
-                                        style: TextStyle(
-                                          fontFamily: Fonts.font,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: getFontSize(context, 12),
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  InkWell(
-                                    onTap: () async {
-                                      Navigator.pop(context);
-                                      final result = await Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (_) => const ProfileScreen(),
-                                        ),
-                                      );
-                                      if (result == true) {
-                                        context.read<GetProfileCubit>().fetchProfile();
-                                      }
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(8.w),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.mainAppColor.withValues(alpha: .3),
-                                        borderRadius: BorderRadius.circular(8.r),
-                                      ),
-                                      child: Icon(
-                                        Icons.edit_outlined,
-                                        size: 20.sp,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        } else {
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 20.h),
-                              child: Text(
-                                "فشل تحميل الملف",
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: getFontSize(context, 12),
                                 ),
                               ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-
-                Expanded(
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        children: [
-                          SizedBox(height: 8.h),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.addAdIcon,
-                            title: "أضف إعلانك معنا",
-                            onTap: () {
-                              navigato(context, const AdGuidelinesScreen());
-                            },
-                          ),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.myAdsIcon,
-                            title: "إعلاناتي",
-                            onTap: () {
-                              navigato(context, const MyAdsScreen());
-                            },
-                          ),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.favoriteAdsIcon,
-                            title: "إعلاناتي المفضلة",
-                            onTap: () {
-                              navigato(context, const MyFavoriteAdsScreen());
-                            },
-                          ),
-
-                          // CustomDrawerTile(
-                          //   iconPath: AppAssets.emailIcon,
-                          //   title: "البريد",
-                          //   onTap: () {
-                          //     cubit.changeSelectIndexBottom(index: 1);
-                          //   },
-                          // ),
-                          //
-                          // CustomDrawerTile(
-                          //   iconPath: AppAssets.notificationsIcon,
-                          //   title: "الإشعارات",
-                          //   onTap: () {
-                          //     cubit.changeSelectIndexBottom(index: 2);
-                          //   },
-                          // ),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.termsIcon,
-                            title: "شروط الاستخدام",
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(builder: (context) => const TermsOfUse()),
-                              );
-                            },
-                          ),
-
-                          // CustomDrawerTile(
-                          //   iconPath: AppAssets.privacyPolicyIcon,
-                          //   title: "سياسة الخصوصية",
-                          //   onTap: () {
-                          //     Navigator.push(
-                          //       context,
-                          //       CupertinoPageRoute(builder: (context) => const PrivacyPolicyScreen()),
-                          //     );
-                          //   },
-                          // ),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.shareIcon,
-                            title: "شارك مع الأصدقاء",
-                            onTap: () {
-                              showPlatformDialog(context);
-                            },
-                          ),
-
-                          CustomDrawerTile(
-                            iconPath: AppAssets.logoutIcon,
-                            title: "تسجيل الخروج",
-                            onTap: () async {
-
-                              await SecureStorageService.delete(SecureStorageService.email);
-                              await SecureStorageService.delete(SecureStorageService.mobile);
-                              await SecureStorageService.delete(SecureStorageService.name);
-                              await SecureStorageService.delete(SecureStorageService.customerid);
-                              await SecureStorageService.delete(SecureStorageService.token);
-
-
-                              sl<Dio>().options.headers.remove('Authorization');
-
-
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                    (route) => false,
-                              );
-                            },
-                          ),
-
-
-                          SizedBox(height: 40.h),
-                        ],
+                            );
+                          }
+                        },
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        }
+
+                  Expanded(
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          children: [
+                            SizedBox(height: 8.h),
+
+                            CustomDrawerTile(
+                              iconPath: AppAssets.addAdIcon,
+                              title: "أضف إعلانك معنا",
+                              onTap: () {
+                                navigato(context, const AdGuidelinesScreen());
+                              },
+                            ),
+
+                            CustomDrawerTile(
+                              iconPath: AppAssets.myAdsIcon,
+                              title: "إعلاناتي",
+                              onTap: () {
+                                navigato(context, const MyAdsScreen());
+                              },
+                            ),
+
+                            CustomDrawerTile(
+                              iconPath: AppAssets.favoriteAdsIcon,
+                              title: "إعلاناتي المفضلة",
+                              onTap: () {
+                                navigato(context, const MyFavoriteAdsScreen());
+                              },
+                            ),
+
+                            CustomDrawerTile(
+                              iconPath: AppAssets.termsIcon,
+                              title: "شروط الاستخدام",
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(builder: (context) => const TermsOfUse()),
+                                );
+                              },
+                            ),
+
+                            CustomDrawerTile(
+                              iconPath: AppAssets.shareIcon,
+                              title: "شارك مع الأصدقاء",
+                              onTap: () {
+                                showPlatformDialog(context);
+                              },
+                            ),
+
+                            CustomDrawerTile(
+                              iconPath: AppAssets.logoutIcon,
+                              title: "تسجيل الخروج",
+                              onTap: () async {
+                                await SecureStorageService.delete(SecureStorageService.email);
+                                await SecureStorageService.delete(SecureStorageService.mobile);
+                                await SecureStorageService.delete(SecureStorageService.name);
+                                await SecureStorageService.delete(SecureStorageService.customerid);
+                                await SecureStorageService.delete(SecureStorageService.token);
+
+                                sl<Dio>().options.headers.remove('Authorization');
+
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                      (route) => false,
+                                );
+                              },
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 16.w),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                border: Border(
+                                  top: BorderSide(color: Colors.grey[300]!, width: 1),
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      "تواصل معنا",
+                                      style: TextStyle(
+                                        fontFamily: Fonts.font,
+                                        fontSize: getFontSize(context, 14),
+                                        fontWeight: FontWeight.w600,
+                                        color:AppColors.mainAppColor
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // زر واتساب
+                                      InkWell(
+                                        onTap: () {
+                                          cubit.whatsapp();
+                                        },
+                                        borderRadius: BorderRadius.circular(12.r),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF25D366),
+                                            borderRadius: BorderRadius.circular(12.r),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Color(0xFF25D366).withValues(alpha: 0.3),
+                                                blurRadius: 8,
+                                                offset: Offset(0, 3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              FaIcon(
+                                                FontAwesomeIcons.whatsapp,
+                                                color: Colors.white,
+                                                size: 20.sp,
+                                              ),
+                                              SizedBox(width: 8.w),
+                                              Text(
+                                                "واتساب",
+                                                style: TextStyle(
+                                                  fontFamily: Fonts.font,
+                                                  color: Colors.white,
+                                                  fontSize: getFontSize(context, 13),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12.w),
+                                      // زر فيسبوك
+                                      InkWell(
+                                        onTap: () {
+                                          cubit.shareFacebook();
+                                        },
+                                        borderRadius: BorderRadius.circular(12.r),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                                          decoration: BoxDecoration(
+                                            color: Color(0xFF1877F2),
+                                            borderRadius: BorderRadius.circular(12.r),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Color(0xFF1877F2).withValues(alpha: 0.3),
+                                                blurRadius: 8,
+                                                offset: Offset(0, 3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.facebook,
+                                                color: Colors.white,
+                                                size: 22.sp,
+                                              ),
+                                              SizedBox(width: 8.w),
+                                              Text(
+                                                "فيسبوك",
+                                                style: TextStyle(
+                                                  fontFamily: Fonts.font,
+                                                  color: Colors.white,
+                                                  fontSize: getFontSize(context, 13),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+
+
+                ],
+              ),
+            );
+          }
       ),
     );
   }

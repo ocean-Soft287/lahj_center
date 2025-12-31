@@ -7,26 +7,23 @@ import '../../data/repo/repo.dart';
 
 class GovernmentBloc extends Bloc<GovernmentEvent, BaseState<Government>> {
   final Addadvertisminterepo _addadvertisminterepo;
-  
+
   GovernmentBloc(this._addadvertisminterepo) : super(BaseState()) {
     on<GetGovernments>(_onGetGovernments);
   }
 
   FutureOr<void> _onGetGovernments(
-    GetGovernments event, 
-    Emitter<BaseState<Government>> emit
+    GetGovernments event,
+    Emitter<BaseState<Government>> emit,
   ) async {
+    if (state.items.isNotEmpty) return;
     emit(state.copyWith(status: Status.loading));
     final result = await _addadvertisminterepo.getGovernment();
     result.fold(
-      (left) => emit(state.copyWith(
-        status: Status.failure, 
-        errorMessage: left.message
-      )), 
-      (right) => emit(state.copyWith(
-        status: Status.success, 
-        items: right
-      ))
+      (left) => emit(
+        state.copyWith(status: Status.failure, errorMessage: left.message),
+      ),
+      (right) => emit(state.copyWith(status: Status.success, items: right)),
     );
   }
 }

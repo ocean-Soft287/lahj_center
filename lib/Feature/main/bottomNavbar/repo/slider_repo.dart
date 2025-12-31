@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:lahijcenter/core/Failure/failure.dart';
 import 'package:lahijcenter/core/utils/api/api_consumer.dart';
-import 'package:lahijcenter/core/utils/api/dio_consumer.dart';
 
 import '../../../../core/utils/api/endpoint.dart';
 import '../model/banar_model.dart';

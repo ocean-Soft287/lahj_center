@@ -21,6 +21,11 @@ class SubmitAdvertisement extends AddAdvertisementEvent {
   final String area;
   final String description;
   final List<File> images;
+  final String condition;
+  final int subGroupId;
+
+  
+
 
   const SubmitAdvertisement({
     required this.name,
@@ -34,6 +39,9 @@ class SubmitAdvertisement extends AddAdvertisementEvent {
     required this.area,
     required this.description,
     required this.images,
+    required this.condition ,
+    required this.subGroupId,
+   
   });
 
   @override
@@ -49,5 +57,7 @@ class SubmitAdvertisement extends AddAdvertisementEvent {
     area,
     description,
     images,
+    condition,
+    subGroupId,
   ];
 }

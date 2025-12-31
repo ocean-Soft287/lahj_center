@@ -91,15 +91,15 @@ class BuildAdvertiserSection extends StatelessWidget {
                               ),
                             ),
 
-                            Text(
-                              item.serviceName,
-                              style: TextStyle(
-                                fontFamily: Fonts.font,
-                                color: Colors.grey.shade500,
-                                fontWeight: FontWeight.w300,
-                                fontSize: 15.sp,
-                              ),
-                            ),
+                            // Text(
+                            //   item.serviceName,
+                            //   style: TextStyle(
+                            //     fontFamily: Fonts.font,
+                            //     color: Colors.grey.shade500,
+                            //     fontWeight: FontWeight.w300,
+                            //     fontSize: 15.sp,
+                            //   ),
+                            // ),
                           ],
                         ),
                         const Spacer(),

@@ -6,23 +6,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:lahijcenter/Feature/Auth/presentation/screen/register_screen.dart';
 import 'package:lahijcenter/Feature/Auth/presentation/screen/verify_account_with_otp.dart';
 import 'package:lahijcenter/Feature/licences/screen/privacy_policy.dart';
-import 'package:lahijcenter/core/Failure/failure.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
-import 'package:lahijcenter/core/sharde/widget/navigation.dart';
 import '../../../../core/Textstyle/text_style.dart';
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/constans/responsve_font.dart';
 import '../../../../core/network/local/flutter_secure_storage.dart';
-import '../../../../core/sharde/widget/text_forn_field.dart';
-import '../../../main/bottomNavbar/Bottomnav.dart';
 import '../../manger/login-cubit/login_view_cubit.dart';
 import '../../manger/login-cubit/login_view_state.dart';
-import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -110,10 +103,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
 
                     children: [
-                      Image.asset(
-                        AppAssets.logo,
-                        width: 150.w,
-                        height: 150,
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.r),
+                          color: Colors.white,
+                          border: Border.all(
+                            color: AppColors.mainAppColor.withValues(alpha:0.1),
+                            width: 1,
+                          ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+
+
+
+                        ),
+                        child: Image.asset(
+                          AppAssets.logo,
+                          width: 100.w,
+                          height: 100,
+                        ),
                       ),
                       30.verticalSpace,
                       Text(
@@ -267,12 +280,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                if (keyForm.currentState!.validate()) {
-                                  cubit.userLogin(
-                                    phonenumber: phoneController.text,
+                                if (phoneController.text.trim().isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                        "من فضلك قم بتسجيل الدخول بإدخال رقم الجوال",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 2),
+                                    ),
                                   );
+                                  return;
                                 }
+
+                                cubit.userLogin(
+                                  phonenumber: phoneController.text,
+                                );
                               },
+
                               child: state is LoginViewStateLoading
                                   ? Center(
                                 child: CircularProgressIndicator(

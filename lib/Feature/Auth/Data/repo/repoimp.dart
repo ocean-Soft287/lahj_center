@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:get_it/get_it.dart';
 import 'package:lahijcenter/Feature/Auth/Data/repo/repo.dart';
 import '../../../../core/Failure/failure.dart';
 import '../../../../core/network/local/flutter_secure_storage.dart';

@@ -38,7 +38,6 @@ class MyaddCubit extends Cubit<MyaddState> {
         emit(DeletemyadditemFailure());
       },
           (successMessage) {
-        // بعد الحذف، نجيب البيانات من السيرفر مرة تانية
         getmyadd();
         emit(Deletemyadditemsuccful());
       },

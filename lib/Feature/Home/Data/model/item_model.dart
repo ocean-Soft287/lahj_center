@@ -5,9 +5,13 @@ class Item {
   final int groupId;
   final String groupName;
   final String groupEName;
+  final int subGroupId;
+  final String subGroupName;
+  final String subGroupEName;
   final int serviceId;
   final String serviceName;
   final String serviceEName;
+  final String condition;
   final double price;
   final int currencyId;
   final String currencyName;
@@ -15,8 +19,10 @@ class Item {
   final int governorateId;
   final String governorateName;
   final String governorateEName;
-  final String area;
-  final String description;
+  final int areaId;
+  final String areaName;
+  final String areaEName;
+  final String? description;
   final String memberId;
   final String memberName;
   final String status;
@@ -27,15 +33,19 @@ class Item {
   final List<AdvertisementImage> advertisementImages;
 
   Item({
-    required this.phone,
     required this.id,
+    required this.phone,
     required this.name,
     required this.groupId,
     required this.groupName,
     required this.groupEName,
+    required this.subGroupId,
+    required this.subGroupName,
+    required this.subGroupEName,
     required this.serviceId,
     required this.serviceName,
     required this.serviceEName,
+    required this.condition,
     required this.price,
     required this.currencyId,
     required this.currencyName,
@@ -43,8 +53,10 @@ class Item {
     required this.governorateId,
     required this.governorateName,
     required this.governorateEName,
-    required this.area,
-    required this.description,
+    required this.areaId,
+    required this.areaName,
+    required this.areaEName,
+    this.description,
     required this.memberId,
     required this.memberName,
     required this.status,
@@ -57,38 +69,43 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      phone: json['phone'] as String? ?? '',
-      id: json['id'] as int? ?? 0,
-      name: json['name'] as String? ?? '',
-      groupId: json['groupId'] as int? ?? 0,
-      groupName: json['groupName'] as String? ?? '',
-      groupEName: json['groupEName'] as String? ?? '',
-      serviceId: json['serviceId'] as int? ?? 0,
-      serviceName: json['serviceName'] as String? ?? '',
-      serviceEName: json['serviceEName'] as String? ?? '',
+      id: json['id'] ?? 0,
+      phone: json['phone'] ?? '',
+      name: json['name'] ?? '',
+      groupId: json['groupId'] ?? 0,
+      groupName: json['groupName'] ?? '',
+      groupEName: json['groupEName'] ?? '',
+      subGroupId: json['subGroupId'] is int
+          ? json['subGroupId']
+          : int.tryParse(json['subGroupId'].toString()) ?? 0,
+      subGroupName: json['subGroupName'] ?? '',
+      subGroupEName: json['subGroupEName'] ?? '',
+      serviceId: json['serviceId'] ?? 0,
+      serviceName: json['serviceName'] ?? '',
+      serviceEName: json['serviceEName'] ?? '',
+      condition: json['condition'] ?? '',
       price: json['price'] != null ? (json['price'] as num).toDouble() : 0.0,
-      currencyId: json['currencyId'] as int? ?? 0,
-      currencyName: json['currencyName'] as String? ?? '',
-      currencyEName: json['currencyEName'] as String? ?? '',
-      governorateId: json['governorateId'] as int? ?? 0,
-      governorateName: json['governorateName'] as String? ?? '',
-      governorateEName: json['governorateEName'] as String? ?? '',
-      area: json['area'] as String? ?? '',
-      description: json['description'] as String? ?? '',
-      memberId: json['memberId'] as String? ?? '',
-      memberName: json['memberName'] as String? ?? '',
-      status: json['status'] as String? ?? '',
-      deletionReason: json['deletionReason'] as String? ?? "", // nullable
-      isCloseReplies: json['isCloseReplies'] as bool? ?? false,
-      isLiked: json['isLiked'] as bool? ?? false,
+      currencyId: json['currencyId'] ?? 0,
+      currencyName: json['currencyName'] ?? '',
+      currencyEName: json['currencyEName'] ?? '',
+      governorateId: json['governorateId'] ?? 0,
+      governorateName: json['governorateName'] ?? '',
+      governorateEName: json['governorateEName'] ?? '',
+      areaId: json['areaId'] ?? 0,
+      areaName: json['areaName'] ?? '',
+      areaEName: json['areaEName'] ?? '',
+      description: json['description'],
+      memberId: json['memberId'] ?? '',
+      memberName: json['memberName'] ?? '',
+      status: json['status'] ?? '',
+      deletionReason: json['deletionReason'],
+      isCloseReplies: json['isCloseReplies'] ?? false,
+      isLiked: json['isLiked'] ?? false,
       date: json['date'] != null
           ? DateTime.tryParse(json['date']) ?? DateTime.now()
           : DateTime.now(),
-      advertisementImages:
-          (json['advertisementImages'] as List<dynamic>?)
-              ?.map(
-                (x) => AdvertisementImage.fromJson(x as Map<String, dynamic>),
-              )
+      advertisementImages: (json['advertisementImages'] as List<dynamic>?)
+              ?.map((x) => AdvertisementImage.fromJson(x))
               .toList() ??
           [],
     );
@@ -103,8 +120,8 @@ class AdvertisementImage {
 
   factory AdvertisementImage.fromJson(Map<String, dynamic> json) {
     return AdvertisementImage(
-      id: json['id'] as int? ?? 0,
-      imageName: json['imageName'] as String? ?? '',
+      id: json['id'] ?? 0,
+      imageName: json['imageName'] ?? '',
     );
   }
 }

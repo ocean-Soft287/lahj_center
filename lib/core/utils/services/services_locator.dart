@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_area_bloc/sub_area_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_catagory_bloc/sub_catagory_cubit.dart';
 import 'package:lahijcenter/Feature/Auth/manger/register_view_cubit/register_view_cubit.dart';
+import 'package:lahijcenter/Feature/Home/Data/repo/filter_by_city_data_repo.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/get_all_comment_repo.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/get_all_comment_repo_impl.dart';
 import 'package:lahijcenter/Feature/Home/Data/repo/get_report_repo.dart';
@@ -16,7 +19,10 @@ import 'package:lahijcenter/Feature/Home/chat/repo/chat_repository_impl.dart';
 import 'package:lahijcenter/Feature/Home/manager/commentcubit/get_all_comment_cubit.dart';
 import 'package:lahijcenter/Feature/Home/manager/commentcubit/get_report_cubit.dart';
 import 'package:lahijcenter/Feature/Home/manager/commentcubit/post_comment_cubit.dart';
+import 'package:lahijcenter/Feature/Home/manager/filter_cities/filter_cities_cubit.dart';
 import 'package:lahijcenter/Feature/Home/manager/homecubit/item_details_cubit.dart';
+import 'package:lahijcenter/Feature/Home/update_advertisement/data/repo/delete_my_advertisement_repo.dart';
+import 'package:lahijcenter/Feature/Home/update_advertisement/presentation/manager/delete_my_advertisement_cubit.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/fav_repo_imp.dart';
 import 'package:lahijcenter/Feature/MyFavoriteAds/data/repo/get_all_repo.dart';
@@ -63,6 +69,8 @@ import '../../../Feature/Home/chat/presentation/bloc/chat/chat_bloc.dart';
 import '../../../Feature/Home/chat/presentation/bloc/contact/chat_contact_bloc.dart';
 import '../../../Feature/Home/manager/categorycubit/category_cubit.dart';
 import '../../../Feature/Home/manager/homecubit/home_cubit.dart';
+import '../../../Feature/Home/update_advertisement/data/repo/upadate_advertisment_repo.dart';
+import '../../../Feature/Home/update_advertisement/presentation/manager/update_cubit.dart';
 import '../../../Feature/Search/data/repo/search_repo_imp.dart';
 import '../../../Feature/Search/manager/search_cubit.dart';
 import '../../../Feature/main/bottomNavbar/manager/slider_cubit.dart';
@@ -276,4 +284,21 @@ Future<void> setup() async {
   // Chat BLoCs
   sl.registerFactory<ChatBloc>(() => ChatBloc(sl()));
   sl.registerFactory<ChatContactBloc>(() => ChatContactBloc(sl()));
+  // update ad
+  sl.registerLazySingleton<AdvertisementRepo>(() => AdvertisementRepoImpl(sl<ApiConsumer>()));
+  sl.registerFactory<UpdateAdvertisementCubit>(() => UpdateAdvertisementCubit(sl<AdvertisementRepo>()));
+  //sub group 
+    sl.registerFactory<SubCatagoryCubit>(() => SubCatagoryCubit(sl<SubGroupRepo>()));
+
+  sl.registerLazySingleton<SubGroupRepo>(() => SubGroupRepoImp(apiConsumer: sl<ApiConsumer>()));
+  //sub area 
+    sl.registerLazySingleton<SubAreaRepo>(() => SubAreaRepoImp(apiConsumer: sl<ApiConsumer>()));
+
+    sl.registerFactory<SubAreaBloc>(() => SubAreaBloc(sl<SubAreaRepo>()));
+    // delete my advertisement
+    sl.registerLazySingleton<DeleteMyAdvertisementRepo>(() => DeleteMyAdvertisementRepoImpl(apiConsumer: sl<ApiConsumer>()));
+    sl.registerFactory<DeleteMyAdvertisementCubit>(() => DeleteMyAdvertisementCubit(sl<DeleteMyAdvertisementRepo>()));
+    // filter by government
+    sl.registerLazySingleton<FilterByCityDataRepo>(()  => FilterByCityDataRepoImpl(sl<ApiConsumer>()));
+    sl.registerFactory<FilterCitiesCubit>(() => FilterCitiesCubit(sl<FilterByCityDataRepo>()));
 }

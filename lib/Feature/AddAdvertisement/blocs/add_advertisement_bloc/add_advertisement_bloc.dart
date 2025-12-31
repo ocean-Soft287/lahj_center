@@ -26,9 +26,11 @@ class AddAdvertisementBloc extends Bloc<AddAdvertisementEvent, BaseState<void>> 
       isCloseReplies: event.isCloseReplies,
       currencyId: event.currencyId,
       governorateId: event.governorateId,
-      area: event.area,
+      areaId: int.parse(event.area),
       description: event.description,
       images: event.images,
+      condition: event.condition,
+      subGroupId: event.subGroupId,
     );
 
     result.fold(

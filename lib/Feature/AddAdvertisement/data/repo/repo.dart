@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_area_model.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_group_model.dart';
 
 import '../../../../core/Failure/failure.dart';
 import '../model/currency.dart';
@@ -18,14 +20,16 @@ abstract class Addadvertisminterepo {
     required String name,
     required String phone,
     required int groupId,
+    required int subGroupId,
     required int serviceId,
     required double price,
     required bool isCloseReplies,
     required int currencyId,
     required int governorateId,
-    required String area,
+    required int areaId ,
     required String description,
     required List<File> images,
+    required String condition 
   });
 
 
@@ -59,6 +63,19 @@ abstract class Addadvertisminterepo {
     required List<File> images,
     required List<String> oldImage,
     String? deletionReason,
+    
   });
 
+}
+abstract class SubGroupRepo{
+  Future<Either<Failure,List< SubGroupModel>>> supgroup({
+    required int groupId ,
+   
+  });
+}
+abstract class SubAreaRepo{
+  Future<Either<Failure,List< SubAreaModel>>> subarea({
+    required int governorateId  ,
+   
+  });
 }

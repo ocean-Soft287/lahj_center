@@ -53,13 +53,13 @@ class ItemDetailsScreen extends StatelessWidget {
                       name: state.item.name,
                       price: state.item.price.toString(),
                       currency: state.item.currencyName,
-                      area: state.item.area,
+                      area: state.item.areaName,
                       item: state.item,
                     ),
 
                     BuildAdvertiserSection(item: state.item),
 
-                    buildDescriptionSection(name: state.item.description),
+                    buildDescriptionSection(name: state.item.description ?? ''),
 
                     state.item.isCloseReplies == false
                         ? CommentSection(controller: comment, advertisementId: x)

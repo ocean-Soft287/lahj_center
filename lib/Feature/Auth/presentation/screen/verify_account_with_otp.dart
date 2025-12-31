@@ -15,7 +15,7 @@ import 'package:lahijcenter/core/constans/responsve_font.dart';
 import '../../../../core/network/local/chachehelper.dart';
 import '../../../../core/sharde/widget/navigation.dart';
 import '../widget/otp_component.dart';
-import 'login_screen.dart';
+
 
 class OTPScreen extends StatefulWidget {
   final String  phonenumber;
@@ -88,10 +88,31 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        AppAssets.logo,
-                        width: 150.w,
-                        height: 150.h,
+                      Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.r),
+                    color: Colors.white,
+                    border: Border.all(
+                      color: AppColors.mainAppColor.withValues(alpha:0.1),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+
+
+
+                ),
+
+                        child: Image.asset(
+                          AppAssets.logo,
+                          width: 100.w,
+                          height: 100.h,
+                        ),
                       ),
                       10.verticalSpace,
                       Text(

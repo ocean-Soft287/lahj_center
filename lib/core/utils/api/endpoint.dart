@@ -66,4 +66,9 @@ class EndPoint {
   static String getNotifications =
       "${baseUrl}Member/myNotifications";
   static String getallSlider="${baseUrl}slider/getAll";
+  static String updateAdvertisement="${baseUrl}Advertisement/updateMyAdvertisement";
+static String getSubGroups = "${baseUrl}SubGroup/by-group";
+  static String getSubAreas = "${baseUrl}Area/by-governorate";
+  static String deletemyadvertisment = "${baseUrl}Advertisement/DeleteMyAdvertisement";
+
 }

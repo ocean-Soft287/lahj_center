@@ -7,26 +7,23 @@ import '../../data/repo/repo.dart';
 
 class CurrencyBloc extends Bloc<CurrencyEvent, BaseState<ModelCurrency>> {
   final Addadvertisminterepo _addadvertisminterepo;
-  
+
   CurrencyBloc(this._addadvertisminterepo) : super(BaseState()) {
     on<GetCurrencies>(_onGetCurrencies);
   }
 
   FutureOr<void> _onGetCurrencies(
-    GetCurrencies event, 
-    Emitter<BaseState<ModelCurrency>> emit
+    GetCurrencies event,
+    Emitter<BaseState<ModelCurrency>> emit,
   ) async {
+    if (state.items.isNotEmpty) return;
     emit(state.copyWith(status: Status.loading));
     final result = await _addadvertisminterepo.getcurrency();
     result.fold(
-      (left) => emit(state.copyWith(
-        status: Status.failure, 
-        errorMessage: left.message
-      )), 
-      (right) => emit(state.copyWith(
-        status: Status.success, 
-        items: right
-      ))
+      (left) => emit(
+        state.copyWith(status: Status.failure, errorMessage: left.message),
+      ),
+      (right) => emit(state.copyWith(status: Status.success, items: right)),
     );
   }
 }

@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lahijcenter/Feature/Home/chat/model/message_model.dart';
 import 'package:lahijcenter/Feature/Home/chat/presentation/bloc/chat/chat_bloc.dart';
-import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
-import 'package:lahijcenter/Feature/profile/manager/get_profile_state.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 import 'package:lahijcenter/core/constans/app_colors.dart';
 import 'package:lahijcenter/core/utils/services/services_locator.dart';
@@ -38,6 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late final ChatBloc _chatBloc;
+  bool _isFirstLoad = true;
 
   @override
   void initState() {
@@ -54,24 +52,9 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
-  Future<void> _sendMessage() async {
-    if (_controller.text.trim().isNotEmpty) {
-      final text = _controller.text.trim();
-
-
-
-      _chatBloc.add(
-        SendMessageEvent(
-          conversationId: widget.conversationId,
-          senderId: widget.currentUserId,
-          receiverId: widget.receiverId,
-          text: text,
-          senderName:await SecureStorageService.read(SecureStorageService.name)??"",
-          receiverName: widget.name,
-        ),
-      );
-      _controller.clear();
-      Future.delayed(const Duration(milliseconds: 100), () {
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      Future.delayed(const Duration(milliseconds: 300), () {
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
@@ -80,6 +63,25 @@ class _ChatScreenState extends State<ChatScreen> {
           );
         }
       });
+    }
+  }
+
+  Future<void> _sendMessage() async {
+    if (_controller.text.trim().isNotEmpty) {
+      final text = _controller.text.trim();
+
+      _chatBloc.add(
+        SendMessageEvent(
+          conversationId: widget.conversationId,
+          senderId: widget.currentUserId,
+          receiverId: widget.receiverId,
+          text: text,
+          senderName: await SecureStorageService.read(SecureStorageService.name) ?? "",
+          receiverName: widget.name,
+        ),
+      );
+      _controller.clear();
+      _scrollToBottom();
     }
   }
 
@@ -163,17 +165,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         letterSpacing: 0.2,
                       ),
                     ),
-                    // SizedBox(height: 2),
-                    // Text(
-                    //   widget.online ? 'نشط الآن' : 'غير متصل',
-                    //   style: TextStyle(
-                    //     color: widget.online
-                    //         ? Color(0xFF4CAF50)
-                    //         : Colors.grey[600],
-                    //     fontSize: 12,
-                    //     fontWeight: FontWeight.w500,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -191,7 +182,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: BlocBuilder<ChatBloc, BaseState<MessageModel>>(
                 builder: (context, state) {
-                  if (state.isLoading) {
+                  if (state.isLoading && state.items.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
@@ -215,6 +206,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     );
                   }
 
+                  // Scroll to bottom when messages are loaded for the first time
+                  if (_isFirstLoad && messages.isNotEmpty) {
+                    _isFirstLoad = false;
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _scrollToBottom();
+                    });
+                  }
+
                   return ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.symmetric(
@@ -227,7 +226,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       final bool isSent = msg.senderId == widget.currentUserId;
                       final bool showAvatar =
                           index == 0 ||
-                          messages[index - 1].senderId != msg.senderId;
+                              messages[index - 1].senderId != msg.senderId;
 
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
@@ -242,17 +241,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                 margin: const EdgeInsets.only(bottom: 20),
                                 child: showAvatar
                                     ? CircleAvatar(
-                                        radius: 16,
-                                        backgroundColor: widget.avatar,
-                                        child: Text(
-                                          widget.name[0],
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      )
+                                  radius: 16,
+                                  backgroundColor: widget.avatar,
+                                  child: Text(
+                                    widget.name[0],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
                                     : const SizedBox(width: 32),
                               ),
                             if (!isSent) const SizedBox(width: 8),
@@ -270,14 +269,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                     decoration: BoxDecoration(
                                       gradient: isSent
                                           ? LinearGradient(
-                                              colors: [
-                                                AppColors.mainAppColor,
-                                                AppColors.mainAppColor
-                                                    .withValues(alpha: 0.85),
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            )
+                                        colors: [
+                                          AppColors.mainAppColor,
+                                          AppColors.mainAppColor
+                                              .withValues(alpha: 0.85),
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      )
                                           : null,
                                       color: isSent ? null : Colors.white,
                                       borderRadius: BorderRadius.only(
@@ -294,10 +293,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                         BoxShadow(
                                           color: isSent
                                               ? AppColors.mainAppColor
-                                                    .withValues(alpha: 0.3)
+                                              .withValues(alpha: 0.3)
                                               : Colors.black.withValues(
-                                                  alpha: 0.08,
-                                                ),
+                                            alpha: 0.08,
+                                          ),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
@@ -390,16 +389,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                 textInputAction: TextInputAction.send,
                               ),
                             ),
-                            // IconButton(
-                            //   icon: Icon(
-                            //     Icons.emoji_emotions_outlined,
-                            //     color: Colors.grey[600],
-                            //     size: 24,
-                            //   ),
-                            //   onPressed: () {},
-                            //   padding: EdgeInsets.zero,
-                            //   constraints: BoxConstraints(),
-                            // ),
                           ],
                         ),
                       ),

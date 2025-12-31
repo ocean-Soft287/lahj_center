@@ -7,11 +7,7 @@ import 'package:lahijcenter/Feature/MyFavoriteAds/data/model/get_all_favourite_m
 import '../../../../core/constans/app_colors.dart';
 
 class FavouriteContainer extends StatelessWidget {
-  const FavouriteContainer({
-    super.key,
-    required this.item,
-    this.onTap,
-  });
+  const FavouriteContainer({super.key, required this.item, this.onTap});
 
   final FavouriteItem item;
   final void Function()? onTap;
@@ -85,14 +81,11 @@ class FavouriteContainer extends StatelessWidget {
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [
-                            Colors.grey[200]!,
-                            Colors.grey[300]!,
-                          ],
+                          colors: [Colors.grey[200]!, Colors.grey[300]!],
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha:0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 8,
                             offset: Offset(0, 3),
                           ),
@@ -102,38 +95,40 @@ class FavouriteContainer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16.r),
                         child: (imageUrl == null || imageUrl.isEmpty)
                             ? Center(
-                          child: Icon(
-                            Icons.image_not_supported_outlined,
-                            color: Colors.grey[500],
-                            size: 36.sp,
-                          ),
-                        )
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: Colors.grey[500],
+                                  size: 36.sp,
+                                ),
+                              )
                             : CachedNetworkImage(
-                          progressIndicatorBuilder: (context, url, progress) => Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                              strokeWidth: 2.5,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.mainAppColor,
+                                progressIndicatorBuilder:
+                                    (context, url, progress) => Center(
+                                      child: CircularProgressIndicator(
+                                        value: progress.progress,
+                                        strokeWidth: 2.5,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              AppColors.mainAppColor,
+                                            ),
+                                      ),
+                                    ),
+                                imageUrl: imageUrl,
+                                fit: BoxFit.cover,
+                                width: 100.w,
+                                height: 100.h,
+                                errorWidget: (context, url, error) => Center(
+                                  child: Icon(
+                                    Icons.image_not_supported_outlined,
+                                    color: Colors.grey[500],
+                                    size: 36.sp,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          imageUrl: imageUrl,
-                          fit: BoxFit.cover,
-                          width: 100.w,
-                          height: 100.h,
-                          errorWidget: (context, url, error) => Center(
-                            child: Icon(
-                              Icons.image_not_supported_outlined,
-                              color: Colors.grey[500],
-                              size: 36.sp,
-                            ),
-                          ),
-                        ),
                       ),
                     ),
-                    // Favourite Badge
 
+                    // Favourite Badge
                   ],
                 ),
 
@@ -163,10 +158,10 @@ class FavouriteContainer extends StatelessWidget {
                             width: 38.w,
                             height: 38.h,
                             decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha:0.1),
+                              color: Colors.green.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: Colors.green.withValues(alpha:0.3),
+                                color: Colors.green.withValues(alpha: 0.3),
                                 width: 1.5,
                               ),
                             ),
@@ -200,7 +195,9 @@ class FavouriteContainer extends StatelessWidget {
                               vertical: 6.h,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.mainAppColor.withValues(alpha:0.08),
+                              color: AppColors.mainAppColor.withValues(
+                                alpha: 0.08,
+                              ),
                               borderRadius: BorderRadius.circular(8.r),
                             ),
                             child: Row(
@@ -241,7 +238,7 @@ class FavouriteContainer extends StatelessWidget {
                               ),
                               SizedBox(width: 6.w),
                               MainTitle(
-                                text: "${item.area }",
+                                text: item.governorateEName,
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w500,
                                 color: Color(0xFF6B7280),
@@ -252,9 +249,6 @@ class FavouriteContainer extends StatelessWidget {
                           ),
                         ],
                       ),
-
-
-
 
                       SizedBox(height: 8.h),
 
@@ -298,7 +292,9 @@ class FavouriteContainer extends StatelessWidget {
                                   width: 18.w,
                                   height: 18.h,
                                   decoration: BoxDecoration(
-                                    color: AppColors.mainAppColor.withValues(alpha:0.2),
+                                    color: AppColors.mainAppColor.withValues(
+                                      alpha: 0.2,
+                                    ),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(

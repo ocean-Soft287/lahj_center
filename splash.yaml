@@ -1,10 +1,10 @@
 flutter_native_splash:
 
   color: "#FFFFFF"
-  image: assets/image/WhatsApplogo.jpeg
+  image: assets/image/splashscreen.png
 
   android_12:
-    image: assets/image/WhatsApplogo.jpeg
+    image: assets/image/splashscreen.png
     color: "#FFFFFF"
 
 

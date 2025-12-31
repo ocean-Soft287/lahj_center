@@ -4,8 +4,11 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_area_model.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_group_model.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/data/repo/repo.dart';
 import 'package:lahijcenter/core/Failure/failure.dart';
+import 'package:lahijcenter/core/utils/api/api_consumer.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/network/remote/encrupt.dart';
@@ -15,6 +18,7 @@ import '../model/currency.dart';
 import '../model/government_model.dart';
 import '../model/group.dart';
 import '../model/services.dart';
+
 class Addadvertisminterepoimp implements Addadvertisminterepo {
   final DioConsumer dioConsumer;
 
@@ -30,7 +34,11 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
   @override
   Future<Either<Failure, List<ModelCurrency>>> getcurrency() async {
     try {
-      final response = await dioConsumer.get(EndPoint.getcurrency);
+      final response = await dioConsumer.get(
+        EndPoint.getcurrency,
+        useCache: true,
+        cacheDuration: const Duration(hours: 24),
+      );
       if (response is List) {
         final List<ModelCurrency> currencies = response
             .whereType<Map<String, dynamic>>()
@@ -48,12 +56,18 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
   @override
   Future<Either<Failure, List<Government>>> getGovernment() async {
     try {
-      final response = await dioConsumer.get(EndPoint.getAllGovernorates).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () {
-          throw Exception('Timeout: Government API took too long');
-        },
-      );
+      final response = await dioConsumer
+          .get(
+            EndPoint.getAllGovernorates,
+            useCache: true,
+            cacheDuration: const Duration(hours: 24),
+          )
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw Exception('Timeout: Government API took too long');
+            },
+          );
 
       if (response == null) {
         return Left(ServerFailure('فشل في جلب المحافظات: استجابة فارغة'));
@@ -80,7 +94,11 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
   @override
   Future<Either<Failure, List<Group>>> getgroup() async {
     try {
-      final response = await dioConsumer.get(EndPoint.getallGroups);
+      final response = await dioConsumer.get(
+        EndPoint.getallGroups,
+        useCache: true,
+        cacheDuration: const Duration(hours: 24),
+      );
       final List<Group> groups = (response as List)
           .map((e) => Group.fromJson(convertToMapStringDynamic(e)))
           .toList();
@@ -93,15 +111,22 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
   @override
   Future<Either<Failure, List<Services>>> getServices() async {
     try {
-      final response = await dioConsumer.get(EndPoint.getallServices);
+      final response = await dioConsumer.get(
+        EndPoint.getallServices,
+        useCache: true,
+        cacheDuration: const Duration(hours: 24),
+      );
 
       if (response == null || response is! List) {
         return Left(ServerFailure('البيانات غير متوقعة'));
       }
 
       final List<Services> services = (response)
-          .map((item) => Services.fromJson(
-          Map<String, dynamic>.from(jsonDecode(jsonEncode(item)))))
+          .map(
+            (item) => Services.fromJson(
+              Map<String, dynamic>.from(jsonDecode(jsonEncode(item))),
+            ),
+          )
           .toList();
 
       return Right(services);
@@ -121,9 +146,11 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
     required bool isCloseReplies,
     required int currencyId,
     required int governorateId,
-    required String area,
+    required int areaId,
     required String description,
     required List<File> images,
+    required String condition,
+    required int subGroupId,
   }) async {
     try {
       final Map<String, dynamic> payload = {
@@ -135,11 +162,11 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         "IsCloseReplies": isCloseReplies,
         "CurrencyId": currencyId,
         "StateId": governorateId,
-        "Area": area,
+        "AreaId": areaId,
         "Discription": description,
+        "Condition": condition,
+        "SubGroupId": subGroupId,
       };
-
-     
 
       final formData = FormData.fromMap(payload);
 
@@ -147,7 +174,10 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         final image = images[i];
         if (!await image.exists()) continue;
         final fileName = image.path.split('/').last;
-        final multipartFile = await MultipartFile.fromFile(image.path, filename: fileName);
+        final multipartFile = await MultipartFile.fromFile(
+          image.path,
+          filename: fileName,
+        );
         formData.files.add(MapEntry('ImagesToAdd', multipartFile));
       }
 
@@ -157,14 +187,14 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
         data: formData,
       );
 
-
-        return Right((response as Map<String, dynamic>)['id']);
-
+      return Right((response as Map<String, dynamic>)['id']);
     } catch (e) {
       if (e is DioException) {
         return Left(ServerFailure('Network error: ${e.message}'));
       }
-      return Left(ServerFailure('Failed to send advertisement: ${e.toString()}'));
+      return Left(
+        ServerFailure('Failed to send advertisement: ${e.toString()}'),
+      );
     }
   }
 
@@ -238,7 +268,8 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
 
       final allImages = [...images];
       for (var name in oldImage) {
-        final url = 'http://78.89.159.126:9393/TheOneLahjAPI/AdvertImages/$name';
+        final url =
+            'http://78.89.159.126:9393/TheOneLahjAPI/AdvertImages/$name';
         try {
           final response = await http.get(Uri.parse(url));
           if (response.statusCode == 200) {
@@ -254,7 +285,10 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
       for (var image in allImages) {
         if (!await image.exists()) continue;
         final fileName = image.path.split('/').last;
-        final multipartFile = await MultipartFile.fromFile(image.path, filename: fileName);
+        final multipartFile = await MultipartFile.fromFile(
+          image.path,
+          filename: fileName,
+        );
         formData.files.add(MapEntry('images', multipartFile));
       }
 
@@ -265,7 +299,11 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
       );
 
       if (response != null && response.toString().isNotEmpty) {
-        final decryptedText = decrypt(response.toString(), privateKey, publicKey);
+        final decryptedText = decrypt(
+          response.toString(),
+          privateKey,
+          publicKey,
+        );
         final String jsonData = jsonDecode(decryptedText);
         return Right(jsonData);
       } else {
@@ -279,3 +317,64 @@ class Addadvertisminterepoimp implements Addadvertisminterepo {
     }
   }
 }
+class SubGroupRepoImp implements SubGroupRepo {
+  final ApiConsumer apiConsumer;
+
+  SubGroupRepoImp({required this.apiConsumer});
+
+  @override
+  Future<Either<Failure, List<SubGroupModel>>> supgroup({
+    required int groupId,
+  }) async {
+    try {
+      final response = await apiConsumer.get(
+        '${EndPoint.getSubGroups}/$groupId',
+        useCache: true,
+        cacheDuration: const Duration(hours: 24),
+      );
+
+      if (response == null || response is! List) {
+        return Left(ServerFailure('البيانات غير متوقعة'));
+      }
+
+      final subGroups = response
+          .map((e) => SubGroupModel.fromJson(e))
+          .toList();
+
+      return Right(subGroups);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+}
+class SubAreaRepoImp implements SubAreaRepo {
+  final ApiConsumer apiConsumer;
+
+  SubAreaRepoImp({required this.apiConsumer});
+
+  @override
+  Future<Either<Failure, List<SubAreaModel>>> subarea({
+    required int governorateId,
+  }) async {
+    try {
+      final response = await apiConsumer.get(
+        '${EndPoint.getSubAreas}/$governorateId',
+        useCache: true,
+        cacheDuration: const Duration(hours: 24),
+      );
+
+      if (response == null || response is! List) {
+        return Left(ServerFailure('البيانات غير متوقعة'));
+      }
+
+      final subAreas = response
+          .map((e) => SubAreaModel.fromJson(e))
+          .toList();
+
+      return Right(subAreas);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+}
+

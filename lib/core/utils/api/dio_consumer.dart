@@ -1,18 +1,16 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import '../../network/local/flutter_secure_storage.dart';
 import 'endpoint.dart';
 import 'api_consumer.dart';
-
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
 
   DioConsumer({required this.dio}) {
     dio.options.baseUrl = EndPoint.baseUrl;
-    dio.options.headers = {
-      'Accept-Language': 'ar',
-    };
-
+    dio.options.headers = {'Accept-Language': 'ar'};
   }
 
   Future<Map<String, String>> _buildHeaders({bool withAuth = true}) async {
@@ -21,22 +19,20 @@ class DioConsumer extends ApiConsumer {
 
     return {
       'Accept-Language': 'ar',
-      if (withAuth && token != null)
-        'Authorization': 'Bearer $token',
+      if (withAuth && token != null) 'Authorization': 'Bearer $token',
     };
   }
-
 
   /// Use this to send body as JSON with GET (required by some APIs)
   @override
   Future get(
-      String path, {
-        Object? data,
-        Duration? cacheDuration,
-        Map<String, dynamic>? queryParameters,
-        bool useCache = true,
-        bool withAuth = true,
-      }) async {
+    String path, {
+    Object? data,
+    Duration? cacheDuration,
+    Map<String, dynamic>? queryParameters,
+    bool useCache = true,
+    bool withAuth = true,
+  }) async {
     try {
       final response = await dio.request(
         path,
@@ -61,12 +57,13 @@ class DioConsumer extends ApiConsumer {
 
   @override
   Future post(
-      String path, {
-        Object? data,
-        bool isFromData = false,
-        Map<String, dynamic>? queryParameters,
-        bool withAuth = true,  Options ?options,
-      }) async {
+    String path, {
+    Object? data,
+    bool isFromData = false,
+    Map<String, dynamic>? queryParameters,
+    bool withAuth = true,
+    Options? options,
+  }) async {
     try {
       final response = await dio.post(
         path,
@@ -82,20 +79,19 @@ class DioConsumer extends ApiConsumer {
     } on DioException catch (e) {
       handleDioExceptions(e);
       rethrow;
-    }
-    catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }
 
   @override
   Future patch(
-      String path, {
-        Object? data,
-        bool isFromData = false,
-        Map<String, dynamic>? queryParameters,
-        bool withAuth = true,
-      }) async {
+    String path, {
+    Object? data,
+    bool isFromData = false,
+    Map<String, dynamic>? queryParameters,
+    bool withAuth = true,
+  }) async {
     try {
       final response = await dio.patch(
         path,
@@ -115,12 +111,12 @@ class DioConsumer extends ApiConsumer {
 
   @override
   Future delete(
-      String path, {
-        Object? data,
-        bool isFromData = false,
-        Map<String, dynamic>? queryParameters,
-        bool withAuth = true,
-      }) async {
+    String path, {
+    Object? data,
+    bool isFromData = false,
+    Map<String, dynamic>? queryParameters,
+    bool withAuth = true,
+  }) async {
     try {
       final response = await dio.delete(
         path,
@@ -138,30 +134,30 @@ class DioConsumer extends ApiConsumer {
     }
   }
 
-  @override
-  Future put(
-      String path, {
-        Object? data,
-        bool isFromData = false,
-        Map<String, dynamic>? queryParameters,
-        bool withAuth = true,
-      }) async {
-    try {
-      final response = await dio.put(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: Options(
-          headers: await _buildHeaders(withAuth: withAuth),
-          contentType: isFromData ? 'multipart/form-data' : 'application/json',
-        ),
-      );
-      return response.data;
-    } on DioException catch (e) {
-      handleDioExceptions(e);
-      rethrow;
-    }
+ @override
+Future put(
+  String path, {
+  Object? data,
+  bool isFromData = false,
+  Map<String, dynamic>? queryParameters,
+  bool withAuth = true,
+}) async {
+  try {
+    final response = await dio.put(
+      path,
+      data: isFromData ? data : jsonEncode(data),
+      queryParameters: queryParameters,
+      options: Options(
+        headers: await _buildHeaders(withAuth: withAuth),
+        contentType: isFromData ? 'multipart/form-data' : 'application/json',
+      ),
+    );
+    return response.data;
+  } on DioException catch (e) {
+    handleDioExceptions(e);
+    rethrow;
   }
+}
 
   void handleDioExceptions(DioException e) {
     if (e.response != null) {

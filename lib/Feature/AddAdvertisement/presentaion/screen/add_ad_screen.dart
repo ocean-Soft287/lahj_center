@@ -8,8 +8,13 @@ import 'package:lahijcenter/Feature/AddAdvertisement/blocs/add_advertisement_blo
 import 'dart:io';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/government_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_area_bloc/sub_area_bloc.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_catagory_bloc/sub_catagory_cubit.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/government_model.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_area_model.dart';
+import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_group_model.dart';
 import 'package:lahijcenter/Feature/main/bottomNavbar/Bottomnav.dart';
+import 'package:lahijcenter/core/Textstyle/extention.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/utils/services/services_locator.dart';
@@ -31,7 +36,10 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
   Services? selectedService;
   ModelCurrency? selectedCurrency;
   Group? selectedCategory;
+  SubGroupModel? selectedSubCategory;
   Government? selectedGovernorate;
+  SubAreaModel? selectedArea;
+  AdCondition? selectedCondition;
   bool? isReplyClosed = false;
   final List<File> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
@@ -42,6 +50,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _areaController = TextEditingController();
+  final TextEditingController _stateController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -52,6 +61,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
     _descController.dispose();
     _phoneController.dispose();
     _areaController.dispose();
+    _stateController.dispose();
     super.dispose();
   }
 
@@ -135,20 +145,31 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
               ),
 
               buildRowLabelField(
-
-
                 "رقم الجوال",
                 textField(
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   hint: 'رقم الجوال',
                   inputType: TextInputType.phone,
                   green: green,
                   controller: _phoneController,
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
+              buildRowLabelField(
+                "حالة الإعلان",
+                buildDropdown<AdCondition>(
+                  value: selectedCondition,
+                  items: AdCondition.values,
+                  displayText: (item) => item.arabicName,
+                  onChanged: (val) => setState(() => selectedCondition = val),
+                  hint: "اختر حالة الإعلان",
+                  green: green,
+                ),
+              ),
+
               Padding(
                 padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
@@ -181,19 +202,19 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
 
                     Expanded(
                       child:
-                      BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
-                        builder: (context, state) {
-                          return buildDropdown<ModelCurrency>(
-                            value: selectedCurrency,
-                            items: state.items,
-                            displayText: (item) => item.arName,
-                            onChanged: (val) =>
-                                setState(() => selectedCurrency = val),
-                            hint: 'اختر العملة',
-                            green: green,
-                          );
-                        },
-                      ),
+                          BlocBuilder<CurrencyBloc, BaseState<ModelCurrency>>(
+                            builder: (context, state) {
+                              return buildDropdown<ModelCurrency>(
+                                value: selectedCurrency,
+                                items: state.items,
+                                displayText: (item) => item.arName,
+                                onChanged: (val) =>
+                                    setState(() => selectedCurrency = val),
+                                hint: 'اختر العملة',
+                                green: green,
+                              );
+                            },
+                          ),
                     ),
                   ],
                 ),
@@ -207,9 +228,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                   SizedBox(width: 100.w, child: label('السعر', green)),
                   Expanded(
                     child: textField(
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       hint: 'اضف السعر',
                       green: green,
                       controller: _priceController,
@@ -257,8 +276,34 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                       value: selectedCategory,
                       items: state.items,
                       displayText: (item) => item.arName,
+                      onChanged: (val) {
+                        setState(() => selectedCategory = val);
+                        context.read<SubCatagoryCubit>().getSubCatagory(
+                          val!.id,
+                        );
+                      },
+                      hint: "اختر القسم",
+                      green: green,
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Padding(
+                padding: const EdgeInsets.only(right: 20, left: 20),
+                child: Divider(color: Color(0xff868686), thickness: 1.5),
+              ),
+
+              buildRowLabelField(
+                "القسم الفرعي",
+                BlocBuilder<SubCatagoryCubit, BaseState<SubGroupModel>>(
+                  builder: (context, state) {
+                    return buildDropdown<SubGroupModel>(
+                      value: selectedSubCategory,
+                      items: state.items,
+                      displayText: (item) => item.arName,
                       onChanged: (val) =>
-                          setState(() => selectedCategory = val),
+                          setState(() => selectedSubCategory = val),
                       hint: "اختر القسم",
                       green: green,
                     );
@@ -276,11 +321,13 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                     return buildDropdown<Government>(
                       value: selectedGovernorate,
                       items: state.items,
-                      displayText: (item) => item.arName,
-                      onChanged: (val) =>
-                          setState(() => selectedGovernorate = val),
                       hint: "اختر المحافظة",
                       green: green,
+                      displayText: (item) => item.arName,
+                      onChanged: (val) {
+                        setState(() => selectedGovernorate = val);
+                        context.read<SubAreaBloc>().getSubArea(val!.id);
+                      },
                     );
                   },
                 ),
@@ -289,17 +336,20 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 padding: const EdgeInsets.only(right: 20, left: 20),
                 child: Divider(color: Color(0xff868686), thickness: 1.5),
               ),
-              Row(
-                children: [
-                  SizedBox(width: 100.w, child: label('المنطقه', green)),
-                  Expanded(
-                    child: textField(
-                      hint: 'اختر المنطقه',
+              buildRowLabelField(
+                "المنطقة",
+                BlocBuilder<SubAreaBloc, BaseState<SubAreaModel>>(
+                  builder: (context, state) {
+                    return buildDropdown<SubAreaModel>(
+                      value: selectedArea,
+                      items: state.items,
+                      displayText: (item) => item.arName,
+                      onChanged: (val) => setState(() => selectedArea = val),
+                      hint: "اختر المنطقة",
                       green: green,
-                      controller: _areaController,
-                    ),
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 20, left: 20),
@@ -460,7 +510,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                 child: TextFormField(
                   maxLines: 4,
                   validator: (value) =>
-                  value!.isEmpty ? 'برجاء ادخال التفاصيل' : null,
+                      value!.isEmpty ? 'برجاء ادخال التفاصيل' : null,
                   controller: _descController,
                   decoration: InputDecoration(
                     hintText: "اكتب التفاصيل هنا ...",
@@ -485,8 +535,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                               children: [
                                 Icon(Icons.check_circle, color: Colors.white),
                                 SizedBox(width: 12.w),
-                                Text("تم اضافه الاعلان بنجاح ",
-                                ),
+                                Text("تم اضافه الاعلان بنجاح "),
                               ],
                             ),
                             backgroundColor: AppColors.mainAppColor,
@@ -500,9 +549,8 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           CupertinoPageRoute(builder: (context) => Bottomnav()),
-                              (route) => false,
+                          (route) => false,
                         );
-
                       }
 
                       if (state.isFailure) {
@@ -517,53 +565,57 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                       return state.isLoading
                           ? const Center(child: CircularProgressIndicator())
                           : ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            if (_selectedImages.length < 5) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "يجب اختيار على الاقل 5 صور",
-                                  ),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  if (_selectedImages.length < 5) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "يجب اختيار على الاقل 5 صور",
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  context.read<AddAdvertisementBloc>().add(
+                                    SubmitAdvertisement(
+                                      name: _titleController.text.trim(),
+                                      phone: _phoneController.text.trim(),
+                                      groupId: selectedCategory?.id ?? 0,
+                                      serviceId: selectedService?.id ?? 0,
+                                      area: selectedArea?.id.toString() ?? '',
+                                      condition: selectedCondition
+                                              ?.name ??
+                                          '',
+                                      subGroupId: selectedSubCategory?.id ?? 0,
+
+                                      price:
+                                          num.tryParse(
+                                            _priceController.text.trim(),
+                                          )?.toDouble() ??
+                                          0,
+                                      isCloseReplies: isReplyClosed ?? false,
+                                      currencyId: selectedCurrency?.id ?? 0,
+                                      governorateId:
+                                          selectedGovernorate?.id ?? 0,
+
+                                      description: _descController.text.trim(),
+                                      images: _selectedImages,
+                                    ),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: green,
+                              ),
+                              child: Text(
+                                "اضف الاعلان",
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: Colors.white,
                                 ),
-                              );
-                              return;
-                            }
-                            context.read<AddAdvertisementBloc>().add(
-                              SubmitAdvertisement(
-                                name: _titleController.text.trim(),
-                                phone: _phoneController.text.trim(),
-                                groupId: selectedCategory?.id ?? 0,
-                                serviceId: selectedService?.id ?? 0,
-                                area: _areaController.text.trim(),
-
-                                price:
-                                num.tryParse(
-                                  _priceController.text.trim(),
-                                )?.toDouble() ??
-                                    0,
-                                isCloseReplies: isReplyClosed ?? false,
-                                currencyId: selectedCurrency?.id ?? 0,
-                                governorateId:
-                                selectedGovernorate?.id ?? 0,
-
-                                description: _descController.text.trim(),
-                                images: _selectedImages,
                               ),
                             );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: green,
-                        ),
-                        child: Text(
-                          "اضف الاعلان",
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
                     },
                   ),
                 ),
@@ -588,18 +640,17 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
     );
   }
 
-  Widget label(String text, Color color) =>
-      Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12.sp,
-            color: color,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      );
+  Widget label(String text, Color color) => Center(
+    child: Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 12.sp,
+        color: color,
+      ),
+      textAlign: TextAlign.center,
+    ),
+  );
 
   Widget textField({
     String? hint,
@@ -607,28 +658,21 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
     required Color green,
     required TextEditingController controller,
     List<TextInputFormatter>? inputFormatters,
-  }) =>
-      TextFormField(
-        controller: controller,
-        keyboardType: inputType,
-        inputFormatters: inputFormatters,
-        validator: (value) =>
-        value!.isEmpty ? 'برجاء ادخال $hint' : null,
-        decoration: InputDecoration(
-          hintText: hint ?? '',
-          contentPadding:
-          EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: green),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-        ),
-      );
-
-
+  }) => TextFormField(
+    controller: controller,
+    keyboardType: inputType,
+    inputFormatters: inputFormatters,
+    validator: (value) => value!.isEmpty ? 'برجاء ادخال $hint' : null,
+    decoration: InputDecoration(
+      hintText: hint ?? '',
+      contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: green),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+    ),
+  );
 
   Widget buildDropdown<T>({
     required T? value,
