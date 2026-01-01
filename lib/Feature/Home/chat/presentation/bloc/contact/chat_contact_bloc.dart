@@ -59,8 +59,4 @@ class ChatContactBloc
     );
   }
 
-  @override
-  Future<void> close() {
-    return super.close();
-  }
 }

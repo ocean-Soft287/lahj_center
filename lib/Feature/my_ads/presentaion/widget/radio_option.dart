@@ -31,7 +31,7 @@ class RadioOption extends StatelessWidget {
       groupValue: isSelected ? true : false,
       contentPadding: const EdgeInsets.symmetric(horizontal: 0),
       activeColor: AppColors.mainAppColor,
-      fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+      fillColor: WidgetStateProperty.resolveWith<Color>((states) {
         return AppColors.mainAppColor;
       }),
       onChanged: (value) {

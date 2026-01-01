@@ -43,7 +43,7 @@ class ConnectivityCubit extends Cubit<bool> {
 
   @override
   void onChange(Change<bool> change) {
-    print("${change.nextState.toString()} Changed -----------------");
+   // print("${change.nextState.toString()} Changed -----------------");
     super.onChange(change);
   }
 }

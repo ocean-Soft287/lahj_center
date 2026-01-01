@@ -30,5 +30,6 @@ Future<void> shareContent({
       Navigator.pop(context);
     });
   } catch (error) {
+    //print('Error sharing content: $error');
   }
 }

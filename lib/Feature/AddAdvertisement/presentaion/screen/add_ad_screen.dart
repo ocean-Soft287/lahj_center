@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +12,6 @@ import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_catagory_bloc/sub
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/government_model.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_area_model.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/data/model/sub_group_model.dart';
-import 'package:lahijcenter/Feature/main/bottomNavbar/Bottomnav.dart';
 import 'package:lahijcenter/core/Textstyle/extention.dart';
 import 'package:lahijcenter/core/bloc/base_state.dart';
 import '../../../../core/constans/app_colors.dart';

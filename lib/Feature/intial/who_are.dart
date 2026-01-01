@@ -125,20 +125,20 @@ class WhoAreState extends State<WhoAre> with SingleTickerProviderStateMixin {
                           borderRadius: BorderRadius.circular(24.r),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.mainAppColor.withOpacity(0.08),
+                              color: AppColors.mainAppColor.withValues(alpha:0.08),
                               offset: Offset(0, 8.h),
                               blurRadius: 24.r,
                               spreadRadius: 0,
                             ),
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: Colors.black.withValues(alpha:0.04),
                               offset: Offset(0, 2.h),
                               blurRadius: 8.r,
                               spreadRadius: 0,
                             ),
                           ],
                           border: Border.all(
-                            color: AppColors.mainAppColor.withOpacity(0.1),
+                            color: AppColors.mainAppColor.withValues(alpha:0.1),
                             width: 1.5,
                           ),
                         ),
@@ -147,7 +147,7 @@ class WhoAreState extends State<WhoAre> with SingleTickerProviderStateMixin {
                             Container(
                               padding: EdgeInsets.all(16.w),
                               decoration: BoxDecoration(
-                                color: AppColors.mainAppColor.withOpacity(0.1),
+                                color: AppColors.mainAppColor.withValues(alpha:0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -182,9 +182,9 @@ class WhoAreState extends State<WhoAre> with SingleTickerProviderStateMixin {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    AppColors.mainAppColor.withOpacity(0.3),
+                                    AppColors.mainAppColor.withValues(alpha:0.3),
                                     AppColors.mainAppColor,
-                                    AppColors.mainAppColor.withOpacity(0.3),
+                                    AppColors.mainAppColor.withValues(alpha:0.3),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(2.r),

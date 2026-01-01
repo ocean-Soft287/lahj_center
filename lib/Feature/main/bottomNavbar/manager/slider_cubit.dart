@@ -18,11 +18,11 @@ class SliderCubit extends Cubit<SliderState> {
 
     result.fold(
           (failure) {
-            print("Banner state is failure");
+           // print("Banner state is failure");
             emit(SliderError(failure: failure));
           },
           (banners) {
-            print("Banner state is success");
+          //  print("Banner state is success");
 
             emit(SliderSuccess(
 

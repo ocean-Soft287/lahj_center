@@ -272,7 +272,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
           margin: EdgeInsets.only(top: 2.h),
           padding: EdgeInsets.all(4.sp),
           decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.1),
+            color: Colors.green.withValues(alpha:0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(

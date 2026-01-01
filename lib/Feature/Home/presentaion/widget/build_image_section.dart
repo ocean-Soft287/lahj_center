@@ -64,6 +64,7 @@ class BuildImageSection extends StatelessWidget {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     final displayDate = formatDate(item.date);
 
@@ -159,7 +160,7 @@ class BuildImageSection extends StatelessWidget {
                             dotHeight: 16.0,
                             paintStyle: PaintingStyle.stroke,
                             strokeWidth: 1.5,
-                            dotColor: Colors.white.withOpacity(0.5),
+                            dotColor: Colors.white.withValues(alpha:0.5),
                             activeDotColor: AppColors.mainAppColor,
                           ),
                         ),
@@ -248,7 +249,7 @@ class BuildImageSection extends StatelessWidget {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                "$displayDate",
+                                displayDate,
                                 style: TextStyle(
                                   fontFamily: Fonts.font,
                                   color: Colors.grey.shade500,

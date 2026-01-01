@@ -5,14 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lahijcenter/Feature/Home/Data/model/item_model.dart';
 import 'package:lahijcenter/Feature/main/bottomNavbar/manager/bottom_cubit.dart';
-import 'package:lahijcenter/Feature/profile/manager/get_profile_cubit.dart';
-import 'package:lahijcenter/Feature/profile/manager/get_profile_state.dart';
 import 'package:lahijcenter/core/constans/fonts.dart';
 
 import '../../../../core/constans/app_assets.dart';
 import '../../../../core/constans/app_colors.dart';
 import '../../../../core/network/local/flutter_secure_storage.dart';
-import '../../../../core/utils/services/services_locator.dart';
 import '../../../main/bottomNavbar/manager/bottom_state.dart';
 import '../../chat/presentation/chat_screen.dart';
 

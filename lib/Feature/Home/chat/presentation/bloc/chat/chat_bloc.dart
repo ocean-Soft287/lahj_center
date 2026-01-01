@@ -88,8 +88,4 @@ class ChatBloc extends Bloc<ChatEvent, BaseState<MessageModel>> {
     );
   }
 
-  @override
-  Future<void> close() {
-    return super.close();
-  }
 }

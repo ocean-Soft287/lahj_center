@@ -89,16 +89,16 @@ class RegisterViewCubit extends Cubit<RegisterViewState> {
         debugPrint("✅ Registration Successful: ${jsonEncode(data)}");
 
 
-        if (data.token != null && data.token.isNotEmpty) {
+        if (data.token.isNotEmpty) {
           await SecureStorageService.write(
             SecureStorageService.token,
-            data.token!,
+            data.token,
           );
           await SecureStorageService.write(SecureStorageService.name, "${data.firstName} ${data.lastName}");
           await SecureStorageService.write(SecureStorageService.email, data.email);
           await SecureStorageService.write(SecureStorageService.customerid, data.id);
-print("-----------data saved in secure storage");
-print("------data ${data.id}     ${SecureStorageService.read(SecureStorageService.customerid)}");
+      //print("-----------data saved in secure storage");
+//print("------data ${data.id}     ${SecureStorageService.read(SecureStorageService.customerid)}");
         }
 
         emit(RegisterViewStateSuccess());

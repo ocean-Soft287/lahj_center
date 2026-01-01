@@ -12,7 +12,7 @@ class ConnectivityWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("ConnectivityWrapper build");
+   // print("ConnectivityWrapper build");
     return BlocBuilder<ConnectivityCubit, bool>(
       builder: (context, isOnline) {
         return Stack(

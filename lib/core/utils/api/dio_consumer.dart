@@ -83,7 +83,7 @@ class DioConsumer extends ApiConsumer {
       handleDioExceptions(e);
       rethrow;
     } catch (e) {
-      print(e.toString());
+      ///print(e.toString());
     }
   }
 

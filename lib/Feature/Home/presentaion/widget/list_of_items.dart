@@ -39,9 +39,9 @@ class Listofitems extends StatelessWidget {
         }
 
         if (state.isSuccess) {
-          print(
-            "-------------------------- Allitemsuccful ${state.data?.items.length}",
-          );
+         // print(
+         //   "-------------------------- Allitemsuccful ${state.data?.items.length}",
+         // );
           return ListView.builder(
             itemCount: state.data!.items.length,
             itemBuilder: (context, index) {

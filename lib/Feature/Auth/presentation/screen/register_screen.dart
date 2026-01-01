@@ -13,12 +13,11 @@ import '../../../../core/sharde/widget/text_forn_field.dart';
 import '../../../main/bottomNavbar/Bottomnav.dart';
 import '../../manger/register_view_cubit/register_view_cubit.dart';
 import '../../manger/register_view_cubit/register_view_state.dart';
-import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
   final String phoneNumber;
 
-  RegisterScreen({super.key, required this.phoneNumber});
+  const RegisterScreen({super.key, required this.phoneNumber});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -284,8 +283,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                               hintText: "البريد الإلكتروني",
                               validator: (value) {
-                                if (value == null || value.isEmpty)
+                                if (value == null || value.isEmpty) {
                                   return 'الرجاء إدخال البريد الإلكتروني';
+                                }
                                 if (!value.contains("@") ||
                                     !value.contains(".")) {
                                   return "يرجى إدخال بريد إلكتروني صحيح";

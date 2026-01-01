@@ -5,7 +5,6 @@ import 'package:lahijcenter/Feature/AddAdvertisement/blocs/category_bloc/categor
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/currency_bloc/currency_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/government_bloc/government_bloc.dart';
 import 'package:lahijcenter/Feature/AddAdvertisement/blocs/services_bloc/services_bloc.dart';
-import 'package:lahijcenter/Feature/AddAdvertisement/blocs/sub_catagory_bloc/sub_catagory_cubit.dart';
 import '../../../Feature/AddAdvertisement/blocs/currency_bloc/currency_event.dart';
 import '../../../Feature/AddAdvertisement/blocs/government_bloc/government_event.dart';
 import '../../../Feature/AddAdvertisement/blocs/services_bloc/services_event.dart';

@@ -60,10 +60,9 @@ class _EditAdvertisementScreenState extends State<EdittAdvertisementScreen> {
     super.initState();
     isReplyClosed = widget.item.isCloseReplies;
 
-    if (widget.item.advertisementImages != null &&
-        widget.item.advertisementImages!.isNotEmpty) {
-      _originalImages = List.from(widget.item.advertisementImages!);
-      for (var img in widget.item.advertisementImages!) {
+    if (widget.item.advertisementImages.isNotEmpty) {
+      _originalImages = List.from(widget.item.advertisementImages);
+      for (var img in widget.item.advertisementImages) {
         _existingImageUrls.add(img.imageName);
       }
     }

@@ -50,7 +50,7 @@ class CategoryCubit extends Cubit<BaseState<AdvertisementResponse>> {
 
     response.fold(
           (failure) {
-        print(failure);
+      //  print(failure);
         emit(state.copyWith(
             errorMessage:"فشل في تحميل التصنيفات: ${failure.message}"));
       },

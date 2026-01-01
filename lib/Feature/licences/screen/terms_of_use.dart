@@ -38,7 +38,7 @@ class TermsOfUse extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       AppColors.mainAppColor,
-                      AppColors.mainAppColor.withOpacity(0.8),
+                      AppColors.mainAppColor.withValues(alpha:0.8),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -46,7 +46,7 @@ class TermsOfUse extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.mainAppColor.withOpacity(0.3),
+                      color: AppColors.mainAppColor.withValues(alpha:0.3),
                       blurRadius: 15,
                       offset: Offset(0, 5),
                     ),
@@ -57,7 +57,7 @@ class TermsOfUse extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha:0.2),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -80,7 +80,7 @@ class TermsOfUse extends StatelessWidget {
                     Text(
                       "التزم بالقواعد لضمان تجربة آمنة",
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha:0.9),
                         fontSize: 14,
                       ),
                     ),
@@ -195,7 +195,7 @@ class TermsOfUse extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha:0.06),
             blurRadius: 10,
             offset: Offset(0, 4),
           ),
@@ -220,7 +220,7 @@ class TermsOfUse extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -277,7 +277,7 @@ class TermsOfUse extends StatelessWidget {
                   color: Colors.grey[50],
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: iconColor.withOpacity(0.2),
+                    color: iconColor.withValues(alpha:0.2),
                     width: 1,
                   ),
                 ),
