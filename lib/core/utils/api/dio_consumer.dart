@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:lahijcenter/Feature/Auth/presentation/screen/login_screen.dart';
+import 'package:lahijcenter/main.dart';
 import '../../network/local/flutter_secure_storage.dart';
 import 'endpoint.dart';
 import 'api_consumer.dart';
@@ -161,6 +164,14 @@ Future put(
 
   void handleDioExceptions(DioException e) {
     if (e.response != null) {
+      if (e.response!.statusCode == 401) {
+        // Handle unauthorized error, e.g., force logout
+       Navigator.of(navigatorKey.currentContext!).pushAndRemoveUntil(
+          CupertinoPageRoute(builder: (context) =>LoginScreen()),
+          (Route<dynamic> route) => false,
+        );
+        // You can add your logout logic here
+      }
       print('Dio error: ${e.response!.statusCode} - ${e.response!.data}');
     } else {
       print('Dio error: ${e.message}');
