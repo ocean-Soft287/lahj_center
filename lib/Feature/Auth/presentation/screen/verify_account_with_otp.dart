@@ -59,8 +59,48 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
             );
           } else if (state is otpSuccessGoHome) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle, color: Colors.white),
+                                SizedBox(width: 12.w),
+                                Text("تم تأكيد رمز التحقق بنجاح ✅",
+                                    style: TextStyle(color: Colors.white,
+                                    fontSize: 10.sp)),
+                              ],
+                            ),
+                            backgroundColor: AppColors.mainAppColor,
+                            duration: Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.all(16),
+                          ),
+                        );
             navigatofinsh(context, const Bottomnav(), true);
           } else if (state is otpSuccessGoRegister) {
+             ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle, color: Colors.white),
+                                SizedBox(width: 12.w),
+                                Text("تم تأكيد رمز التحقق بنجاح ✅",
+                                    style: TextStyle(color: Colors.white,
+                                    fontSize: 10.sp)),
+                              ],
+                            ),
+                            backgroundColor: AppColors.mainAppColor,
+                            duration: Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.all(16),
+                          ),
+                        );
             navigatofinsh(
               context,
               RegisterScreen(phoneNumber: widget.phonenumber),

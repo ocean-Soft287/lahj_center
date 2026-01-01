@@ -65,6 +65,27 @@ class _LoginScreenState extends State<LoginScreen> {
               SecureStorageService.mobile,
               user.phoneNumber,
             );
+             ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            behavior: SnackBarBehavior.floating,
+                            content: Row(
+                              children: [
+                                Icon(Icons.check_circle, color: Colors.white),
+                                SizedBox(width: 12.w),
+                                Text("من فضلك راجع واتساب، تم إرسال رمز التحقق على رقمك ",
+                                    style: TextStyle(color: Colors.white,
+                                    fontSize: 10.sp)),
+                              ],
+                            ),
+                            backgroundColor: AppColors.mainAppColor,
+                            duration: Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.all(16),
+                          ),
+                        );
+                        
 
             Navigator.of(context).pushAndRemoveUntil(
               CupertinoPageRoute(
