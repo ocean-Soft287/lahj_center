@@ -128,18 +128,15 @@ class FavouriteContainer extends StatelessWidget {
                       ),
                     ),
 
-                    // Favourite Badge
                   ],
                 ),
 
                 SizedBox(width: 16.w),
 
-                // Content Column
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title and Remove Button Row
                       Row(
                         children: [
                           Expanded(
@@ -185,7 +182,6 @@ class FavouriteContainer extends StatelessWidget {
 
                       SizedBox(height: 10.h),
 
-                      // Service Category Badge
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

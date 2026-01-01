@@ -483,11 +483,9 @@ class _HomeScreenWiState extends State<HomeScreenWi> {
                 setState(() {
                   selectedGovernorate = val;
                   if (val == null) {
-                    // User selected "الكل" - reset to normal view
                     isFilteringByCity = false;
                     selectedGovernorateId = null;
                   } else {
-                    // User selected a specific city - filter by it
                     isFilteringByCity = true;
                     selectedGovernorateId = val.id;
                     context.read<FilterCitiesCubit>().fetchFirstPage(val.id);

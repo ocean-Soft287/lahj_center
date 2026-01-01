@@ -15,10 +15,10 @@ class MyaddCubit extends Cubit<MyaddState> {
     final response = await myaddrepo.getmyad();
 
     response.fold(
-          (failure) {
+      (failure) {
         emit(AllmyadditemFailure());
       },
-          (data) {
+      (data) {
         if (data.items.isEmpty) {
           emit(Allmyaddsitemsuccfulempty());
         } else {
@@ -29,18 +29,48 @@ class MyaddCubit extends Cubit<MyaddState> {
   }
 
   Future<void> deletemyadd(int id, String reason) async {
-    emit(Allmyadditemsuccfulload()); // optional: show loading
-
     final response = await myaddrepo.deletemyadd(id, reason);
 
     response.fold(
-          (failure) {
+      (failure) {
         emit(DeletemyadditemFailure());
       },
-          (successMessage) {
-        getmyadd();
-        emit(Deletemyadditemsuccful());
+      (successMessage) {
+        final updatedResponse = removeItem(id);
+        if (updatedResponse != null) {
+          emit(Deletemyadditemsuccful(advertisementResponse: updatedResponse));
+        } else {
+          emit(Allmyaddsitemsuccfulempty());
+        }
       },
     );
+  }
+
+  AdvertisementResponse? removeItem(int id) {
+    if (state is Allmyadditemsuccful || state is Deletemyadditemsuccful) {
+      final currentStateResponse = state is Allmyadditemsuccful
+          ? (state as Allmyadditemsuccful).advertisementResponse
+          : (state as Deletemyadditemsuccful).advertisementResponse;
+
+      final updatedItems = currentStateResponse.items
+          .where((item) => item.id != id)
+          .toList();
+
+      if (updatedItems.isEmpty) {
+        emit(Allmyaddsitemsuccfulempty());
+        return null;
+      } else {
+        final newResponse = AdvertisementResponse(
+          items: updatedItems,
+          page: currentStateResponse.page,
+          pageSize: currentStateResponse.pageSize,
+          totalItems: currentStateResponse.totalItems - 1,
+          totalPages: currentStateResponse.totalPages,
+        );
+        emit(Allmyadditemsuccful(advertisementResponse: newResponse));
+        return newResponse;
+      }
+    }
+    return null;
   }
 }

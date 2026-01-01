@@ -546,11 +546,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                             margin: EdgeInsets.all(16),
                           ),
                         );
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          CupertinoPageRoute(builder: (context) => Bottomnav()),
-                          (route) => false,
-                        );
+                        Navigator.pop(  context); 
                       }
 
                       if (state.isFailure) {
@@ -585,7 +581,7 @@ class _AddAdvertisementScreenState extends State<AddAdvertisementScreen> {
                                       serviceId: selectedService?.id ?? 0,
                                       area: selectedArea?.id.toString() ?? '',
                                       condition: selectedCondition
-                                              ?.name ??
+                                              ?.apiValue ??
                                           '',
                                       subGroupId: selectedSubCategory?.id ?? 0,
 

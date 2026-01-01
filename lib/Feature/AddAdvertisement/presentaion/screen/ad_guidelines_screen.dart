@@ -65,7 +65,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                   end: Alignment.bottomCenter,
                   colors: [
                     AppColors.mainAppColor,
-                    AppColors.mainAppColor.withOpacity(0.1),
+                    AppColors.mainAppColor.withValues(alpha: .1),
                   ],
                 ),
               ),
@@ -78,7 +78,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                     borderRadius: BorderRadius.circular(15.r),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha:0.08),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -112,12 +112,12 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
-                        color: AppColors.mainAppColor.withOpacity(0.2),
+                        color: AppColors.mainAppColor.withValues(alpha:0.2),
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.mainAppColor.withOpacity(0.1),
+                          color: AppColors.mainAppColor.withValues(alpha:0.1),
                           blurRadius: 15,
                           offset: const Offset(0, 5),
                         ),
@@ -131,7 +131,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                             vertical: 10.h,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.mainAppColor.withOpacity(0.1),
+                            color: AppColors.mainAppColor.withValues(alpha:0.1),
                             borderRadius: BorderRadius.circular(10.r),
                           ),
                           child: Text(
@@ -168,7 +168,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                       borderRadius: BorderRadius.circular(20.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha:0.06),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -182,7 +182,7 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
                             Container(
                               padding: EdgeInsets.all(10.sp),
                               decoration: BoxDecoration(
-                                color: AppColors.mainAppColor.withOpacity(0.1),
+                                color: AppColors.mainAppColor.withValues(alpha:0.1),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Icon(
@@ -234,7 +234,6 @@ class _AdGuidelinesScreenState extends State<AdGuidelinesScreen> {
 
                   SizedBox(height: 30.h),
 
-                  // Continue button
                   DefaultButton(
                     function: () {
                       navigato(

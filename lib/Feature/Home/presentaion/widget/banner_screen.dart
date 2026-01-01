@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,37 +58,29 @@ class _BannerPageState extends State<BannerPage> {
                   return Container(
                     width: double.infinity,
                     margin: EdgeInsets.all(5.w),
-
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        banners[index].imagePath,
+                      child: CachedNetworkImage(
+                        imageUrl: banners[index].imagePath,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                  : null,
-                              color: Colors.green,
+
+                        /// loading (بديل loadingBuilder)
+                        placeholder: (context, url) => Center(
+                          child: CircularProgressIndicator(color: Colors.green),
+                        ),
+
+                        /// error (بديل errorBuilder)
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              size: 50,
+                              color: Colors.grey[400],
                             ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[200],
-                            child: Center(
-                              child: Icon(
-                                Icons.broken_image,
-                                size: 50,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
                     ),
                   );

@@ -43,68 +43,77 @@ class MyAdsScreen extends StatelessWidget {
           slivers: [
             BlocBuilder<MyaddCubit, MyaddState>(
               builder: (context, state) {
-                if (state is Allmyadditemsuccful) {
-                  if (state.advertisementResponse.items.isEmpty) {
-    return const SliverToBoxAdapter(
-      child: Center(
-        child: Padding(
+                if (state is Allmyadditemsuccful ||
+                    state is Deletemyadditemsuccful) {
+                  final advertisementResponse = state is Allmyadditemsuccful
+                      ? state.advertisementResponse
+                      : (state as Deletemyadditemsuccful).advertisementResponse;
 
-          padding: EdgeInsets.only(top: 150),
-          child: Column(
-            children: [
-             Icon(Icons.campaign_outlined, size: 100, color:Colors.green),
-
-              Text("لا توجد إعلانات حالياً",
-              style:TextStyle(
-                color: Colors.grey,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: Fonts.font
-              ),),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha:0.1),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(8.r),
-                              child: Myadscontainer(
-                                item: state.advertisementResponse.items[index],
-                                function: () {
-                                  final cubit = context.read<MyaddCubit>();
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => BlocProvider.value(
-                                      value: cubit,
-                                      child: DeleteAdDialog(id: state.advertisementResponse.items[index].id),
-                                    ),
-                                  );
-                                },
+                  if (advertisementResponse.items.isEmpty) {
+                    return const SliverToBoxAdapter(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 150),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.campaign_outlined,
+                                size: 100,
+                                color: Colors.green,
                               ),
+
+                              Text(
+                                "لا توجد إعلانات حالياً",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: Fonts.font,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8.r),
+                            child: Myadscontainer(
+                              item: advertisementResponse.items[index],
+                              function: () {
+                                final cubit = context.read<MyaddCubit>();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => BlocProvider.value(
+                                    value: cubit,
+                                    child: DeleteAdDialog(
+                                      id: advertisementResponse.items[index].id,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        );
-                      },
-                      childCount: state.advertisementResponse.items.length,
-                    ),
+                        ),
+                      );
+                    }, childCount: advertisementResponse.items.length),
                   );
                 } else if (state is Allmyaddsitemsuccfulempty) {
                   return const SliverToBoxAdapter(
@@ -117,9 +126,7 @@ class MyAdsScreen extends StatelessWidget {
                   );
                 } else {
                   return const SliverToBoxAdapter(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: Center(child: Center(child: CircularProgressIndicator())),
                   );
                 }
               },
